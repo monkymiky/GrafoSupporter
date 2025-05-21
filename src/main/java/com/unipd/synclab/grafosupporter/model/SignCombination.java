@@ -2,9 +2,11 @@ package com.unipd.synclab.grafosupporter.model;
 
 import java.util.List;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -25,13 +27,17 @@ public class SignCombination {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Basic(fetch = FetchType.LAZY)
     private String title;
+    @Basic(fetch = FetchType.LAZY)
     private String shortDescription;
+    @Basic(fetch = FetchType.LAZY)
     private String longDescription;
+
     @ElementCollection
     private List<ValuatedSign> signs;
-    //private Img img;
-    @ManyToOne
-    @JoinColumn(name="book_id", nullable = true)
+    // private Img img;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id", nullable = true)
     private Book sourceBook;
 }
