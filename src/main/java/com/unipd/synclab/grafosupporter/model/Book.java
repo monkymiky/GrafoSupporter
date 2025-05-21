@@ -16,12 +16,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Books {
+public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String title;
     private String writer;
+    private Integer pubblicationJear;
     private String etitor;
-    private String edition;
+    private String isbn;
 }
