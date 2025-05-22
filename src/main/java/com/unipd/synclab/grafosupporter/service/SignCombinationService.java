@@ -1,20 +1,15 @@
 package com.unipd.synclab.grafosupporter.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.security.InvalidParameterException;
+
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.unipd.synclab.grafosupporter.model.Sign;
 import com.unipd.synclab.grafosupporter.model.SignCombination;
-import com.unipd.synclab.grafosupporter.model.ValuatedSign;
 import com.unipd.synclab.grafosupporter.repository.SignCombinationRepository;
 import com.unipd.synclab.grafosupporter.repository.SignRepository;
 
@@ -22,32 +17,40 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SignCombinationService {
-    private final SignCombinationRepository signCombinationRepository;
     @Autowired
     SignRepository signRepository;
-
     @Autowired
-    public SignCombinationService(SignCombinationRepository signCombinationRepository) {
-        this.signCombinationRepository = signCombinationRepository;
-    }
+    SignCombinationRepository signCombinationRepository;
 
     @Transactional(readOnly = true)
     public List<SignCombination> getSignCombinationsWithoutValue(Map<Long, Integer> serchedSign) {
         List<SignCombination> result = signCombinationRepository.findAll();
-        return result.parallelStream()
+        return result.stream()
                 .filter(combination -> combination.getSigns().stream()
-                        .allMatch(valuatedSign -> matchValues(
-                                serchedSign.entrySet().stream().filter(
-                                        SSign -> SSign.getKey().equals(valuatedSign.getSignId())).findFirst().get()
-                                        .getValue(),
-                                valuatedSign.getValue())
+                        .allMatch(signInCombination -> {
+
+                            Integer requestedSignValue = serchedSign.get(signInCombination.getSignId());
+                            if (requestedSignValue == null) {
+                                return false; // ignora la combinazione
+                            }
+                            return matchValues(requestedSignValue, signInCombination.getValue());
+                        }
 
                         )).collect(Collectors.toList());
 
     };
 
     private boolean matchValues(Integer frontendValue, Integer backendValue) {
-        return frontendValue.equals(backendValue); // da cambiare con = 5 <5 >5
+        switch (frontendValue) {
+            case 0:
+                return backendValue < 5;
+            case 1:
+                return backendValue.equals(5);
+            case 2:
+                return backendValue > 5;
+            default:
+                throw new InvalidParameterException();
+        }
     }
 
 }

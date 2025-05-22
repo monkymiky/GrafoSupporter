@@ -34,7 +34,7 @@ public class SignCombination {
     @Basic(fetch = FetchType.LAZY)
     private String longDescription;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<ValuatedSign> signs;
     // private Img img;
     @ManyToOne(fetch = FetchType.LAZY)
