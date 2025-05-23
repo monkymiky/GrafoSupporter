@@ -8,11 +8,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.unipd.synclab.grafosupporter.model.SignCombination;
 import com.unipd.synclab.grafosupporter.repository.SignCombinationRepository;
 import com.unipd.synclab.grafosupporter.repository.SignRepository;
+import com.unipd.synclab.grafosupporter.repository.specifications.SignCombinationSpecifications;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -36,20 +38,12 @@ public class SignCombinationService {
 
     @Transactional(readOnly = true)
     public List<SignCombination> getSignCombinationsWithoutValue(Map<Long, Integer> serchedSign) {
-        List<SignCombination> result = signCombinationRepository.findAll();
-        return result.stream()
-                .filter(combination -> combination.getSigns().stream()
-                        .allMatch(signInCombination -> {
-
-                            Integer requestedSignValue = serchedSign.get(signInCombination.getSignId());
-                            if (requestedSignValue == null) {
-                                return false; // ignora la combinazione
-                            }
-                            return matchValues(requestedSignValue, signInCombination.getValue());
-                        }
-
-                        )).collect(Collectors.toList());
-
+        if (serchedSign == null || serchedSign.isEmpty()) {
+            throw new InvalidParameterException("non è possibile cercare combianzioni che non contengono segni");
+        }
+        Specification<SignCombination> spec = SignCombinationSpecifications
+                .allSignsInCombinationMustMatchCriteria(serchedSign);
+        return signCombinationRepository.findAll(spec);
     };
 
     @Transactional
@@ -62,6 +56,10 @@ public class SignCombinationService {
         SignCombination signCombinationToEdit = signCombinationRepository.findById(signCombination.getId())
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Impossible to edit - SignCombination not found with id: " + signCombination.getId()));
+        if (signCombinationToEdit.getSourceBook() != null)
+            throw new InvalidParameterException(
+                    "non è possibile eliminare la combianzione con id=" + signCombination.getId()
+                            + " perche l'autore è moretti");
         signCombinationToEdit.setLongDescription((signCombination.getLongDescription()));
         signCombinationToEdit.setShortDescription(signCombination.getShortDescription());
         signCombinationToEdit.setSigns(signCombination.getSigns());
@@ -75,20 +73,10 @@ public class SignCombinationService {
         if (!signCombinationRepository.existsById(id)) {
             throw new EntityNotFoundException("SignCombination not found with id: " + id);
         }
+        if (signCombinationRepository.findById(id).get().getSourceBook() != null)
+            throw new InvalidParameterException(
+                    "non è possibile eliminare la combianzione con id=" + id + " perche l'autore è moretti");
         signCombinationRepository.deleteById(id);
-    }
-
-    private boolean matchValues(Integer frontendValue, Integer backendValue) {
-        switch (frontendValue) {
-            case 0:
-                return backendValue < 5;
-            case 1:
-                return backendValue.equals(5);
-            case 2:
-                return backendValue > 5;
-            default:
-                throw new InvalidParameterException();
-        }
     }
 
 }

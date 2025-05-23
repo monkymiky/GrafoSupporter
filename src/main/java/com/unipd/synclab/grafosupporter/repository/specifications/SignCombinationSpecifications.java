@@ -1,0 +1,86 @@
+package com.unipd.synclab.grafosupporter.repository.specifications;
+
+import com.unipd.synclab.grafosupporter.model.SignCombination;
+import com.unipd.synclab.grafosupporter.model.ValuatedSign;
+
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Expression;
+
+import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.data.jpa.domain.Specification;
+
+public class SignCombinationSpecifications {
+    private static Predicate buildMatchValuesPredicate(CriteriaBuilder cb, Expression<Integer> backendValueExpression,
+            Integer frontendValue) {
+        switch (frontendValue) {
+            case 0:
+                return cb.lessThan(backendValueExpression, 5);
+            case 1:
+                return cb.equal(backendValueExpression, 5);
+            case 2:
+                return cb.greaterThan(backendValueExpression, 5);
+            default:
+                throw new InvalidParameterException("Invalid frontendValue for JPA specification: " + frontendValue);
+        }
+    }
+
+    public static Specification<SignCombination> allSignsInCombinationMustMatchCriteria(
+            Map<Long, Integer> referenceCriteriaSigns) {
+        // la condizione "tutti i segni soddisfano la condizione x" equivale a dire
+        // "non esiste alcun segno che non soddisfa x"
+        return (Root<SignCombination> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
+
+            if (referenceCriteriaSigns == null || referenceCriteriaSigns.isEmpty()) {
+                return cb.disjunction();
+            }
+
+            Subquery<Long> subquery = query.subquery(Long.class);
+            Root<SignCombination> subRoot = subquery.correlate(root);
+            Join<SignCombination, ValuatedSign> valuatedSignFromCombination = subRoot.join("signs");
+
+            subquery.select(cb.literal(1L));
+            // Identifico le combinazioni "problematiche" per poi escluderle e tenere solo
+            // le altre
+            // per ogni chiave/valore nella mappa referenceCriteriaSigns,
+            // creiamo una condizione che soddisfa il valuatedSignFromCombination.
+            // Poi neghiamo l'OR di tutte queste condizioni soddisfacenti.
+
+            List<Predicate> orConditionsForSatisfactoryMatch = new ArrayList<>();
+            for (Map.Entry<Long, Integer> criteriaEntry : referenceCriteriaSigns.entrySet()) {
+                Long criteriaSignId = criteriaEntry.getKey();
+                Integer criteriaFrontendValue = criteriaEntry.getValue();
+
+                Predicate signIdMatchesCriteria = cb.equal(valuatedSignFromCombination.get("signId"), criteriaSignId);
+                Predicate valueMatchesCriteria = buildMatchValuesPredicate(cb, valuatedSignFromCombination.get("value"),
+                        criteriaFrontendValue);
+
+                orConditionsForSatisfactoryMatch.add(cb.and(signIdMatchesCriteria, valueMatchesCriteria));
+            }
+
+            // Un ValuatedSign è "soddisfacente" se matcha con un entry della map
+            // referenceCriteriaSigns
+
+            Predicate isSatisfactory = cb.or(orConditionsForSatisfactoryMatch.toArray(new Predicate[0]));
+
+            // Un ValuatedSign è "problematico" se NON matcha con nessun entry di
+            // referenceCriteriaSigns ovvero non è "soddisfacente"
+
+            Predicate isProblematic = cb.not(isSatisfactory);
+
+            subquery.where(isProblematic);
+
+            // NON ESISTE un ValuatedSign "problematico" --> tutti i ValuatedSign matchano
+            return cb.not(cb.exists(subquery));
+        };
+    }
+
+}

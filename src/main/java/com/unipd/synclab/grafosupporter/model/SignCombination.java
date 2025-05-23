@@ -27,11 +27,8 @@ public class SignCombination {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Basic(fetch = FetchType.LAZY)
     private String title;
-    @Basic(fetch = FetchType.LAZY)
     private String shortDescription;
-    @Basic(fetch = FetchType.LAZY)
     private String longDescription;
 
     @ElementCollection(fetch = FetchType.EAGER)

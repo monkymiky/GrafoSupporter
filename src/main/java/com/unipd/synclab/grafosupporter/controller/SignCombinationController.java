@@ -33,8 +33,29 @@ public class SignCombinationController {
     }
 
     @GetMapping("/withoutValue")
-    public List<SignCombination> getSignCombinationsWithoutValue(@RequestBody Map<Long, Integer> serchedSign)
-            throws Exception {
+    public List<SignCombination> getSignCombinationsWithoutValue(@RequestBody Map<Long, Integer> serchedSign) {
         return signCombinationService.getSignCombinationsWithoutValue(serchedSign);
     }
+
+    @GetMapping("/{combination_id}")
+    public SignCombination getSignCombinationsById(@PathVariable Long combination_id) {
+        return signCombinationService.getSignCombinationsById(combination_id);
+    }
+
+    @PostMapping
+    public void addSignCombination(@RequestBody SignCombination signCombination) {
+        signCombinationService.addSignCombination(signCombination);
+    }
+
+    @PutMapping
+    public void editSignCombination(@RequestBody SignCombination signCombination) {
+        signCombinationService.editSignCombination(signCombination);
+    }
+
+    @DeleteMapping("/{combination_id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteSignCombination(@PathVariable("combination_id") Long combination_id) {
+        signCombinationService.deleteSignCombination(combination_id);
+    }
+
 }
