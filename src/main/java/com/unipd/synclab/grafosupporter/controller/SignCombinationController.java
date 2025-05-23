@@ -32,7 +32,7 @@ public class SignCombinationController {
         this.signCombinationService = signCombinationService;
     }
 
-    @GetMapping("/withoutValue")
+    @PostMapping("/withoutValue")
     public List<SignCombination> getSignCombinationsWithoutValue(@RequestBody Map<Long, Integer> serchedSign) {
         return signCombinationService.getSignCombinationsWithoutValue(serchedSign);
     }

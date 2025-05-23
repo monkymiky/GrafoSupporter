@@ -12,6 +12,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +24,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@NamedEntityGraph(name = "SignCombination.withSignsAndBooks", attributeNodes = { @NamedAttributeNode("signs"),
+        @NamedAttributeNode("sourceBook") })
 public class SignCombination {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
