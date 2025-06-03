@@ -23,7 +23,7 @@ export interface Sign_filter {
   angoliB: grado;
   mantieneIlRigo: grado;
   secca: grado;
-  asteInLineaRetta: grado;
+  asteRette: grado;
   dritta: grado;
   recisa: grado;
   austera: grado;
