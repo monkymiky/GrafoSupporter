@@ -1,9 +1,8 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Combination } from '../search-combinations/combination/combination.interface';
-import { Sign_filter } from '../search-combinations/filters/sign-filter.interface';
-import { SharedStateService } from './shared-state.service';
+import { Combination } from '../search-combinations/combination-list/combination.interface';
+import { Filter } from '../search-combinations/filters/filter.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -11,14 +10,9 @@ import { SharedStateService } from './shared-state.service';
 export class CombiantionService {
   private apiUrl = 'http://localhost:8080/combinations';
   private http = inject(HttpClient);
-  private sharedState = inject(SharedStateService);
 
-  searchCombinations(): Observable<Combination[]> {
-    console.log(this.sharedState.getfilters()());
-    return this.http.post<Combination[]>(
-      this.apiUrl,
-      this.sharedState.getfilters()()
-    );
+  searchCombinations(filters: Filter): Observable<Combination[]> {
+    return this.http.post<Combination[]>(this.apiUrl, filters);
   }
 
   createProduct(combination: Combination): Observable<Combination> {

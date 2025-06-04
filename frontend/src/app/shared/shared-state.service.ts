@@ -1,13 +1,39 @@
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { Combination } from '../search-combinations/combination/combination.interface';
-import { Sign_filter } from '../search-combinations/filters/sign-filter.interface';
+import { inject, Injectable, signal } from '@angular/core';
+import { Combination } from '../search-combinations/combination-list/combination.interface';
+import { CombiantionService } from './combinations.service';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { catchError, Observable, of, startWith, switchMap, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SharedStateService {
-  private combinations: WritableSignal<Combination[]> = signal([]);
-  private filters: WritableSignal<Sign_filter> = signal({
+  combiantionsService = inject(CombiantionService);
+  errorMessage = signal('');
+  triggerCombinationSearch = signal(0);
+
+  private combinationsObservable: Observable<Combination[]> = toObservable(
+    this.triggerCombinationSearch
+  ).pipe(
+    startWith([]),
+    switchMap(() => {
+      return this.combiantionsService.searchCombinations(this.filters()).pipe(
+        tap(() => this.errorMessage.set('')),
+        catchError((err) => {
+          this.errorMessage.set(
+            `Errore caricamento combinazioni : ${err.message}`
+          );
+          return of([] as Combination[]);
+        })
+      );
+    })
+  );
+
+  readonly combinationsDisplayed = toSignal(this.combinationsObservable, {
+    initialValue: [] as Combination[],
+  });
+
+  filters = signal({
     largaTraLettere: 0,
     // attesa
     curva: 0,
@@ -69,20 +95,4 @@ export class SharedStateService {
     largaTraParole: 0,
     disugualeMetodicamente: 0,
   });
-
-  getcombinations(): WritableSignal<Combination[]> {
-    return this.combinations;
-  }
-
-  getfilters(): WritableSignal<Sign_filter> {
-    return this.filters;
-  }
-
-  setcombinations(newCombinations: Combination[]): void {
-    this.combinations.set(newCombinations);
-  }
-
-  setFilters(newFilter: Sign_filter): void {
-    this.filters.set(newFilter);
-  }
 }
