@@ -1,0 +1,15 @@
+<p>single combination works!</p>
+<p>{{ this.combination.title }}</p>
+<p>{{ this.combination.shortDescription }}</p>
+<p>{{ this.combination.longDescription }}</p>
+<p>{{ this.combination.imagePath }}</p>
+<p>autore : {{ this.combination.author }}</p>
+@if(this.combination.source?.title){
+<p>{{ this.combination.source?.title }}</p>
+<p>{{ this.combination.source?.edition }}</p>
+<p>{{ this.combination.source?.editor }}</p>
+<p>{{ this.combination.source?.isbn }}</p>
+} @for (sign of this.combination.signs ; track sign.id){
+<p>{{ sign.name }}</p>
+}
+<p>{{ this.combination.originalTextCondition }}</p>

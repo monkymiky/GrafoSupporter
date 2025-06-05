@@ -7,12 +7,16 @@ import { Filter } from '../search-combinations/filters/filter.interface';
 @Injectable({
   providedIn: 'root',
 })
-export class CombiantionService {
+export class CombinationService {
   private apiUrl = 'http://localhost:8080/combinations';
   private http = inject(HttpClient);
 
   searchCombinations(filters: Filter): Observable<Combination[]> {
-    return this.http.post<Combination[]>(this.apiUrl, filters);
+    console.log(this.apiUrl + '/withoutNumbers');
+    return this.http.post<Combination[]>(
+      this.apiUrl + '/withoutNumbers',
+      filters
+    );
   }
 
   createProduct(combination: Combination): Observable<Combination> {

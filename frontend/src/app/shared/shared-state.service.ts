@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Combination } from '../search-combinations/combination-list/combination.interface';
-import { CombiantionService } from './combinations.service';
+import { CombinationService } from './combinations.service';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { catchError, Observable, of, startWith, switchMap, tap } from 'rxjs';
 
@@ -8,9 +8,73 @@ import { catchError, Observable, of, startWith, switchMap, tap } from 'rxjs';
   providedIn: 'root',
 })
 export class SharedStateService {
-  combiantionsService = inject(CombiantionService);
+  combiantionsService = inject(CombinationService);
   errorMessage = signal('');
   triggerCombinationSearch = signal(0);
+
+  filters = signal({
+    '1': 0,
+    // attesa
+    '2': 3,
+    '3': 0,
+    '4': 0,
+    '5': 0,
+    '6': 0,
+    '7': 0,
+    '8': 0,
+    '9': 0,
+    '10': 0,
+    // resistenza
+    '11': 3,
+    '12': 0,
+    '13': 0,
+    '14': 0,
+    '15': 0,
+    '16': 0,
+    '17': 0,
+    // assalto
+    '18': 0,
+    '19': 0,
+    '20': 0,
+    '21': 0,
+    '22': 0,
+    '23': 0,
+    '24': 0,
+    '25': 0,
+    '26': 0,
+    '27': 0,
+    '28': 0,
+    '29': 0,
+    '30': 0,
+    // Attesa
+    '31': 0,
+    '32': 0,
+    '33': 0,
+    '34': 0,
+    '35': 0,
+    '36': 0,
+    '37': 0,
+    '38': 0,
+    '39': 0,
+    '40': 0,
+    '41': 0,
+    '42': 0,
+    '43': 0,
+    '44': 0,
+    '45': 0,
+    '46': 0,
+    '47': 0,
+    '48': 0,
+    '49': 0,
+    '50': 0,
+    '51': 0,
+    '52': 0,
+    '53': 0,
+    '54': 0,
+    '55': 0,
+    '56': 0,
+    '57': 0,
+  });
 
   private combinationsObservable: Observable<Combination[]> = toObservable(
     this.triggerCombinationSearch
@@ -31,68 +95,5 @@ export class SharedStateService {
 
   readonly combinationsDisplayed = toSignal(this.combinationsObservable, {
     initialValue: [] as Combination[],
-  });
-
-  filters = signal({
-    largaTraLettere: 0,
-    // attesa
-    curva: 0,
-    discendente: 0,
-    titubante: 0,
-    aperturaACapoDelleOeA: 0,
-    asteColConcavoADestra: 0,
-    pendente: 0,
-    profusa: 0,
-    fluida: 0,
-    attaccata: 0,
-    // resistenza
-    angoliB: 0,
-    mantieneIlRigo: 0,
-    secca: 0,
-    asteRette: 0,
-    dritta: 0,
-    recisa: 0,
-    austera: 0,
-    // assalto
-    angoliA: 0,
-    intozzata1Modo: 0,
-    ascendente: 0,
-    scattante: 0,
-    asteColConcavoASinistra: 0,
-    ardita: 0,
-    slanciata: 0,
-    impaziente: 0,
-    spavalda: 0,
-    acuta: 0,
-    veloce: 0,
-    solenne: 0,
-    // Attesa
-    intozzata2Modo: 0,
-    contorta: 0,
-    sinuosa: 0,
-    stentata: 0,
-    tentennante: 0,
-    ponderata: 0,
-    calma: 0,
-    filiforme: 0,
-    fine: 0,
-    grossa: 0,
-    grossolana: 0,
-    ricciNascondimento: 0,
-    ricciAmmanieramento: 0,
-    ricciMitomania: 0,
-    vezzosa: 0,
-    accurata: 0,
-    minuta: 0,
-    minuziosa: 0,
-    pedante: 0,
-    uguale: 0,
-    parca: 0,
-    staccata: 0,
-    levigata: 0,
-    angoliC: 0,
-    largaDiLettere: 0,
-    largaTraParole: 0,
-    disugualeMetodicamente: 0,
   });
 }
