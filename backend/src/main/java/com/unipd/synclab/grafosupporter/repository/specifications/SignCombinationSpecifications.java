@@ -19,15 +19,27 @@ import java.util.Map;
 import org.springframework.data.jpa.domain.Specification;
 
 public class SignCombinationSpecifications {
-    private static Predicate buildMatchValuesPredicate(CriteriaBuilder cb, Expression<Integer> backendValueExpression,
+    private static Predicate buildMatchValuesPredicate(CriteriaBuilder cb, Expression<Integer> backendMinExpression,
+            Expression<Integer> backendMaxExpression,
             Integer frontendValue) {
         switch (frontendValue) {
             case 0:
-                return cb.lessThan(backendValueExpression, 5);
+                return cb.and(cb.equal(backendMinExpression, 0), cb.equal(backendMaxExpression, 0));
             case 1:
-                return cb.equal(backendValueExpression, 5);
+                return cb.and(cb.lessThanOrEqualTo(backendMinExpression, 1),
+                        cb.greaterThanOrEqualTo(backendMaxExpression, 2));
             case 2:
-                return cb.greaterThan(backendValueExpression, 5);
+                return cb.and(cb.lessThanOrEqualTo(backendMinExpression, 3),
+                        cb.greaterThanOrEqualTo(backendMaxExpression, 4));
+            case 3:
+                return cb.and(cb.lessThanOrEqualTo(backendMinExpression, 5),
+                        cb.greaterThanOrEqualTo(backendMaxExpression, 5));
+            case 4:
+                return cb.and(cb.lessThanOrEqualTo(backendMinExpression, 6),
+                        cb.greaterThanOrEqualTo(backendMaxExpression, 7));
+            case 5:
+                return cb.and(cb.lessThanOrEqualTo(backendMinExpression, 8),
+                        cb.greaterThanOrEqualTo(backendMaxExpression, 10));
             default:
                 throw new InvalidParameterException("Invalid frontendValue for JPA specification: " + frontendValue);
         }
@@ -57,16 +69,19 @@ public class SignCombinationSpecifications {
             List<Predicate> orConditionsForSatisfactoryMatch = new ArrayList<>();
             for (Map.Entry<Long, Integer> criteriaEntry : referenceCriteriaSigns.entrySet()) {
                 Long criteriaSignId = criteriaEntry.getKey();
-                Integer criteriaFrontendValue = criteriaEntry.getValue();
+                Integer frontendValue = criteriaEntry.getValue();
 
                 Predicate signIdMatchesCriteria = cb.equal(valuatedSignFromCombination.get("signId"), criteriaSignId);
-                Predicate valueMatchesCriteria = buildMatchValuesPredicate(cb, valuatedSignFromCombination.get("value"),
-                        criteriaFrontendValue);
+                Predicate signIsOptional = cb.equal(valuatedSignFromCombination.get("isOptional"), true);
+                Predicate valueMatchesCriteria = buildMatchValuesPredicate(cb,
+                        valuatedSignFromCombination.get("min"), valuatedSignFromCombination.get("max"),
+                        frontendValue);
 
-                orConditionsForSatisfactoryMatch.add(cb.and(signIdMatchesCriteria, valueMatchesCriteria));
+                orConditionsForSatisfactoryMatch
+                        .add(cb.or(signIsOptional, cb.and(signIdMatchesCriteria, valueMatchesCriteria)));
             }
 
-            // Un ValuatedSign è "soddisfacente" se matcha con un entry della map
+            // Un ValuatedSign è "soddisfacente" se metcha con un entry della map
             // referenceCriteriaSigns
 
             Predicate isSatisfactory = cb.or(orConditionsForSatisfactoryMatch.toArray(new Predicate[0]));

@@ -21,9 +21,11 @@ import com.unipd.synclab.grafosupporter.model.SignCombination;
 import com.unipd.synclab.grafosupporter.service.SignCombinationService;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
-@RequestMapping("/signCombinations")
+@RequestMapping("/combinations")
+@CrossOrigin(origins = "http://localhost:4200")
 public class SignCombinationController {
 
     private final SignCombinationService signCombinationService;
@@ -32,9 +34,10 @@ public class SignCombinationController {
         this.signCombinationService = signCombinationService;
     }
 
-    @PostMapping("/withoutValue")
-    public List<SignCombination> getSignCombinationsWithoutValue(@RequestBody Map<Long, Integer> serchedSign) {
-        return signCombinationService.getSignCombinationsWithoutValue(serchedSign);
+    @PostMapping("/withoutNumbers")
+    public List<SignCombination> getSignCombinationsWithoutValue(@RequestBody Map<Long, Integer> searchedSign) {
+        System.out.println("Input ricevuto: " + searchedSign);
+        return signCombinationService.getSignCombinationsWithoutValue(searchedSign);
     }
 
     @GetMapping("/{combination_id}")

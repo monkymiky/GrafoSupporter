@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import jakarta.persistence.Column;
 
 @Entity
 @Getter
@@ -31,9 +32,18 @@ public class SignCombination {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 512)
     private String title;
+    @Column(length = 1024)
     private String shortDescription;
+    @Column(length = 2048)
     private String longDescription;
+    @Column(length = 2048)
+    private String OriginalTextCondition;
+    @Column(length = 125)
+    private String Author;
+    @Column(length = 512)
+    private String ImagePath;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<ValuatedSign> signs;

@@ -13,5 +13,8 @@ import lombok.Setter;
 @Embeddable
 public class ValuatedSign {
     private Long signId;
-    private Integer value;
+    private Integer max;
+    private Integer min;
+    private String classification;
+    private Boolean isOptional;
 }
