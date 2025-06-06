@@ -1,6 +1,6 @@
 <p>combination-list works!</p>
-<button (click)="this.triggerSearch()">cerca</button>
-@for( singleCombination of this.sharedState.combinationsDisplayed(); track
+
+@for( singleCombination of this.combinationsDisplayed(); track
 singleCombination.id){
 <div>
   <app-single-combination

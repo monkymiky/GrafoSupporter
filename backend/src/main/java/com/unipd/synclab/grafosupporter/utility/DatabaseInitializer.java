@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -72,7 +75,7 @@ public class DatabaseInitializer {
                 return null;
         }
 
-        public void populateDatabaseFromJson(String jsonFilePath) {
+        public void populateDatabaseFromJson(String file) {
                 if (signCombinationRepository.count() > 0) {
                         System.out.println("SignCombinationDatabase already initialized.");
                         return;
@@ -80,8 +83,8 @@ public class DatabaseInitializer {
 
                 ObjectMapper objectMapper = new ObjectMapper();
                 try {
-                        InputStream inputStream = new FileInputStream(jsonFilePath);
-                        JsonRoot root = objectMapper.readValue(inputStream, JsonRoot.class);
+
+                        JsonRoot root = objectMapper.readValue(file, JsonRoot.class);
 
                         List<SignCombination> combinations = new ArrayList<>();
 
@@ -128,7 +131,7 @@ public class DatabaseInitializer {
         }
 
         @EventListener(ApplicationReadyEvent.class)
-        public void initBookDatabase() {
+        public void initBookDatabase() throws Exception {
                 if (bookRepository.count() == 0) {
                         ArrayList<Book> books = new ArrayList<Book>();
                         books.add(new Book(null, "Manuale di grafologia", "Girolamo Moretti", 1914,
@@ -249,7 +252,9 @@ public class DatabaseInitializer {
                 }
 
                 populateDatabaseFromJson(
-                                "C:/Users/michi/Desktop/UNI/Stage/GrafoSupporter/backend/src/main/java/com/unipd/synclab/grafosupporter/utility/defaultData.json");
+                                new String(Files.readAllBytes(Paths.get(
+                                                "src/main/resources/defaultData.json")),
+                                                StandardCharsets.UTF_8));
         }
 
 }

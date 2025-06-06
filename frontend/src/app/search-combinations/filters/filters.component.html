@@ -1,1 +1,34 @@
-<p>filters works!</p>
+@if (errorMessage()) {
+<div>{{ errorMessage() }}</div>
+} @if (signsForm) {
+<form [formGroup]="signsForm" (ngSubmit)="onSubmit()">
+  <div formArrayName="rowSelections">
+    @for (signCtrl of rowSelectionsFormArray.controls; track i; let i = $index)
+    {
+    <div>
+      @if (signsData()[i]; as currentSignData) {
+      <h4>
+        {{ currentSignData.signName }} ({{ currentSignData.temperamento }})
+      </h4>
+
+      @for (option of currentSignData.radioOptions; track option.value) {
+      @if(option.value != 0){
+      <label>
+        <input
+          type="radio"
+          [formControlName]="i.toString()"
+          [value]="option.value"
+          (click)="onRadioClick(i, option.value)"
+        />
+      </label>
+      } } } @else {
+      <p>Caricamento dati segno...</p>
+      }
+    </div>
+    }
+  </div>
+  <button type="submit" [disabled]="!signsForm.valid">Applica Filtri</button>
+</form>
+} @else {
+<p>Inizializzazione filtri...</p>
+}
