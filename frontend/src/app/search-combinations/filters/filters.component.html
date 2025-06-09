@@ -1,33 +1,54 @@
 @if (errorMessage()) {
 <div>{{ errorMessage() }}</div>
 } @if (signsForm) {
+
 <form [formGroup]="signsForm" (ngSubmit)="onSubmit()">
-  <div formArrayName="rowSelections">
+  <div formArrayName="rowSelections" class="p-1">
     @for (signCtrl of rowSelectionsFormArray.controls; track i; let i = $index)
     {
     <div>
       @if (signsData()[i]; as currentSignData) {
-      <h4>
-        {{ currentSignData.signName }} ({{ currentSignData.temperamento }})
-      </h4>
+      <div>
+        {{ currentSignData.signName }}
 
-      @for (option of currentSignData.radioOptions; track option.value) {
-      @if(option.value != 0){
-      <label>
-        <input
-          type="radio"
-          [formControlName]="i.toString()"
-          [value]="option.value"
-          (click)="onRadioClick(i, option.value)"
-        />
-      </label>
-      } } } @else {
+        <div class="float-r">
+          @for (option of currentSignData.radioOptions; track option.value) {
+          @if(option.value != 0){
+          <label>
+            @if(option.value == 5){
+            <input
+              class="form-check-input form-check-inline margin-r"
+              type="radio"
+              [formControlName]="i.toString()"
+              [value]="option.value"
+              (click)="onRadioClick(i, option.value)"
+            />
+            }@else{
+            <input
+              class="form-check-input form-check-inline"
+              type="radio"
+              [formControlName]="i.toString()"
+              [value]="option.value"
+              (click)="onRadioClick(i, option.value)"
+            />
+            }
+          </label>
+          } }
+        </div>
+      </div>
+      } @else {
       <p>Caricamento dati segno...</p>
       }
     </div>
     }
   </div>
-  <button type="submit" [disabled]="!signsForm.valid">Applica Filtri</button>
+  <button
+    class="btn btn-outline-success float-r mt-3"
+    type="submit"
+    [disabled]="!signsForm.valid"
+  >
+    Applica Filtri
+  </button>
 </form>
 } @else {
 <p>Inizializzazione filtri...</p>

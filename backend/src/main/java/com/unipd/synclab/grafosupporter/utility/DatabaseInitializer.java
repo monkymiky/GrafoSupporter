@@ -13,7 +13,7 @@ import com.unipd.synclab.grafosupporter.repository.SignCombinationRepository;
 import com.unipd.synclab.grafosupporter.repository.SignRepository;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Optional;
 import java.nio.file.Paths;
@@ -24,8 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import lombok.Data;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.InputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 @Data

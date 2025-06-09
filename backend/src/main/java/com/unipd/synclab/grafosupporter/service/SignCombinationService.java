@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.unipd.synclab.grafosupporter.dto.CombinationResponseDto;
+import com.unipd.synclab.grafosupporter.dto.ValuatedSignDto;
+import com.unipd.synclab.grafosupporter.model.Sign;
 import com.unipd.synclab.grafosupporter.model.SignCombination;
 import com.unipd.synclab.grafosupporter.repository.SignCombinationRepository;
 import com.unipd.synclab.grafosupporter.repository.SignRepository;
@@ -19,6 +22,7 @@ import com.unipd.synclab.grafosupporter.repository.specifications.SignCombinatio
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.transaction.annotation.Transactional;
+import com.unipd.synclab.grafosupporter.utility.SignCombinationResponseMapper;
 
 @Service
 public class SignCombinationService {
@@ -26,6 +30,8 @@ public class SignCombinationService {
     SignRepository signRepository;
     @Autowired
     SignCombinationRepository signCombinationRepository;
+    @Autowired
+    SignCombinationResponseMapper signCombinationResponseMapper;
 
     @Transactional(readOnly = true)
     public SignCombination getSignCombinationsById(Long id) {
@@ -37,13 +43,36 @@ public class SignCombinationService {
     }
 
     @Transactional(readOnly = true)
-    public List<SignCombination> getSignCombinationsWithoutValue(Map<Long, Integer> serchedSign) {
+    public List<CombinationResponseDto> getSignCombinationsWithoutValue(Map<Long, Integer> serchedSign) {
         if (serchedSign == null || serchedSign.isEmpty()) {
-            throw new InvalidParameterException("non è possibile cercare combianzioni che non contengono segni");
+            throw new InvalidParameterException("non è possibile cercare combinazioni che non contengono segni");
         }
+        List<Sign> allSigns = signRepository.findAll();
         Specification<SignCombination> spec = SignCombinationSpecifications
                 .allSignsInCombinationMustMatchCriteria(serchedSign);
-        return signCombinationRepository.findAll(spec);
+        List<SignCombination> foundCombinations = signCombinationRepository.findAll(spec);
+
+        List<List<ValuatedSignDto>> valuatedSignsDtos = foundCombinations.stream()
+                .map(signCombination -> signCombination.getSigns().stream()
+                        .map(sign -> {
+                            Sign foundSign = allSigns.stream()
+                                    .filter(s -> s.getId().equals(sign.getSignId()))
+                                    .findFirst()
+                                    .orElseThrow(() -> new EntityNotFoundException(
+                                            "Sign not found with id: " + sign.getSignId()));
+                            return new ValuatedSignDto(sign.getSignId(), sign.getMax(), sign.getMin(),
+                                    sign.getClassification(), sign.getIsOptional(), foundSign.getName(),
+                                    foundSign.getTemperamento());
+                        })
+                        .collect(Collectors.toList()))
+                .collect(Collectors.toList());
+
+        List<CombinationResponseDto> signCombinationDtos = foundCombinations.stream()
+                .map(signCombination -> signCombinationResponseMapper.toCombinationResponseDto(signCombination,
+                        valuatedSignsDtos.get(foundCombinations.indexOf(signCombination))))
+                .collect(Collectors.toList());
+
+        return signCombinationDtos;
     };
 
     @Transactional

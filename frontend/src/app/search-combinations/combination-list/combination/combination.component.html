@@ -1,15 +1,49 @@
-<p>single combination works!</p>
-<p>{{ this.combination.title }}</p>
-<p>{{ this.combination.shortDescription }}</p>
-<p>{{ this.combination.longDescription }}</p>
-<p>{{ this.combination.imagePath }}</p>
-<p>autore : {{ this.combination.author }}</p>
-@if(this.combination.source?.title){
-<p>{{ this.combination.source?.title }}</p>
-<p>{{ this.combination.source?.edition }}</p>
-<p>{{ this.combination.source?.editor }}</p>
-<p>{{ this.combination.source?.isbn }}</p>
-} @for (sign of this.combination.signs ; track sign.id){
-<p>{{ sign.name }}</p>
-}
-<p>{{ this.combination.originalTextCondition }}</p>
+<div ngbAccordion [closeOthers]="true">
+  <div ngbAccordionItem>
+    <h2 ngbAccordionHeader>
+      <button ngbAccordionButton>
+        <div class="component-flex w-100">
+          <div class="row">
+            <div class="col-3">
+              @for (sign of this.combination.signs ; track sign.id){
+              <p>{{ sign.name }}</p>
+              }
+            </div>
+
+            <div class="col-9">
+              <p>{{ this.combination.title }}</p>
+              <p>{{ this.combination.shortDescription }}</p>
+            </div>
+          </div>
+        </div>
+      </button>
+    </h2>
+    <div ngbAccordionCollapse>
+      <div ngbAccordionBody>
+        <ng-template>
+          <div class="component-flex">
+            <div class="row">
+              <div class="col-3">
+                @for (sign of this.combination.signs ; track sign.id){
+                <p>{{ sign.name }}</p>
+                }
+                <p>{{ this.combination.originalTextCondition }}</p>
+              </div>
+              <div class="col-9">
+                <p>{{ this.combination.longDescription }}</p>
+                <p>{{ this.combination.imagePath }}</p>
+                <p>autore : {{ this.combination.author }}</p>
+                @if(this.combination.source?.title){
+                <p>{{ this.combination.source?.title }}</p>
+                <p>{{ this.combination.source?.edition }}</p>
+                <p>{{ this.combination.source?.editor }}</p>
+                <p>{{ this.combination.source?.isbn }}</p>
+                }
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,11 +15,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.unipd.synclab.grafosupporter.model.Sign;
+import com.unipd.synclab.grafosupporter.dto.CombinationResponseDto;
 import com.unipd.synclab.grafosupporter.model.SignCombination;
 import com.unipd.synclab.grafosupporter.service.SignCombinationService;
 
-import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
@@ -35,7 +33,7 @@ public class SignCombinationController {
     }
 
     @PostMapping("/withoutNumbers")
-    public List<SignCombination> getSignCombinationsWithoutValue(@RequestBody Map<Long, Integer> searchedSign) {
+    public List<CombinationResponseDto> getSignCombinationsWithoutValue(@RequestBody Map<Long, Integer> searchedSign) {
         System.out.println("Input ricevuto: " + searchedSign);
         return signCombinationService.getSignCombinationsWithoutValue(searchedSign);
     }

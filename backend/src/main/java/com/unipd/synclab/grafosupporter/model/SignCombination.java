@@ -2,9 +2,8 @@ package com.unipd.synclab.grafosupporter.model;
 
 import java.util.List;
 
-import jakarta.persistence.Basic;
 import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embedded;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GenerationType;

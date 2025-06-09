@@ -1,0 +1,22 @@
+.rounded {
+  background-color: lightgrey;
+}
+.float-r {
+  float: right;
+}
+.inline {
+  display: inline-block;
+}
+.grado {
+  width: 50px;
+  text-align: center;
+}
+.grado-header {
+  float: right;
+}
+.margin-r {
+  margin-right: 10px;
+}
+.not-under-top-bar {
+  margin-top: 58px;
+}
