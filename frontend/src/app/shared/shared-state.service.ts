@@ -15,6 +15,6 @@ export class SharedStateService {
     }
     return map;
   }
-
+  triggherCombinationsSearch = signal(0);
   filters = signal<Map<number, Grado>>(this.initializeFiltersMap());
 }

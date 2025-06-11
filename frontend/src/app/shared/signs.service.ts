@@ -12,7 +12,7 @@ interface SignApiResponseItem {
   providedIn: 'root',
 })
 export class SignsService {
-  private apiUrl = 'http://localhost:8080/signs';
+  private apiUrl = '/api/signs';
   private http = inject(HttpClient);
 
   getSigns(): Observable<Map<number, [string, string]>> {

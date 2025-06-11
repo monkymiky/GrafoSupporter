@@ -74,7 +74,6 @@ export class FiltersComponent {
         signName,
         temperamento,
         radioOptions: [
-          // Esempio di opzioni, adattale a Grado
           { value: Grado.ASSENTE },
           { value: Grado.BASSO },
           { value: Grado.SOTTO_MEDIA },
@@ -143,5 +142,6 @@ export class FiltersComponent {
     }
 
     this.sharedState.filters.set(newFilterMap);
+    this.sharedState.triggherCombinationsSearch.set(Date.now());
   }
 }

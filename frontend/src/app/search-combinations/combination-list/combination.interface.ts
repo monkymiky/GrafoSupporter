@@ -8,7 +8,7 @@ export interface Combination {
   longDescription: string | null;
   originalTextCondition: string | null;
   author: string;
-  source: Book | null;
+  sourceBook: Book | null;
   imagePath: string | null;
   signs: Sign[];
 }

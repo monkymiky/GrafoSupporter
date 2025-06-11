@@ -1,49 +1,99 @@
-<div ngbAccordion [closeOthers]="true">
-  <div ngbAccordionItem>
-    <h2 ngbAccordionHeader>
-      <button ngbAccordionButton>
-        <div class="component-flex w-100">
-          <div class="row">
-            <div class="col-3">
-              @for (sign of this.combination.signs ; track sign.id){
-              <p>{{ sign.name }}</p>
-              }
-            </div>
+<div class="card combination-card mb-3" [class.is-expanded]="isExpanded">
+  <div class="combination-row row g-0">
+    <div class="signs-column col-auto" (click)="toggleExpand()">
+      @for (sign of combination.signs; track sign.name) {
 
-            <div class="col-9">
-              <p>{{ this.combination.title }}</p>
-              <p>{{ this.combination.shortDescription }}</p>
-            </div>
+      <div>
+        <ng-template #tipContent>
+          @switch( sign.classification){ @case ("S") {Sostanziale} @case ("M") {
+          Modificante } @case ("A") {Accidentale} @default {non classificato}
+          }</ng-template
+        >
+        <div [ngbTooltip]="tipContent" placement="end" class="d-flex z-3">
+          @if(sign.isOptional == true){
+          <div [ngbTooltip]="tipContent2" placement="top" class="d-flex z-3">
+            <ng-template #tipContent2>
+              segno opzionale per la combinazione</ng-template
+            >
+            <i class="bi bi-question-circle text-secondary"></i>
+          </div>
+          }
+
+          <div
+            [class.ms-4]="!sign.isOptional"
+            [class.ms-2]="sign.isOptional"
+            class="text-nowrap me-2"
+          >
+            {{ sign.name }}
+          </div>
+          <div class="ms-auto text-nowrap">
+            {{ sign.min }}-{{ sign.max }}/10
           </div>
         </div>
-      </button>
-    </h2>
-    <div ngbAccordionCollapse>
-      <div ngbAccordionBody>
-        <ng-template>
-          <div class="component-flex">
-            <div class="row">
-              <div class="col-3">
-                @for (sign of this.combination.signs ; track sign.id){
-                <p>{{ sign.name }}</p>
-                }
-                <p>{{ this.combination.originalTextCondition }}</p>
-              </div>
-              <div class="col-9">
-                <p>{{ this.combination.longDescription }}</p>
-                <p>{{ this.combination.imagePath }}</p>
-                <p>autore : {{ this.combination.author }}</p>
-                @if(this.combination.source?.title){
-                <p>{{ this.combination.source?.title }}</p>
-                <p>{{ this.combination.source?.edition }}</p>
-                <p>{{ this.combination.source?.editor }}</p>
-                <p>{{ this.combination.source?.isbn }}</p>
-                }
-              </div>
-            </div>
-          </div>
-        </ng-template>
+      </div>
+      }
+    </div>
+
+    <div class="description-column col" (click)="toggleExpand()">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <p class="fw-bold mb-1">{{ combination.title }}</p>
+
+          <p class="text-muted mb-0">{{ combination.shortDescription }}</p>
+        </div>
+
+        <i
+          class="bi bi-chevron-down ms-3 chevron-icon"
+          [class.rotated]="isExpanded"
+        ></i>
       </div>
     </div>
   </div>
+
+  @if (isExpanded) {
+  <div class="combination-body row g-0">
+    <div class="signs-column-body col-auto">
+      <p>Condizione testuale originale:</p>
+      <p>{{ combination.originalTextCondition }}</p>
+    </div>
+    <div class="col description-column-body">
+      @if(combination.author !== 'Girolamo Moretti'){
+      <div class="float-md-end d-flex gap-1 flex-column mb-3">
+        <button
+          type="button"
+          (click)="this.openConfirmDeletionModal()"
+          class="btn btn-outline-danger"
+        >
+          <i class="bi bi-trash"></i>
+        </button>
+        <button type="button" class="btn btn-outline-warning">
+          <i class="bi bi-pencil-square"></i>
+        </button>
+      </div>
+      }
+
+      <p>{{ combination.longDescription }}</p>
+
+      @if(combination.imagePath) {
+      <img
+        [src]="'assets/imgCombinations/' + combination.imagePath"
+        [alt]="combination.title"
+        class="img-fluid rounded mb-3"
+      />
+      }
+
+      <p><strong>Autore:</strong> {{ combination.author }}</p>
+
+      @if(this.combination.sourceBook?.title){
+      <p>
+        Fonte: {{ this.combination.sourceBook?.title }}, Anno pubblicazione:
+        {{ this.combination.sourceBook?.pubblicationJear }}, Edito da
+        {{ this.combination.sourceBook?.editor }}, ISBN :
+        {{ this.combination.sourceBook?.isbn }}
+      </p>
+      }
+    </div>
+  </div>
+
+  }
 </div>

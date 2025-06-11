@@ -8,7 +8,7 @@ import { Grado } from '../search-combinations/filters/filter.interface';
   providedIn: 'root',
 })
 export class CombinationService {
-  private apiUrl = 'http://localhost:8080/combinations';
+  private apiUrl = '/api/combinations';
   private http = inject(HttpClient);
 
   searchCombinations(filters: Map<number, number>): Observable<Combination[]> {
@@ -25,19 +25,19 @@ export class CombinationService {
     );
   }
 
-  createCombinations(combination: Combination): Observable<Combination> {
+  createCombination(combination: Combination): Observable<Combination> {
     const { id, ...combinationData } = combination;
     return this.http.post<Combination>(this.apiUrl, combinationData);
   }
 
-  updateCombinations(
+  updateCombination(
     id: number,
     combination: Combination
   ): Observable<Combination> {
     return this.http.put<Combination>(`${this.apiUrl}/${id}`, combination);
   }
 
-  deleteCombinations(id: number): Observable<void> {
+  deleteCombination(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

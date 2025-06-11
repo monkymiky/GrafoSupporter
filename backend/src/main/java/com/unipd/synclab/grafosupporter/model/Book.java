@@ -25,6 +25,6 @@ public class Book {
     private String title;
     private String writer;
     private Integer pubblicationJear;
-    private String etitor;
+    private String editor;
     private String isbn;
 }

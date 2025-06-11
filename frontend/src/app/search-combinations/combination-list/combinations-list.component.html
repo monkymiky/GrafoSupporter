@@ -1,0 +1,8 @@
+<div class="container-fluid">
+  @for(singleCombination of this.combinationsDisplayed(); track
+  singleCombination.id){
+  <app-single-combination
+    [combination]="singleCombination"
+  ></app-single-combination>
+  }
+</div>

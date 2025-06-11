@@ -9,6 +9,6 @@ export interface Sign {
   name: string;
   max: number;
   min: number;
-  optional: boolean;
+  isOptional: boolean;
   classification: classification;
 }

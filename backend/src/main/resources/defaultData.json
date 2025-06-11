@@ -1,13 +1,45 @@
 {
   "combinazioni": [
     {
+      "title": "Prova : Orgoglio con spinta alla reazione (Angoli A elevati)",
+      "description_short": "Prova : Angoli A sopra i 5/10 conferiscono all'orgoglio una tendenza reattiva.",
+      "description_long": "Prova : Quando il segno Angoli A supera i 5/10, esso fornisce all'orgoglio (definito da altri segni come Curva e Marcata) la spinta a reagire di fronte a percepite minacce o svalutazioni dell'Io. Questa reazione può essere difensiva o, in gradi più elevati, sfociare in permalosità.",
+      "original_text_condition": "Prova : Angoli A. Danno, sopra i 5/10, all'orgoglio la spinta alla reazione.",
+      "author": "Utente",
+      "source": null,
+      "imagePath": "scrittura.jpg",
+      "signs": [
+        {
+          "id": 1,
+          "max": 10,
+          "min": 5,
+          "optional": false,
+          "classification": "M"
+        },
+        {
+          "id": 2,
+          "max": 8,
+          "min": 5,
+          "optional": false,
+          "classification": "S"
+        },
+        {
+          "id": 43,
+          "max": 8,
+          "min": 6,
+          "optional": true,
+          "classification": "A"
+        }
+      ]
+    },
+    {
       "title": "Orgoglio con spinta alla reazione (Angoli A elevati)",
       "description_short": "Angoli A sopra i 5/10 conferiscono all'orgoglio una tendenza reattiva.",
       "description_long": "Quando il segno Angoli A supera i 5/10, esso fornisce all'orgoglio (definito da altri segni come Curva e Marcata) la spinta a reagire di fronte a percepite minacce o svalutazioni dell'Io. Questa reazione può essere difensiva o, in gradi più elevati, sfociare in permalosità.",
       "original_text_condition": "Angoli A. Danno, sopra i 5/10, all'orgoglio la spinta alla reazione.",
-      "author": "Girolamo Moretti",
-      "source": 2,
-      "imagePath": "placeholder",
+      "author": "Utente",
+      "source": null,
+      "imagePath": "scrittura.jpg",
       "signs": [
         {
           "id": 19,
@@ -107,7 +139,7 @@
       "original_text_condition": "Nella lussuria curva aumenta l'efietto del temperamento della cessione, si dona.",
       "author": "Girolamo Moretti",
       "source": 2,
-      "imagePath": "placeholder",
+      "imagePath": "scrittura2.jpg",
       "signs": [
         {
           "id": 2,
@@ -200,7 +232,7 @@
       "imagePath": "placeholder_SADP_pag50_fig8.png",
       "signs": [
         {
-          "id": 19,
+          "id": 1,
           "max": 10,
           "min": 7,
           "optional": false,
@@ -391,7 +423,7 @@
       "original_text_condition": "Angoli B non sopra i 5/10 rendono Curva tenace. Compatibilità indiretta.",
       "author": "Girolamo Moretti",
       "source": 5,
-      "imagePath": "placeholder_GP_pag63.png",
+      "imagePath": "scrittura2.jpg",
       "signs": [
         {
           "id": 2,

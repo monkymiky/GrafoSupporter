@@ -1,17 +1,18 @@
 import { Component, inject, signal } from '@angular/core';
-import { SingleCombination } from './combination/single-combination.component';
+import { SingleCombination } from './combination/combination.component';
 import { CombinationService } from '../../shared/combinations.service';
 import { SignsService } from '../../shared/signs.service';
 import { catchError, Observable, of, startWith, switchMap, tap } from 'rxjs';
 import { Combination } from './combination.interface';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { SharedStateService } from '../../shared/shared-state.service';
+import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-combination-list',
-  imports: [SingleCombination],
-  templateUrl: './combination-list.component.html',
-  styleUrl: './combination-list.component.css',
+  imports: [SingleCombination, NgbAccordionModule],
+  templateUrl: './combinations-list.component.html',
+  styleUrl: './combinations-list.component.css',
 })
 export class CombinationListComponent {
   combiantionsService = inject(CombinationService);
@@ -20,7 +21,7 @@ export class CombinationListComponent {
   errorMessage = signal('');
 
   private combinationsObservable: Observable<Combination[]> = toObservable(
-    this.sharedState.filters
+    this.sharedState.triggherCombinationsSearch
   ).pipe(
     switchMap(() => {
       console.log('signal ricevuto' + this.sharedState.filters);

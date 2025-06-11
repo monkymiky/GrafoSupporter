@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FiltersComponent } from '../filters/filters.component';
-import { CombinationListComponent } from '../combination-list/combination-list.component';
+import { CombinationListComponent } from '../combination-list/combinations-list.component';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({

@@ -105,10 +105,8 @@ public class DatabaseInitializer {
                                         }
                                 }
 
-                                com.unipd.synclab.grafosupporter.model.Book book = processBook(jc.getSource(),
-                                                jc.getTitle());
-
                                 SignCombination sc = new SignCombination();
+
                                 sc.setTitle(jc.getTitle());
                                 sc.setShortDescription(jc.getDescription_short());
                                 sc.setLongDescription(jc.getDescription_long());
@@ -116,7 +114,11 @@ public class DatabaseInitializer {
                                 sc.setAuthor(jc.getAuthor());
                                 sc.setImagePath(jc.getImagePath());
                                 sc.setSigns(valuatedSigns);
-                                sc.setSourceBook(book);
+                                if (jc.getSource() != null) {
+                                        com.unipd.synclab.grafosupporter.model.Book book = processBook(jc.getSource(),
+                                                        jc.getTitle());
+                                        sc.setSourceBook(book);
+                                }
 
                                 combinations.add(sc);
                         }
@@ -181,67 +183,107 @@ public class DatabaseInitializer {
 
                 if (signRepository.count() == 0) {
                         ArrayList<Sign> signs = new ArrayList<Sign>();
-                        signs.add(new Sign(null, "largaTraLettere", null));
+                        signs.add(new Sign(null, "Largo tra lettere", null));
                         // temperamento Cessione
-                        signs.add(new Sign(null, "curva", "Cessione"));
-                        signs.add(new Sign(null, "discendente", "Cessione"));
-                        signs.add(new Sign(null, "titubante", "Cessione"));
-                        signs.add(new Sign(null, "aperturaACapoDelleOeA", "Cessione"));
-                        signs.add(new Sign(null, "asteColConcavoADestra", "Cessione"));
-                        signs.add(new Sign(null, "pendente", "Cessione"));
-                        signs.add(new Sign(null, "profusa", "Cessione"));
-                        signs.add(new Sign(null, "fluida", "Cessione"));
-                        signs.add(new Sign(null, "attaccata", "Cessione"));
+                        signs.add(new Sign(null, "Curva", "Cessione"));
+                        signs.add(new Sign(null, "Discendente", "Cessione"));
+                        signs.add(new Sign(null, "Titubante", "Cessione"));
+                        signs.add(new Sign(null, "Apertura a capo O,A", "Cessione"));
+                        signs.add(new Sign(null, "Aste concave a destra", "Cessione"));
+                        signs.add(new Sign(null, "Pendente", "Cessione"));
+                        signs.add(new Sign(null, "Profusa", "Cessione"));
+                        signs.add(new Sign(null, "Fluida", "Cessione"));
+                        signs.add(new Sign(null, "Attaccata", "Cessione"));
                         // temperamento Resistenza
-                        signs.add(new Sign(null, "angoliB", "Resistenza"));
-                        signs.add(new Sign(null, "mantieneIlRigo", "Resistenza"));
-                        signs.add(new Sign(null, "secca", "Resistenza"));
-                        signs.add(new Sign(null, "asteRette", "Resistenza"));
-                        signs.add(new Sign(null, "dritta", "Resistenza"));
-                        signs.add(new Sign(null, "recisa", "Resistenza"));
-                        signs.add(new Sign(null, "austera", "Resistenza"));
+                        signs.add(new Sign(null, "Angoli B", "Resistenza"));
+                        signs.add(new Sign(null, "Mantiene il Rigo", "Resistenza"));
+                        signs.add(new Sign(null, "Secca", "Resistenza"));
+                        signs.add(new Sign(null, "Aste Rette", "Resistenza"));
+                        signs.add(new Sign(null, "Dritta", "Resistenza"));
+                        signs.add(new Sign(null, "Recisa", "Resistenza"));
+                        signs.add(new Sign(null, "Austera", "Resistenza"));
                         signs.add(new Sign(null, "Chiara", "Resistenza"));
                         // temperamento Assalto
-                        signs.add(new Sign(null, "angoliA", "Assalto"));
-                        signs.add(new Sign(null, "intozzata1Modo", "Assalto"));
-                        signs.add(new Sign(null, "ascendente", "Assalto"));
-                        signs.add(new Sign(null, "scattante", "Assalto"));
-                        signs.add(new Sign(null, "asteColConcavoASinistra", "Assalto"));
-                        signs.add(new Sign(null, "ardita", "Assalto"));
-                        signs.add(new Sign(null, "slanciata", "Assalto"));
-                        signs.add(new Sign(null, "impaziente", "Assalto"));
-                        signs.add(new Sign(null, "spavalda", "Assalto"));
-                        signs.add(new Sign(null, "acuta", "Assalto"));
-                        signs.add(new Sign(null, "veloce", "Assalto"));
-                        signs.add(new Sign(null, "solenne", "Assalto"));
+                        signs.add(new Sign(null, "Angoli A", "Assalto"));
+                        signs.add(new Sign(null, "Intozzata I Modo", "Assalto"));
+                        signs.add(new Sign(null, "Ascendente", "Assalto"));
+                        signs.add(new Sign(null, "Scattante", "Assalto"));
+                        signs.add(new Sign(null, "Aste concave a sinistra", "Assalto"));
+                        signs.add(new Sign(null, "Ardita", "Assalto"));
+                        signs.add(new Sign(null, "Slanciata", "Assalto"));
+                        signs.add(new Sign(null, "Impaziente", "Assalto"));
+                        signs.add(new Sign(null, "Spavalda", "Assalto"));
+                        signs.add(new Sign(null, "Acuta", "Assalto"));
+                        signs.add(new Sign(null, "Veloce", "Assalto"));
+                        signs.add(new Sign(null, "Solenne", "Assalto"));
                         // temperamento Attesa
-                        signs.add(new Sign(null, "intozzata2Modo", "Attesa"));
-                        signs.add(new Sign(null, "contorta", "Attesa"));
-                        signs.add(new Sign(null, "sinuosa", "Attesa"));
-                        signs.add(new Sign(null, "stentata", "Attesa"));
-                        signs.add(new Sign(null, "tentennante", "Attesa"));
-                        signs.add(new Sign(null, "ponderata", "Attesa"));
-                        signs.add(new Sign(null, "calma", "Attesa"));
-                        signs.add(new Sign(null, "filiforme", "Attesa"));
-                        signs.add(new Sign(null, "fine", "Attesa"));
-                        signs.add(new Sign(null, "grossa", "Attesa"));
-                        signs.add(new Sign(null, "grossolana", "Attesa"));
-                        signs.add(new Sign(null, "ricciNascondimento", "Attesa"));
-                        signs.add(new Sign(null, "ricciAmmanieramento", "Attesa"));
-                        signs.add(new Sign(null, "ricciMitomania", "Attesa"));
-                        signs.add(new Sign(null, "vezzosa", "Attesa"));
-                        signs.add(new Sign(null, "accurata", "Attesa"));
-                        signs.add(new Sign(null, "minuta", "Attesa"));
-                        signs.add(new Sign(null, "minuziosa", "Attesa"));
-                        signs.add(new Sign(null, "pedante", "Attesa"));
-                        signs.add(new Sign(null, "uguale", "Attesa"));
-                        signs.add(new Sign(null, "parca", "Attesa"));
-                        signs.add(new Sign(null, "staccata", "Attesa"));
-                        signs.add(new Sign(null, "levigata", "Attesa"));
-                        signs.add(new Sign(null, "angoliC", "Attesa"));
-                        signs.add(new Sign(null, "largaDiLettere", "Attesa"));
-                        signs.add(new Sign(null, "largaTraParole", "Attesa"));
-                        signs.add(new Sign(null, "disugualeMetodicamente", "Attesa"));
+                        signs.add(new Sign(null, "Intozzata II Modo", "Attesa"));
+                        signs.add(new Sign(null, "Contorta", "Attesa"));
+                        signs.add(new Sign(null, "Sinuosa", "Attesa"));
+                        signs.add(new Sign(null, "Stentata", "Attesa"));
+                        signs.add(new Sign(null, "Tentennante", "Attesa"));
+                        signs.add(new Sign(null, "Ponderata", "Attesa"));
+                        signs.add(new Sign(null, "Calma", "Attesa"));
+                        signs.add(new Sign(null, "Filiforme", "Attesa"));
+                        signs.add(new Sign(null, "Fine", "Attesa"));
+                        signs.add(new Sign(null, "Grossa", "Attesa"));
+                        signs.add(new Sign(null, "Grossolana", "Attesa"));
+                        signs.add(new Sign(null, "Ricci Nascondimento", "Attesa"));
+                        signs.add(new Sign(null, "Ricci Ammanieramento", "Attesa"));
+                        signs.add(new Sign(null, "Ricci Mitomania", "Attesa"));
+                        signs.add(new Sign(null, "Vezzosa", "Attesa"));
+                        signs.add(new Sign(null, "Accurata", "Attesa"));
+                        signs.add(new Sign(null, "Minuta", "Attesa"));
+                        signs.add(new Sign(null, "Minuziosa", "Attesa"));
+                        signs.add(new Sign(null, "Pedante", "Attesa"));
+                        signs.add(new Sign(null, "Uguale", "Attesa"));
+                        signs.add(new Sign(null, "Parca", "Attesa"));
+                        signs.add(new Sign(null, "Staccata", "Attesa"));
+                        signs.add(new Sign(null, "Levigata", "Attesa"));
+                        signs.add(new Sign(null, "Angoli C", "Attesa"));
+                        signs.add(new Sign(null, "Largo di lettere", "Attesa"));
+                        signs.add(new Sign(null, "Largo tra parole", "Attesa"));
+                        signs.add(new Sign(null, "Disuguale Metodico", "Attesa"));
+
+                        // altri segni
+                        // temp cessione
+                        signs.add(new Sign(null, "Flessuosa", "Cessione"));
+                        signs.add(new Sign(null, "Sciatta", "Cessione"));
+                        signs.add(new Sign(null, "Flaccida", "Cessione"));
+                        signs.add(new Sign(null, "Rilasciata", "Cessione"));
+                        signs.add(new Sign(null, "Ricci Flemma", "Cessione"));
+                        signs.add(new Sign(null, "Dilatata", "Cessione"));
+                        signs.add(new Sign(null, "Frammentata", "Cessione"));
+                        signs.add(new Sign(null, "Disordinata", "Cessione"));
+
+                        // temp resistenza
+                        signs.add(new Sign(null, "Lettere Addossate", "Resistenza"));
+                        signs.add(new Sign(null, "Legata", "Resistenza"));
+                        signs.add(new Sign(null, "Piantata sul rigo", "Resistenza"));
+                        signs.add(new Sign(null, "Allungata o Alta", "Resistenza"));
+                        signs.add(new Sign(null, "Stretto di lettere", "Resistenza"));
+                        signs.add(new Sign(null, "Stretto tra lettere", "Resistenza"));
+                        signs.add(new Sign(null, "Nitida", "Resistenza"));
+                        signs.add(new Sign(null, "Aggrovigliata", "Resistenza"));
+                        signs.add(new Sign(null, "Accartocciata", "Resistenza"));
+
+                        // temp assalto
+                        signs.add(new Sign(null, "Artritica", "Assalto"));
+                        signs.add(new Sign(null, "Irta", "Assalto"));
+                        signs.add(new Sign(null, "Ampollosa", "Assalto"));
+                        signs.add(new Sign(null, "Dinamica", "Assalto"));
+                        signs.add(new Sign(null, "Ricci Spavalderia", "Assalto"));
+                        // temp attesa
+                        signs.add(new Sign(null, "Parallela", "Attesa"));
+                        signs.add(new Sign(null, "Calibro Piccolo", "Attesa"));
+                        signs.add(new Sign(null, "Oscura", "Attesa"));
+                        signs.add(new Sign(null, "Lenta", "Attesa"));
+                        signs.add(new Sign(null, "Elegante", "Attesa"));
+                        signs.add(new Sign(null, "Studiata", "Attesa"));
+                        signs.add(new Sign(null, "Ricci Sobrietà", "Attesa"));
+                        signs.add(new Sign(null, "Ricci Soggettivismo", "Attesa"));
+                        signs.add(new Sign(null, "Ricci Stentatezza", "Attesa"));
+                        signs.add(new Sign(null, "Ricci Vezzosità", "Attesa"));
 
                         signRepository.saveAll(signs);
                         System.out.println("SignDatabase initialized with default Signs.");
