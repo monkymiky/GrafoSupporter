@@ -2,8 +2,6 @@ package com.unipd.synclab.grafosupporter.model;
 
 import java.util.List;
 
-import jakarta.persistence.ElementCollection;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GenerationType;
@@ -13,6 +11,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +26,7 @@ import jakarta.persistence.Column;
 @NoArgsConstructor
 @NamedEntityGraph(name = "SignCombination.withSignsAndBooks", attributeNodes = { @NamedAttributeNode("signs"),
         @NamedAttributeNode("sourceBook") })
-public class SignCombination {
+public class Combination {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -44,9 +44,9 @@ public class SignCombination {
     @Column(length = 512)
     private String ImagePath;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "combination", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ValuatedSign> signs;
-    // private Img img;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", nullable = true)
     private Book sourceBook;

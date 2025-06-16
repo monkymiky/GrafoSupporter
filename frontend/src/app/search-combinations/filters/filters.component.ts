@@ -11,13 +11,9 @@ import {
   ReactiveFormsModule,
   FormBuilder,
   FormGroup,
-  Validators,
   FormControl,
   FormArray,
 } from '@angular/forms';
-import { catchError, Observable, of, startWith, switchMap, tap } from 'rxjs';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { SignsService } from '../../shared/signs.service';
 import { Grado } from './filter.interface';
 import { SharedStateService } from '../../shared/shared-state.service';
 
@@ -36,39 +32,15 @@ interface SingleSignForm {
 })
 export class FiltersComponent {
   private formBuilder = inject(FormBuilder);
-  private signsService = inject(SignsService);
   private sharedState = inject(SharedStateService);
 
   signsForm!: FormGroup;
 
   readonly errorMessage = signal<string | null>(null);
 
-  triggerSignsRequest = signal(0);
-  private signsObservable: Observable<Map<number, [string, string]>> =
-    toObservable(this.triggerSignsRequest).pipe(
-      startWith([]),
-      switchMap(() => {
-        return this.signsService.getSigns().pipe(
-          tap(() => this.errorMessage.set('')),
-          catchError((err) => {
-            this.errorMessage.set(`Errore caricamento segni : ${err.message}`);
-            return of(
-              new Map<number, [string, string]>() as Map<
-                number,
-                [string, string]
-              >
-            );
-          })
-        );
-      })
-    );
-  signs = toSignal(this.signsObservable, {
-    initialValue: new Map<number, [string, string]>(),
-  });
-
   signsData: Signal<SingleSignForm[]> = computed(() => {
     const result: SingleSignForm[] = [];
-    for (const [id, [signName, temperamento]] of this.signs()) {
+    for (const [id, [signName, temperamento]] of this.sharedState.signs()) {
       result.push({
         id,
         signName,
@@ -100,7 +72,7 @@ export class FiltersComponent {
   }
 
   ngOnInit(): void {
-    this.triggerSignsRequest.set(Date.now());
+    this.sharedState.triggerSignsRequest.set(Date.now());
   }
   get rowSelectionsFormArray(): FormArray {
     return this.signsForm.get('rowSelections') as FormArray;

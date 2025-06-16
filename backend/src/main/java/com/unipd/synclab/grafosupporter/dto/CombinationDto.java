@@ -6,12 +6,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-import com.unipd.synclab.grafosupporter.model.Book;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CombinationResponseDto {
+public class CombinationDto {
 
     private Long id;
     private String title;
@@ -21,5 +19,5 @@ public class CombinationResponseDto {
     private String Author;
     private String ImagePath;
     private List<ValuatedSignDto> signs;
-    private Book sourceBook;
+    private BookDto sourceBook;
 }

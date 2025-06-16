@@ -1,11 +1,11 @@
-enum classification {
+export enum classification {
   Sostanziale = 'S',
   Modificante = 'M',
   Accidentale = 'A',
 }
 
 export interface Sign {
-  id: number;
+  signId: number;
   name: string;
   max: number;
   min: number;

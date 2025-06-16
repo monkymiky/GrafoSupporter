@@ -1,6 +1,10 @@
 package com.unipd.synclab.grafosupporter.model;
 
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +14,20 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Embeddable
+@Entity
 public class ValuatedSign {
-    private Long signId;
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "sign_id")
+    private Sign sign;
+
+    @ManyToOne
+    @JoinColumn(name = "combination_id")
+    private Combination combination;
+
     private Integer max;
     private Integer min;
     private String classification;

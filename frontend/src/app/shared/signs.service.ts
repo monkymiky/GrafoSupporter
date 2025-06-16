@@ -15,22 +15,18 @@ export class SignsService {
   private apiUrl = '/api/signs';
   private http = inject(HttpClient);
 
-  getSigns(): Observable<Map<number, [string, string]>> {
+  getSigns(): Observable<[number, [string, string]][]> {
     return this.http.get<SignApiResponseItem[]>(this.apiUrl).pipe(
       map((responseArray) => {
-        const newMap = new Map<number, [string, string]>();
+        const signs = [] as [number, [string, string]][];
         if (responseArray && Array.isArray(responseArray)) {
-          // Controllo di sicurezza
           for (const item of responseArray) {
-            // Gestisci il caso in cui temperamento è null.
-            // Decidi cosa vuoi mettere nella mappa: una stringa vuota, "N/A", o mantenere null
-            // e adattare il componente. Per ora, uso una stringa vuota se null.
             const temperamentoValue =
               item.temperamento === null ? '' : item.temperamento;
-            newMap.set(item.id, [item.name, temperamentoValue]);
+            signs.push([item.id, [item.name, temperamentoValue]]);
           }
         }
-        return newMap;
+        return signs;
       })
     );
   }

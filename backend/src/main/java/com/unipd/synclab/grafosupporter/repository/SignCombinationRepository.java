@@ -9,16 +9,16 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import com.unipd.synclab.grafosupporter.model.SignCombination;
+import com.unipd.synclab.grafosupporter.model.Combination;
 
 public interface SignCombinationRepository
-                extends JpaRepository<SignCombination, Long>, JpaSpecificationExecutor<SignCombination> {
+                extends JpaRepository<Combination, Long>, JpaSpecificationExecutor<Combination> {
 
         @Override
         @EntityGraph(value = "SignCombination.withSignsAndBooks")
-        List<SignCombination> findAll(Specification<SignCombination> spec);
+        List<Combination> findAll(Specification<Combination> spec);
 
         @Override
         @EntityGraph(value = "SignCombination.withSignsAndBooks")
-        Page<SignCombination> findAll(Specification<SignCombination> spec, Pageable pageable);
+        Page<Combination> findAll(Specification<Combination> spec, Pageable pageable);
 }

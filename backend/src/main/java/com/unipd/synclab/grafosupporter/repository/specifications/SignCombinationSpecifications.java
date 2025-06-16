@@ -1,6 +1,6 @@
 package com.unipd.synclab.grafosupporter.repository.specifications;
 
-import com.unipd.synclab.grafosupporter.model.SignCombination;
+import com.unipd.synclab.grafosupporter.model.Combination;
 import com.unipd.synclab.grafosupporter.model.ValuatedSign;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -45,19 +45,19 @@ public class SignCombinationSpecifications {
         }
     }
 
-    public static Specification<SignCombination> allSignsInCombinationMustMatchCriteria(
+    public static Specification<Combination> allSignsInCombinationMustMatchCriteria(
             Map<Long, Integer> referenceCriteriaSigns) {
         // la condizione "tutti i segni soddisfano la condizione x" equivale a dire
         // "non esiste alcun segno che non soddisfa x"
-        return (Root<SignCombination> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
+        return (Root<Combination> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
 
             if (referenceCriteriaSigns == null || referenceCriteriaSigns.isEmpty()) {
                 return cb.disjunction();
             }
 
             Subquery<Long> subquery = query.subquery(Long.class);
-            Root<SignCombination> subRoot = subquery.correlate(root);
-            Join<SignCombination, ValuatedSign> valuatedSignFromCombination = subRoot.join("signs");
+            Root<Combination> subRoot = subquery.correlate(root);
+            Join<Combination, ValuatedSign> valuatedSignFromCombination = subRoot.join("signs");
 
             subquery.select(cb.literal(1L));
             // Identifico le combinazioni "problematiche" per poi escluderle e tenere solo
@@ -71,7 +71,8 @@ public class SignCombinationSpecifications {
                 Long criteriaSignId = criteriaEntry.getKey();
                 Integer frontendValue = criteriaEntry.getValue();
 
-                Predicate signIdMatchesCriteria = cb.equal(valuatedSignFromCombination.get("signId"), criteriaSignId);
+                Predicate signIdMatchesCriteria = cb.equal(valuatedSignFromCombination.get("sign").get("id"),
+                        criteriaSignId);
                 Predicate signIsOptional = cb.equal(valuatedSignFromCombination.get("isOptional"), true);
                 Predicate valueMatchesCriteria = buildMatchValuesPredicate(cb,
                         valuatedSignFromCombination.get("min"), valuatedSignFromCombination.get("max"),

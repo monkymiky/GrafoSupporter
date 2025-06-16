@@ -1,0 +1,10 @@
+@media screen and (min-width: 768px) {
+  .labels {
+    display: none;
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 808px) {
+  .select-number {
+    padding-right: 0.2rem;
+  }
+}

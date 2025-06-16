@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.unipd.synclab.grafosupporter.model.Book;
 import com.unipd.synclab.grafosupporter.model.Sign;
-import com.unipd.synclab.grafosupporter.model.SignCombination;
+import com.unipd.synclab.grafosupporter.model.Combination;
 import com.unipd.synclab.grafosupporter.model.ValuatedSign;
 import com.unipd.synclab.grafosupporter.repository.BookRepository;
 import com.unipd.synclab.grafosupporter.repository.SignCombinationRepository;
@@ -25,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import lombok.Data;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.io.InputStream;
+import org.springframework.core.io.ClassPathResource;
 
 @Data
 class JsonSign {
@@ -78,22 +80,29 @@ public class DatabaseInitializer {
                         System.out.println("SignCombinationDatabase already initialized.");
                         return;
                 }
-
+                ClassPathResource resource = new ClassPathResource("defaultData.json");
                 ObjectMapper objectMapper = new ObjectMapper();
-                try {
-
-                        JsonRoot root = objectMapper.readValue(file, JsonRoot.class);
-
-                        List<SignCombination> combinations = new ArrayList<>();
+                try (InputStream inputStream = resource.getInputStream()) {
+                        JsonRoot root = objectMapper.readValue(inputStream, JsonRoot.class);
+                        List<Combination> combinations = new ArrayList<>();
 
                         for (JsonCombination jc : root.getCombinazioni()) {
+                                Combination combination = new Combination();
+                                combination.setTitle(jc.getTitle());
+                                combination.setShortDescription(jc.getDescription_short());
+                                combination.setLongDescription(jc.getDescription_long());
+                                combination.setOriginalTextCondition(jc.getOriginal_text_condition());
+                                combination.setAuthor(jc.getAuthor());
+                                combination.setImagePath(jc.getImagePath());
+
                                 List<ValuatedSign> valuatedSigns = new ArrayList<>();
                                 for (JsonSign js : jc.getSigns()) {
                                         Optional<Sign> optionalSign = signRepository.findById(js.getId());
                                         if (optionalSign.isPresent()) {
                                                 Sign foundSign = optionalSign.get();
                                                 ValuatedSign vs = new ValuatedSign();
-                                                vs.setSignId(foundSign.getId());
+                                                vs.setSign(foundSign);
+                                                vs.setCombination(combination);
                                                 vs.setMin(js.getMin());
                                                 vs.setMax(js.getMax());
                                                 vs.setIsOptional(js.getOptional());
@@ -104,23 +113,15 @@ public class DatabaseInitializer {
                                                                 + " non trovato per combinazione " + jc.getTitle());
                                         }
                                 }
+                                combination.setSigns(valuatedSigns);
 
-                                SignCombination sc = new SignCombination();
-
-                                sc.setTitle(jc.getTitle());
-                                sc.setShortDescription(jc.getDescription_short());
-                                sc.setLongDescription(jc.getDescription_long());
-                                sc.setOriginalTextCondition(jc.getOriginal_text_condition());
-                                sc.setAuthor(jc.getAuthor());
-                                sc.setImagePath(jc.getImagePath());
-                                sc.setSigns(valuatedSigns);
                                 if (jc.getSource() != null) {
                                         com.unipd.synclab.grafosupporter.model.Book book = processBook(jc.getSource(),
                                                         jc.getTitle());
-                                        sc.setSourceBook(book);
+                                        combination.setSourceBook(book);
                                 }
 
-                                combinations.add(sc);
+                                combinations.add(combination);
                         }
 
                         signCombinationRepository.saveAll(combinations);

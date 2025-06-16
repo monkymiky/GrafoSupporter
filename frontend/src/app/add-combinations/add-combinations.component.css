@@ -1,0 +1,24 @@
+.header-signs {
+  margin-right: calc(3.5rem + 24px);
+}
+@media screen and (min-width: 1200px) {
+  .intervallo-header-sign {
+    margin-left: 3.5rem;
+  }
+}
+@media screen and (max-width: 767.98px) {
+  .header-labels {
+    display: none;
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 991.98px) {
+  .intervallo-header-sign {
+    margin-left: 0;
+  }
+  .sign-header-sign {
+    flex-grow: 1;
+  }
+  .classificazione-header-sign {
+    margin-right: 11vw;
+  }
+}

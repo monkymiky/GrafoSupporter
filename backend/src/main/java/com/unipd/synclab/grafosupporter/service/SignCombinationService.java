@@ -1,5 +1,7 @@
 package com.unipd.synclab.grafosupporter.service;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.InvalidParameterException;
 
 import java.util.List;
@@ -11,10 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.unipd.synclab.grafosupporter.dto.CombinationResponseDto;
+import com.unipd.synclab.grafosupporter.dto.CombinationDto;
 import com.unipd.synclab.grafosupporter.dto.ValuatedSignDto;
 import com.unipd.synclab.grafosupporter.model.Sign;
-import com.unipd.synclab.grafosupporter.model.SignCombination;
+import com.unipd.synclab.grafosupporter.model.Combination;
 import com.unipd.synclab.grafosupporter.repository.SignCombinationRepository;
 import com.unipd.synclab.grafosupporter.repository.SignRepository;
 import com.unipd.synclab.grafosupporter.repository.specifications.SignCombinationSpecifications;
@@ -22,7 +24,7 @@ import com.unipd.synclab.grafosupporter.repository.specifications.SignCombinatio
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.transaction.annotation.Transactional;
-import com.unipd.synclab.grafosupporter.utility.SignCombinationResponseMapper;
+import com.unipd.synclab.grafosupporter.utility.SignCombinationMapper;
 
 @Service
 public class SignCombinationService {
@@ -31,11 +33,13 @@ public class SignCombinationService {
     @Autowired
     SignCombinationRepository signCombinationRepository;
     @Autowired
-    SignCombinationResponseMapper signCombinationResponseMapper;
+    SignCombinationMapper signCombinationResponseMapper;
+    @Autowired
+    FileStorageService fileStorageService;
 
     @Transactional(readOnly = true)
-    public SignCombination getSignCombinationsById(Long id) {
-        Optional<SignCombination> signCombination = signCombinationRepository.findById(id);
+    public Combination getSignCombinationsById(Long id) {
+        Optional<Combination> signCombination = signCombinationRepository.findById(id);
         if (signCombination.isPresent())
             return signCombination.get();
         else
@@ -43,46 +47,55 @@ public class SignCombinationService {
     }
 
     @Transactional(readOnly = true)
-    public List<CombinationResponseDto> getSignCombinationsWithoutValue(Map<Long, Integer> serchedSign) {
+    public List<CombinationDto> getSignCombinationsWithoutValue(Map<Long, Integer> serchedSign) {
         if (serchedSign == null || serchedSign.isEmpty()) {
             throw new InvalidParameterException("non è possibile cercare combinazioni che non contengono segni");
         }
-        List<Sign> allSigns = signRepository.findAll();
-        Specification<SignCombination> spec = SignCombinationSpecifications
+        // List<Sign> allSigns = signRepository.findAll();
+        Specification<Combination> spec = SignCombinationSpecifications
                 .allSignsInCombinationMustMatchCriteria(serchedSign);
-        List<SignCombination> foundCombinations = signCombinationRepository.findAll(spec);
+        List<Combination> foundCombinations = signCombinationRepository.findAll(spec);
 
-        List<List<ValuatedSignDto>> valuatedSignsDtos = foundCombinations.stream()
-                .map(signCombination -> signCombination.getSigns().stream()
-                        .map(sign -> {
-                            Sign foundSign = allSigns.stream()
-                                    .filter(s -> s.getId().equals(sign.getSignId()))
-                                    .findFirst()
-                                    .orElseThrow(() -> new EntityNotFoundException(
-                                            "Sign not found with id: " + sign.getSignId()));
-                            return new ValuatedSignDto(sign.getSignId(), sign.getMax(), sign.getMin(),
-                                    sign.getClassification(), sign.getIsOptional(), foundSign.getName(),
-                                    foundSign.getTemperamento());
-                        })
-                        .collect(Collectors.toList()))
-                .collect(Collectors.toList());
+        // List<List<ValuatedSignDto>> valuatedSignsDtos = foundCombinations.stream()
+        // .map(signCombination -> signCombination.getSigns().stream()
+        // .map(sign -> {
+        // Sign foundSign = allSigns.stream()
+        // .filter(s -> s.getId().equals(sign.getSign().getId()))
+        // .findFirst()
+        // .orElseThrow(() -> new EntityNotFoundException(
+        // "Sign not found with id: " + sign.getSign().getId()));
+        // return new ValuatedSignDto(sign.getSign().getId(), sign.getMax(),
+        // sign.getMin(),
+        // sign.getClassification(), sign.getIsOptional(), foundSign.getName(),
+        // foundSign.getTemperamento());
+        // })
+        // .collect(Collectors.toList()))
+        // .collect(Collectors.toList());
 
-        List<CombinationResponseDto> signCombinationDtos = foundCombinations.stream()
-                .map(signCombination -> signCombinationResponseMapper.toCombinationResponseDto(signCombination,
-                        valuatedSignsDtos.get(foundCombinations.indexOf(signCombination))))
+        List<CombinationDto> signCombinationDtos = foundCombinations.stream()
+                .map(signCombination -> signCombinationResponseMapper.toCombinationResponseDto(signCombination))
                 .collect(Collectors.toList());
 
         return signCombinationDtos;
     };
 
     @Transactional
-    public void addSignCombination(SignCombination signCombination) {
+    public void addSignCombination(Combination signCombination) {
         signCombinationRepository.save(signCombination);
     }
 
     @Transactional
-    public void editSignCombination(SignCombination signCombination) {
-        SignCombination signCombinationToEdit = signCombinationRepository.findById(signCombination.getId())
+    public void editSignCombination(Combination signCombination) {
+        Combination oldCombination = this.getSignCombinationsById(signCombination.getId());
+
+        if (oldCombination.getImagePath() != null && oldCombination.getImagePath() != signCombination.getImagePath()) {
+            Path oldFilePath = fileStorageService.getImagePath(signCombination.getImagePath());
+            if (Files.exists(oldFilePath)) {
+                fileStorageService.deleteFile(signCombination.getImagePath());
+            }
+        }
+
+        Combination signCombinationToEdit = signCombinationRepository.findById(signCombination.getId())
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Impossible to edit - SignCombination not found with id: " + signCombination.getId()));
         if (signCombinationToEdit.getSourceBook() != null)

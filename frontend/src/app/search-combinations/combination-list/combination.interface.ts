@@ -9,6 +9,6 @@ export interface Combination {
   originalTextCondition: string | null;
   author: string;
   sourceBook: Book | null;
-  imagePath: string | null;
+  imagePath: string | null | File;
   signs: Sign[];
 }
