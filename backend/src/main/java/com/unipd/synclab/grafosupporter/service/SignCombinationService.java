@@ -14,8 +14,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.unipd.synclab.grafosupporter.dto.CombinationDto;
-import com.unipd.synclab.grafosupporter.dto.ValuatedSignDto;
 import com.unipd.synclab.grafosupporter.model.Sign;
+import com.unipd.synclab.grafosupporter.model.ValuatedSign;
 import com.unipd.synclab.grafosupporter.model.Combination;
 import com.unipd.synclab.grafosupporter.repository.SignCombinationRepository;
 import com.unipd.synclab.grafosupporter.repository.SignRepository;
@@ -85,29 +85,53 @@ public class SignCombinationService {
     }
 
     @Transactional
-    public void editSignCombination(Combination signCombination) {
-        Combination oldCombination = this.getSignCombinationsById(signCombination.getId());
+    public void editSignCombination(Combination combinationData) {
+        Combination existingCombination = signCombinationRepository.findById(combinationData.getId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Impossible to edit - SignCombination not found with id: " + combinationData.getId()));
 
-        if (oldCombination.getImagePath() != null && oldCombination.getImagePath() != signCombination.getImagePath()) {
-            Path oldFilePath = fileStorageService.getImagePath(signCombination.getImagePath());
-            if (Files.exists(oldFilePath)) {
-                fileStorageService.deleteFile(signCombination.getImagePath());
+        if (existingCombination.getImagePath() != null
+                && existingCombination.getImagePath() != combinationData.getImagePath()) {
+            Path existingFilePath = fileStorageService.getImagePath(existingCombination.getImagePath());
+            if (Files.exists(existingFilePath)) {
+                fileStorageService.deleteFile(existingCombination.getImagePath());
             }
         }
 
-        Combination signCombinationToEdit = signCombinationRepository.findById(signCombination.getId())
+        Combination signCombinationToEdit = signCombinationRepository.findById(combinationData.getId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Impossible to edit - SignCombination not found with id: " + signCombination.getId()));
+                        "Impossible to edit - SignCombination not found with id: " + combinationData.getId()));
         if (signCombinationToEdit.getSourceBook() != null)
             throw new InvalidParameterException(
-                    "non è possibile eliminare la combianzione con id=" + signCombination.getId()
+                    "non è possibile eliminare la combianzione con id=" + combinationData.getId()
                             + " perche l'autore è moretti");
-        signCombinationToEdit.setLongDescription((signCombination.getLongDescription()));
-        signCombinationToEdit.setShortDescription(signCombination.getShortDescription());
-        signCombinationToEdit.setSigns(signCombination.getSigns());
-        signCombinationToEdit.setSourceBook(signCombination.getSourceBook());
-        signCombinationToEdit.setTitle(signCombination.getTitle());
-        signCombinationToEdit.setSourceBook(signCombination.getSourceBook());
+
+        existingCombination.setTitle(combinationData.getTitle());
+        existingCombination.setShortDescription(combinationData.getShortDescription());
+        existingCombination.setLongDescription(combinationData.getLongDescription());
+        existingCombination.setImagePath(combinationData.getImagePath());
+        existingCombination.setAuthor(combinationData.getAuthor());
+
+        existingCombination.getSigns().clear();
+
+        if (combinationData.getSigns() != null) {
+            for (ValuatedSign signData : combinationData.getSigns()) {
+                ValuatedSign newSign = new ValuatedSign();
+
+                Sign signRef = signRepository.findById(signData.getSign().getId())
+                        .orElseThrow(
+                                () -> new EntityNotFoundException("Sign not found: " + signData.getSign().getId()));
+
+                newSign.setSign(signRef);
+                newSign.setMin(signData.getMin());
+                newSign.setMax(signData.getMax());
+                newSign.setClassification(signData.getClassification());
+                newSign.setIsOptional(signData.getIsOptional());
+
+                newSign.setCombination(existingCombination);
+                existingCombination.getSigns().add(newSign);
+            }
+        }
     }
 
     @Transactional

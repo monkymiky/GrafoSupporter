@@ -13,7 +13,10 @@ import {
 } from '@angular/forms';
 import { SharedStateService } from '../shared/shared-state.service';
 import { Combination } from '../search-combinations/combination-list/combination.interface';
-import { classification } from '../search-combinations/combination-list/sign.interface';
+import {
+  classification,
+  Sign,
+} from '../search-combinations/combination-list/sign.interface';
 import { CombinationService } from '../shared/combinations.service';
 import { SignFormFieldComponent } from './sign-form-field/sign-form-field.component';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -88,7 +91,9 @@ export function uniqueSignsValidator(
   );
   const allIds = [firstSignId, secondSignId, ...otherSignsIds];
 
-  const validIds = allIds.filter((id) => id !== null && id !== undefined);
+  const validIds = allIds
+    .filter((id) => id !== null && id !== undefined)
+    .map((id) => Number(id));
 
   if (validIds.length < 2) {
     return null;
@@ -99,6 +104,38 @@ export function uniqueSignsValidator(
     return { duplicateSigns: true };
   }
   return null;
+}
+
+export function fileSizeValidator(maxSize: number): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    const file = control.value;
+
+    if (!(file instanceof File)) {
+      return null;
+    }
+
+    if (file.size > maxSize) {
+      return { maxSize: { actualSize: file.size, requiredSize: maxSize } };
+    }
+    return null;
+  };
+}
+
+export function fileTypeValidator(allowedTypes: string[]): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    const file = control.value;
+
+    if (!(file instanceof File)) {
+      return null;
+    }
+
+    if (!allowedTypes.includes(file.type)) {
+      return {
+        fileType: { actualType: file.type, allowedTypes: allowedTypes },
+      };
+    }
+    return null;
+  };
 }
 
 @Component({
@@ -160,8 +197,8 @@ export class AddCombinationsComponent {
           validators: [Validators.maxLength(2048)],
         }),
         imagePath: this.formBuilder.control<string | File | null>(null, [
-          this.fileSizeValidator(5 * 1024 * 1024),
-          this.fileTypeValidator([
+          fileSizeValidator(5 * 1024 * 1024),
+          fileTypeValidator([
             'image/png',
             'image/jpg',
             'image/jpeg',
@@ -234,59 +271,41 @@ export class AddCombinationsComponent {
     );
   }
 
+  private mapSignDataToForm(sign: Sign) {
+    return {
+      signId: sign.signId,
+      max: sign.max,
+      min: sign.min,
+      isAbsent: sign.min === 0 && sign.max === 0,
+      isOptional: sign.isOptional,
+      classification: sign.classification ?? classification.Sostanziale,
+    };
+  }
+
   private loadCombinationData(c: Combination): void {
-    const combination = c;
-    let isSignAbsent: boolean[] = [];
-
-    for (const sign of combination.signs) {
-      sign.min == 0 && sign.max == 0
-        ? isSignAbsent.push(true)
-        : isSignAbsent.push(false);
-    }
-
     this.combinationForm.patchValue({
-      id: combination.id,
-      title: combination.title,
-      shortDescription: combination.shortDescription,
-      longDescription: combination.longDescription,
-      imagePath: combination.imagePath,
-      firstSign: {
-        signId: combination.signs[0].signId,
-        max: combination.signs[0].max,
-        min: combination.signs[0].min,
-        isAbsent: isSignAbsent[0],
-        isOptional: combination.signs[0].isOptional,
-        classification:
-          combination.signs[0].classification ?? classification.Sostanziale,
-      },
-      secondSign: {
-        signId: combination.signs[1].signId,
-        max: combination.signs[1].max,
-        min: combination.signs[1].min,
-        isAbsent: isSignAbsent[1],
-        isOptional: combination.signs[1].isOptional,
-        classification:
-          combination.signs[1].classification ?? classification.Sostanziale,
-      },
+      id: c.id,
+      title: c.title,
+      shortDescription: c.shortDescription,
+      longDescription: c.longDescription,
+      imagePath: c.imagePath,
+      firstSign: this.mapSignDataToForm(c.signs[0]),
+      secondSign: this.mapSignDataToForm(c.signs[1]),
     });
-    this.combinationForm.controls.otherSigns.clear();
 
-    for (let i = 2; i < combination.signs.length; i++) {
-      const sign = combination.signs[i];
-      const isAbsent = sign.min === 0 && sign.max === 0;
-
-      const signForm = this.createSingleSignForm(false);
-      signForm.patchValue({
-        signId: sign.signId,
-        min: sign.min,
-        max: sign.max,
-        isAbsent: isAbsent,
-        isOptional: sign.isOptional,
-        classification: sign.classification ?? classification.Sostanziale,
-      });
-      this.combinationForm.controls.otherSigns.push(signForm);
+    if (typeof c.imagePath === 'string') {
+      this.selectedFileName = c.imagePath;
     }
+
+    this.combinationForm.controls.otherSigns.clear();
+    c.signs.slice(2).forEach((sign) => {
+      const signForm = this.createSingleSignForm(false);
+      signForm.patchValue(this.mapSignDataToForm(sign));
+      this.combinationForm.controls.otherSigns.push(signForm);
+    });
+
     this.errorMessage.set(null);
+    this.combinationForm.markAllAsTouched();
   }
 
   addOtherSign(): void {
@@ -296,28 +315,6 @@ export class AddCombinationsComponent {
   }
   removeOtherSign(i: number): void {
     this.combinationForm.controls.otherSigns.removeAt(i);
-  }
-
-  fileSizeValidator(maxSize: number): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const file = control.value as File;
-      if (file && file.size > maxSize) {
-        return { maxSize: { actualSize: file.size, requiredSize: maxSize } };
-      }
-      return null;
-    };
-  }
-
-  fileTypeValidator(allowedTypes: string[]): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const file = control.value as File;
-      if (file && !allowedTypes.includes(file.type)) {
-        return {
-          fileType: { actualType: file.type, allowedTypes: allowedTypes },
-        };
-      }
-      return null;
-    };
   }
 
   onFileSelected(event: Event): void {
@@ -337,16 +334,14 @@ export class AddCombinationsComponent {
 
   onSubmit(): void {
     this.errorMessage.set(null);
+    this.combinationForm.markAllAsTouched();
 
     if (this.combinationForm.invalid) {
-      // const invalidFields = this.getInvalidControls(this.combinationForm);
-      // console.warn('Campi invalidi:', invalidFields);
-      this.combinationForm.markAllAsTouched();
+      console.warn('Form is invalid. Submission aborted.');
       return;
     }
 
     const formValue = this.combinationForm.getRawValue();
-    const imageFile = this.combinationForm.get('imagePath')?.value;
 
     const getSignNameById = (id: number | null): string => {
       if (id === null) return 'ID nullo';
@@ -355,11 +350,11 @@ export class AddCombinationsComponent {
     };
 
     const combinationData: Combination = {
-      id: this.isEditMode() ? this.combination?.id! : undefined,
+      id: this.isEditMode() ? this.combination!.id : undefined,
       title: formValue.title,
       shortDescription: formValue.shortDescription,
       longDescription: formValue.longDescription,
-      imagePath: this.selectedFileName,
+      imagePath: null,
       originalTextCondition: null,
       author: 'Utente',
       sourceBook: null,
@@ -380,7 +375,6 @@ export class AddCombinationsComponent {
           isOptional: formValue.secondSign.isOptional,
           classification: formValue.secondSign.classification,
         },
-
         ...(formValue.otherSigns || []).map((sign) => ({
           signId: +sign.signId!,
           name: getSignNameById(sign.signId),
@@ -392,74 +386,57 @@ export class AddCombinationsComponent {
       ],
     };
 
-    const saveCombinationToDatabase = () => {
-      if (this.isEditMode()) {
-        this.combinationsService
-          .updateCombination(combinationData.id!, combinationData)
-          .pipe(
-            finalize(() =>
-              this.sharedState.triggherCombinationsSearch.set(Date.now())
-            )
+    const saveCombination = (finalCombinationData: Combination) => {
+      const saveOperation = this.isEditMode()
+        ? this.combinationsService.updateCombination(
+            finalCombinationData.id!,
+            finalCombinationData
           )
-          .subscribe({
-            next: () => {
+        : this.combinationsService.createCombination(
+            finalCombinationData as Omit<Combination, 'id'>
+          );
+
+      saveOperation
+        .pipe(
+          finalize(() =>
+            this.sharedState.triggerCombinationsSearch.set(Date.now())
+          )
+        )
+        .subscribe({
+          next: () => {
+            if (this.isEditMode()) {
               this.activeModal.close('submit');
-            },
-            error: (err) => {
-              console.error(
-                "Errore durante l'aggiornamento della combinazione:",
-                err
-              );
-              this.errorMessage.set(
-                `Errore durante l'aggiornamento della combinazione: ${
-                  err.error?.message || err.message
-                }`
-              );
-            },
-          });
-      } else {
-        this.combinationsService
-          .createCombination(combinationData as Omit<Combination, 'id'>)
-          .pipe(
-            finalize(() =>
-              this.sharedState.triggherCombinationsSearch.set(Date.now())
-            )
-          )
-          .subscribe({
-            next: () => {
+            } else {
               this.successMessage.set(
                 "Combinazione inserita con successo, se vuoi puoi inserirne un'altra."
               );
               this.combinationForm.reset();
-            },
-            error: (err) => {
-              console.error(
-                'Errore durante la creazione della combinazione:',
-                err
-              );
-              this.errorMessage.set(
-                `Errore durante la creazione della combinazione: ${
-                  err.error?.message || err.message
-                }`
-              );
-            },
-          });
-      }
+            }
+          },
+          error: (err) => {
+            const action = this.isEditMode() ? 'aggiornamento' : 'creazione';
+            this.errorMessage.set(
+              `Errore durante l'${action} della combinazione: ${
+                err.error?.message || err.message
+              }`
+            );
+          },
+        });
     };
 
-    if (imageFile && typeof imageFile === 'object' && 'name' in imageFile) {
+    const imageValue = this.combinationForm.get('imagePath')?.value;
+
+    if (imageValue instanceof File) {
       const formImageData = new FormData();
-      formImageData.append('imageFile', imageFile);
+      formImageData.append('imageFile', imageValue);
 
       this.fileUploadService.uploadCombiantionImage(formImageData).subscribe({
         next: (response) => {
           combinationData.imagePath = response.fileName;
-          console.log('Immagine caricata con successo!');
           this.selectedFileName = response.fileName;
-          saveCombinationToDatabase();
+          saveCombination(combinationData);
         },
         error: (err) => {
-          console.error("Errore durante l'upload dell'immagine:", err);
           this.errorMessage.set(
             `Errore durante l'upload dell'immagine: ${
               err.error?.message || err.message
@@ -467,14 +444,16 @@ export class AddCombinationsComponent {
           );
         },
       });
-    } else if (
-      this.isEditMode() &&
-      typeof this.combination?.imagePath === 'string'
-    ) {
-      combinationData.imagePath = this.combination.imagePath;
-      saveCombinationToDatabase();
     } else {
-      saveCombinationToDatabase();
+      if (
+        this.isEditMode() &&
+        typeof this.combination?.imagePath === 'string'
+      ) {
+        combinationData.imagePath = this.combination.imagePath;
+      } else {
+        combinationData.imagePath = null;
+      }
+      saveCombination(combinationData);
     }
   }
 

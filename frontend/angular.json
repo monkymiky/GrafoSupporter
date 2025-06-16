@@ -28,6 +28,11 @@
                 "glob": "**/*",
                 "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
                 "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "../backend/uploads/combination-images",
+                "output": "/assets/imgCombinations/"
               }
             ],
             "styles": [

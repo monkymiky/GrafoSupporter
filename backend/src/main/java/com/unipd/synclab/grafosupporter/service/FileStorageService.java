@@ -13,10 +13,8 @@ import java.nio.file.Paths;
 public class FileStorageService {
 
     private final Path combinationUploadDir;
-    private final UploadProperties uploadProperties;
 
     public FileStorageService(UploadProperties uploadProperties) throws IOException {
-        this.uploadProperties = uploadProperties;
         this.combinationUploadDir = Paths.get(uploadProperties.getCombinationImagesDirectory()).toAbsolutePath();
         if (!Files.exists(this.combinationUploadDir)) {
             Files.createDirectories(this.combinationUploadDir);

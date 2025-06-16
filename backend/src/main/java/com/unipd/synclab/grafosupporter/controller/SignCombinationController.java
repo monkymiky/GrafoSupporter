@@ -43,7 +43,7 @@ public class SignCombinationController {
     }
 
     @GetMapping("/{combination_id}")
-    public Combination getSignCombinationsById(@PathVariable Long combination_id) {
+    public Combination getSignCombinationsById(@PathVariable("combination_id") Long combination_id) {
         return signCombinationService.getSignCombinationsById(combination_id);
     }
 
@@ -54,9 +54,10 @@ public class SignCombinationController {
         signCombinationService.addSignCombination(signCombination);
     }
 
-    @PutMapping
-    public void editSignCombination(@RequestBody Combination signCombination) {
-        signCombinationService.editSignCombination(signCombination);
+    @PutMapping("/{combination_id}")
+    public void editSignCombination(@RequestBody CombinationDto signCombinationDto,
+            @PathVariable("combination_id") Long combination_id) {
+        signCombinationService.editSignCombination(signCombinationMapper.toCombinationEntity(signCombinationDto));
     }
 
     @DeleteMapping("/{combination_id}")

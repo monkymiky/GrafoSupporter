@@ -22,11 +22,10 @@ export class SearchCombinationsPageComponent {
   }
 
   openModalCombiantion() {
-    const modalRef = this.modalService.open(AddCombinationsComponent, {
+    this.modalService.open(AddCombinationsComponent, {
       size: 'xl',
       centered: true,
       fullscreen: 'lg',
     });
-    modalRef.componentInstance.name = 'World';
   }
 }

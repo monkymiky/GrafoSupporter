@@ -136,6 +136,7 @@
             titleCtrl.invalid && (titleCtrl.dirty || titleCtrl.touched)
           "
         />
+
         @if (titleCtrl.invalid && (titleCtrl.dirty || titleCtrl.touched)) {
         <div class="invalid-feedback d-block">
           @if (titleCtrl.errors?.['required']) {

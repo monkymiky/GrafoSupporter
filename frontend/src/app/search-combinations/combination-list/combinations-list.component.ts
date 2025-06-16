@@ -21,7 +21,7 @@ export class CombinationListComponent {
   errorMessage = signal('');
 
   private combinationsObservable: Observable<Combination[]> = toObservable(
-    this.sharedState.triggherCombinationsSearch
+    this.sharedState.triggerCombinationsSearch
   ).pipe(
     switchMap(() => {
       console.log('signal ricevuto' + this.sharedState.filters);

@@ -114,6 +114,6 @@ export class FiltersComponent {
     }
 
     this.sharedState.filters.set(newFilterMap);
-    this.sharedState.triggherCombinationsSearch.set(Date.now());
+    this.sharedState.triggerCombinationsSearch.set(Date.now());
   }
 }

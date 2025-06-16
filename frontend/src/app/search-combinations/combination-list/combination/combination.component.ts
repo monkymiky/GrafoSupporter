@@ -3,12 +3,12 @@ import { Combination } from '../combination.interface';
 import {
   NgbAccordionModule,
   NgbTooltip,
-  NgbActiveModal,
   NgbModal,
 } from '@ng-bootstrap/ng-bootstrap';
 import { DeleteComponentModalComponent } from './delete-component-modal/delete-component-modal.component';
 import { CombinationService } from '../../../shared/combinations.service';
 import { SharedStateService } from '../../../shared/shared-state.service';
+import { AddCombinationsComponent } from '../../../add-combinations/add-combinations.component';
 
 @Component({
   selector: 'app-single-combination',
@@ -31,6 +31,23 @@ export class SingleCombination {
     this.isExpanded = !this.isExpanded;
   }
 
+  openModifyModal() {
+    const modalRef = this.modalService.open(AddCombinationsComponent, {
+      size: 'xl',
+      centered: true,
+      fullscreen: 'lg',
+    });
+    modalRef.componentInstance.combination = this.combination;
+    modalRef.result.then(
+      (result) => {
+        console.log(`Modale chiuso con risultato: ${result}`);
+      },
+      (reason) => {
+        console.log(`Modale annullato, motivo: ${reason}`);
+      }
+    );
+  }
+
   openConfirmDeletionModal() {
     const modalRef = this.modalService.open(DeleteComponentModalComponent);
     modalRef.result.then(
@@ -40,7 +57,7 @@ export class SingleCombination {
             .deleteCombination(this.combination.id)
             .subscribe({
               next: () => {
-                this.sharedState.triggherCombinationsSearch.set(Date.now());
+                this.sharedState.triggerCombinationsSearch.set(Date.now());
                 console.log(
                   `Combinazione ${this.combination.id} eliminata con successo!`
                 );
