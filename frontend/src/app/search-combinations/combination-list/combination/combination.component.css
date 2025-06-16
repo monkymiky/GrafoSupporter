@@ -39,3 +39,13 @@
 .chevron-icon.rotated {
   transform: rotate(180deg);
 }
+
+@media screen and (min-width: 992px) and (max-width: 1200px) {
+  .signs-column {
+    margin: auto;
+  }
+  .signs-column-body,
+  .description-column-body {
+    flex-basis: auto;
+  }
+}

@@ -9,13 +9,14 @@ import {
   FormArray,
   ValidatorFn,
   AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
 import { SharedStateService } from '../shared/shared-state.service';
 import { Combination } from '../search-combinations/combination-list/combination.interface';
 import { classification } from '../search-combinations/combination-list/sign.interface';
 import { CombinationService } from '../shared/combinations.service';
 import { SignFormFieldComponent } from './sign-form-field/sign-form-field.component';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FileUploadService } from '../shared/file-upload.service';
 import { finalize } from 'rxjs';
 
@@ -41,6 +42,63 @@ interface CombinationFormModel {
   firstSign: FormGroup<SingleSignFormModel>;
   secondSign: FormGroup<SingleSignFormModel>;
   otherSigns: FormArray<FormGroup<SingleSignFormModel>>;
+}
+
+export function intervalValidator(
+  control: AbstractControl
+): ValidationErrors | null {
+  const group = control as FormGroup<SingleSignFormModel>;
+
+  const min = group.controls.min?.value;
+  const max = group.controls.max?.value;
+
+  if (min === null || max === null) {
+    return null;
+  }
+
+  return min > max ? { invalidInterval: true } : null;
+}
+
+export function SignIsNotAbsentValidator(
+  control: AbstractControl
+): ValidationErrors | null {
+  const group = control as FormGroup<SingleSignFormModel>;
+
+  const min = group.controls.min?.value;
+  const max = group.controls.max?.value;
+
+  if (min === null || max === null) {
+    return null;
+  }
+
+  return min == 0 && max == 0 ? { RequiredSignCanTBeAbsent: true } : null;
+}
+
+export function uniqueSignsValidator(
+  control: AbstractControl
+): ValidationErrors | null {
+  const group = control as FormGroup<CombinationFormModel>;
+
+  const firstSignId = group.controls.firstSign.get('signId')?.value;
+  const secondSignId = group.controls.secondSign.get('signId')?.value;
+
+  const otherSigns = group.get('otherSigns') as FormArray;
+  const otherSignsIds = otherSigns.controls.map(
+    (signControl) => signControl.get('signId')?.value
+  );
+  const allIds = [firstSignId, secondSignId, ...otherSignsIds];
+
+  const validIds = allIds.filter((id) => id !== null && id !== undefined);
+
+  if (validIds.length < 2) {
+    return null;
+  }
+  const idSet = new Set(validIds);
+
+  if (validIds.length !== idSet.size) {
+    return { duplicateSigns: true };
+  }
+  return null;
 }
 
 @Component({
@@ -82,80 +140,98 @@ export class AddCombinationsComponent {
   }
 
   private initForm(): void {
-    this.combinationForm = this.formBuilder.group<CombinationFormModel>({
-      id: this.formBuilder.control<number | null>(null),
-      title: this.formBuilder.control<string>('', {
-        nonNullable: true,
-        validators: [Validators.required, Validators.minLength(10)],
-      }),
-      shortDescription: this.formBuilder.control<string>('', {
-        nonNullable: true,
-        validators: [
-          Validators.required,
-          Validators.minLength(30),
-          Validators.maxLength(300),
-        ],
-      }),
-      longDescription: this.formBuilder.control<string>('', {
-        nonNullable: true,
-        validators: [Validators.maxLength(2048)],
-      }),
-      imagePath: this.formBuilder.control<string | File | null>(null, [
-        this.fileSizeValidator(5 * 1024 * 1024),
-        this.fileTypeValidator([
-          'image/png',
-          'image/jpg',
-          'image/jpeg',
-          'image/gif',
-          'image/webp',
-          'image/svg',
+    this.combinationForm = this.formBuilder.group<CombinationFormModel>(
+      {
+        id: this.formBuilder.control<number | null>(null),
+        title: this.formBuilder.control<string>('', {
+          nonNullable: true,
+          validators: [Validators.required, Validators.minLength(10)],
+        }),
+        shortDescription: this.formBuilder.control<string>('', {
+          nonNullable: true,
+          validators: [
+            Validators.required,
+            Validators.minLength(30),
+            Validators.maxLength(300),
+          ],
+        }),
+        longDescription: this.formBuilder.control<string>('', {
+          nonNullable: true,
+          validators: [Validators.maxLength(2048)],
+        }),
+        imagePath: this.formBuilder.control<string | File | null>(null, [
+          this.fileSizeValidator(5 * 1024 * 1024),
+          this.fileTypeValidator([
+            'image/png',
+            'image/jpg',
+            'image/jpeg',
+            'image/gif',
+            'image/webp',
+            'image/svg',
+          ]),
         ]),
-      ]),
-      firstSign: this.createSingleSignForm(),
-      secondSign: this.createSingleSignForm(),
-      otherSigns: this.formBuilder.array<FormGroup<SingleSignFormModel>>([]),
-    });
+        firstSign: this.createSingleSignForm(true),
+        secondSign: this.createSingleSignForm(true),
+        otherSigns: this.formBuilder.array<FormGroup<SingleSignFormModel>>([]),
+      },
+      {
+        validators: [uniqueSignsValidator],
+      }
+    );
     this.combinationForm.controls.firstSign.controls.isOptional.disable();
     this.combinationForm.controls.secondSign.controls.isOptional.disable();
   }
 
-  private createSingleSignForm(): FormGroup<SingleSignFormModel> {
-    return this.formBuilder.group<SingleSignFormModel>({
-      signId: this.formBuilder.control<number | null>(null, {
-        validators: [Validators.required],
-      }),
-      min: this.formBuilder.control<number>(0, {
-        nonNullable: true,
-        validators: [
-          Validators.min(0),
-          Validators.max(10),
-          Validators.required,
-        ],
-      }),
-      max: this.formBuilder.control<number>(0, {
-        nonNullable: true,
-        validators: [
-          Validators.min(0),
-          Validators.max(10),
-          Validators.required,
-        ],
-      }),
-      isAbsent: this.formBuilder.control<boolean>(false, {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      isOptional: this.formBuilder.control<boolean>(false, {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      classification: this.formBuilder.control<classification>(
-        classification.Sostanziale,
-        {
+  private createSingleSignForm(
+    isRequiredAndNotAbsent: boolean
+  ): FormGroup<SingleSignFormModel> {
+    const groupValidators: ValidatorFn[] = [intervalValidator];
+
+    if (isRequiredAndNotAbsent) {
+      groupValidators.push(SignIsNotAbsentValidator);
+    }
+
+    return this.formBuilder.group<SingleSignFormModel>(
+      {
+        signId: this.formBuilder.control<number | null>(null, {
+          validators: [Validators.required],
+        }),
+        min: this.formBuilder.control<number>(0, {
+          nonNullable: true,
+          validators: [
+            Validators.min(0),
+            Validators.max(10),
+            Validators.required,
+          ],
+        }),
+        max: this.formBuilder.control<number>(0, {
+          nonNullable: true,
+          validators: [
+            Validators.min(0),
+            Validators.max(10),
+            Validators.required,
+          ],
+        }),
+        isAbsent: this.formBuilder.control<boolean>(false, {
           nonNullable: true,
           validators: [Validators.required],
-        }
-      ),
-    });
+        }),
+        isOptional: this.formBuilder.control<boolean>(false, {
+          nonNullable: true,
+          validators: [Validators.required],
+        }),
+        classification: this.formBuilder.control<classification>(
+          classification.Sostanziale,
+          {
+            nonNullable: true,
+            validators: [Validators.required],
+          }
+        ),
+      },
+      {
+        validators: groupValidators,
+      }
+    );
   }
 
   private loadCombinationData(c: Combination): void {
@@ -199,7 +275,7 @@ export class AddCombinationsComponent {
       const sign = combination.signs[i];
       const isAbsent = sign.min === 0 && sign.max === 0;
 
-      const signForm = this.createSingleSignForm();
+      const signForm = this.createSingleSignForm(false);
       signForm.patchValue({
         signId: sign.signId,
         min: sign.min,
@@ -214,7 +290,9 @@ export class AddCombinationsComponent {
   }
 
   addOtherSign(): void {
-    this.combinationForm.controls.otherSigns.push(this.createSingleSignForm());
+    this.combinationForm.controls.otherSigns.push(
+      this.createSingleSignForm(false)
+    );
   }
   removeOtherSign(i: number): void {
     this.combinationForm.controls.otherSigns.removeAt(i);
@@ -350,8 +428,9 @@ export class AddCombinationsComponent {
           .subscribe({
             next: () => {
               this.successMessage.set(
-                'Combinazione inserita con successo, se vuoi puoi inserirne un altra.'
+                "Combinazione inserita con successo, se vuoi puoi inserirne un'altra."
               );
+              this.combinationForm.reset();
             },
             error: (err) => {
               console.error(

@@ -2,7 +2,7 @@
   class="btn btn-outline-primary d-lg-none m-3"
   (click)="openSidebar(sidebar)"
 >
-  ☰ Filtri
+  ☰ Cerca
 </button>
 
 <!-- Sidebar dinamica (offcanvas) -->
@@ -25,38 +25,34 @@
 <div class="d-flex flex-column vh-100">
   <header class="container-fluid bg-light">
     <div class="row">
-      <div class="row">
-        <div
-          class="col-5 col-xl-4 d-none d-lg-block border align-items-center py-3 px-4"
-        >
-          Filtri
-          <div class="inline grado-header">
-            Grado:
-            <div class="inline grado mx-2">Basso</div>
+      <div
+        class="col-5 col-xl-4 d-none d-lg-block border align-items-center py-3 px-4"
+      >
+        Cerca
+        <div class="inline grado-header">
+          Grado:
+          <div class="inline grado basso">Basso</div>
 
-            <div class="inline grado mx-2">Medio</div>
-
-            <div class="inline grado ms-2">Alto</div>
-          </div>
+          <div class="inline grado alto me-2">Alto</div>
         </div>
-        <div
-          class="col-7 col-xl-8 flex-grow-1 border-light text-center d-flex py-2"
-        >
-          <div class="container-fluid">
-            <div class="row align-items-center">
-              <div class="col-3">Segni della combinazione</div>
-              <div class="col-6">Significato</div>
-              <div class="col-3">
-                <div class="">
-                  Aggiungi:
-                  <button
-                    type="button"
-                    (click)="openModalCombiantion()"
-                    class="btn btn-outline-success"
-                  >
-                    <i class="bi bi-plus-lg"></i>
-                  </button>
-                </div>
+      </div>
+      <div
+        class="col-7 col-xl-8 flex-grow-1 border-light text-center d-flex py-2"
+      >
+        <div class="container-fluid">
+          <div class="row align-items-center">
+            <div class="col-3">Segni della combinazione</div>
+            <div class="col-6">Significato</div>
+            <div class="col-3 d-flex">
+              <div class="ms-auto">
+                Aggiungi:
+                <button
+                  type="button"
+                  (click)="openModalCombiantion()"
+                  class="btn btn-outline-success ms-2 me-4"
+                >
+                  <i class="bi bi-plus-lg"></i>
+                </button>
               </div>
             </div>
           </div>

@@ -108,5 +108,16 @@
   <div class="invalid-feedback d-block mt-1">
     L'intervallo per entrambi i valori deve essere compreso tra 0 e 10.
   </div>
+  } @else if (signFormGroup.hasError('invalidInterval') && (signFormGroup.dirty
+  || signFormGroup.touched)) {
+  <div class="invalid-feedback d-block mt-1">
+    Il valore massimo non può essere inferiore al valore minimo.
+  </div>
+  } @else if (signFormGroup.hasError('RequiredSignCanTBeAbsent') &&
+  (signFormGroup.dirty || signFormGroup.touched)) {
+  <div class="invalid-feedback d-block mt-1">
+    I primi due segni sono obbligatori e non puossono essere assenti (intervallo
+    0-0).
+  </div>
   }
 </div>

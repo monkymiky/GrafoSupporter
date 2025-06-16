@@ -3,7 +3,7 @@
     <h2 class="modal-title">{{ pageTitle() }}</h2>
     <button
       type="button"
-      class="btn-close"
+      class="btn-close me-2"
       aria-label="Close"
       (click)="activeModal.dismiss('Cross click')"
     ></button>
@@ -25,38 +25,8 @@
       {{ successMessage() }}
     </div>
     <form [formGroup]="combinationForm" (ngSubmit)="onSubmit()" novalidate>
-      <div class="mb-3">
-        <label for="title" class="form-label">Titolo Descrittivo*</label>
-        <input
-          type="text"
-          id="title"
-          class="form-control"
-          formControlName="title"
-          placeholder="Inserisci un titolo descrittivo"
-          [class.is-invalid]="
-            titleCtrl.invalid && (titleCtrl.dirty || titleCtrl.touched)
-          "
-        />
-        @if (titleCtrl.invalid && (titleCtrl.dirty || titleCtrl.touched)) {
-        <div class="invalid-feedback d-block">
-          @if (titleCtrl.errors?.['required']) {
-          <span>Il titlolo è obbligatorio.</span> } @if
-          (titleCtrl.errors?.['minlength']) {
-          <span
-            >Il titlolo deve avere almeno
-            {{ titleCtrl.errors?.['minlength'].requiredLength }}
-            caratteri.</span
-          >
-          }
-        </div>
-        }
-      </div>
-
-      <hr />
-
-      <h3>Segni</h3>
       <div
-        class="row g-3 align-items-center mb-2 header-signs text-muted small ms-2 header-labels"
+        class="row g-3 align-items-center mb-2 header-signs ms-2 header-labels"
       >
         <div class="col-xl-5 col-lg-5 col-md-4 sign-header-sign">
           Seleziona un segno
@@ -64,7 +34,7 @@
         <div class="col-md-2 intervallo-header-sign">Intervallo</div>
         <div class="col-md-3 classificazione-header-sign">Classificazione</div>
       </div>
-      <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="d-flex justify-content-between align-items-center">
         <div
           class="sign-block border rounded p-3 mb-3 flex-grow-1"
           formGroupName="firstSign"
@@ -85,7 +55,7 @@
         </button>
       </div>
 
-      <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="d-flex justify-content-between align-items-center">
         <div
           class="sign-block border rounded p-3 mb-3 flex-grow-1"
           formGroupName="secondSign"
@@ -109,7 +79,7 @@
       <div formArrayName="otherSigns">
         @for (otherSign of combinationForm.controls.otherSigns.controls; track
         $index) {
-        <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex justify-content-between align-items-center">
           <div
             class="sign-block border rounded px-2 pt-3 mb-3 flex-grow-1"
             [formGroupName]="$index"
@@ -137,15 +107,49 @@
         }
       </div>
 
-      <button
-        type="button"
-        class="btn btn-secondary mt-2"
-        (click)="addOtherSign()"
-      >
-        Aggiungi Segno
-      </button>
+      @if (combinationForm.hasError('duplicateSigns')) {
+      <div class="alert alert-danger mt-3" role="alert">
+        Non è possibile inserire in una combinazione lo stesso segno più di una
+        volta.
+      </div>
+      }
+      <div class="d-flex">
+        <button
+          type="button"
+          (click)="addOtherSign()"
+          class="btn btn-sm btn-outline-success m-auto"
+        >
+          <i class="bi bi-plus-lg"></i>
+        </button>
+      </div>
 
       <hr />
+      <div class="mb-3">
+        <label for="title" class="form-label">Titolo Descrittivo*</label>
+        <input
+          type="text"
+          id="title"
+          class="form-control"
+          formControlName="title"
+          placeholder="Inserisci un titolo descrittivo"
+          [class.is-invalid]="
+            titleCtrl.invalid && (titleCtrl.dirty || titleCtrl.touched)
+          "
+        />
+        @if (titleCtrl.invalid && (titleCtrl.dirty || titleCtrl.touched)) {
+        <div class="invalid-feedback d-block">
+          @if (titleCtrl.errors?.['required']) {
+          <span>Il titlolo è obbligatorio.</span> } @if
+          (titleCtrl.errors?.['minlength']) {
+          <span
+            >Il titlolo deve avere almeno
+            {{ titleCtrl.errors?.['minlength'].requiredLength }}
+            caratteri.</span
+          >
+          }
+        </div>
+        }
+      </div>
 
       <div class="mb-3">
         <label for="shortDescription" class="form-label"
@@ -211,8 +215,6 @@
         }
       </div>
 
-      <hr />
-
       <div class="mb-3">
         <label for="imagePath" class="form-label">Carica un immagine</label>
         <div class="input-group">
@@ -226,8 +228,6 @@
           />
         </div>
       </div>
-
-      <hr />
 
       @if(errorMessage()) {
       <div class="alert alert-danger" role="alert">
