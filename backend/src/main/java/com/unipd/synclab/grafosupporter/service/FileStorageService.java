@@ -1,4 +1,3 @@
-// backend/src/main/java/com/unipd/synclab/grafosupporter/service/FileStorageService.java
 package com.unipd.synclab.grafosupporter.service;
 
 import com.unipd.synclab.grafosupporter.config.UploadProperties;
@@ -26,7 +25,7 @@ public class FileStorageService {
     }
 
     public boolean deleteFile(String fileName) {
-        if (fileName == null || fileName.trim().isEmpty()) {
+        if (fileName == null || fileName.trim().isEmpty() || fileName.contains("..")) {
             return false;
         }
         Path fileToDelete = getImagePath(fileName);

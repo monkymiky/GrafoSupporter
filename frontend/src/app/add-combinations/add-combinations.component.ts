@@ -150,7 +150,9 @@ export class AddCombinationsComponent {
   sharedState = inject(SharedStateService);
   private combinationsService = inject(CombinationService);
   private fileUploadService = inject(FileUploadService);
-  selectedFileName: string | null = null;
+  activeImageFileName: string | null = null;
+  RemoteImageFileName: string | null = null;
+  imagePreviewUrl: string | null = null;
 
   combinationForm!: FormGroup<CombinationFormModel>;
 
@@ -294,7 +296,7 @@ export class AddCombinationsComponent {
     });
 
     if (typeof c.imagePath === 'string') {
-      this.selectedFileName = c.imagePath;
+      this.RemoteImageFileName = c.imagePath;
     }
 
     this.combinationForm.controls.otherSigns.clear();
@@ -322,11 +324,17 @@ export class AddCombinationsComponent {
     const file: File | null = input.files ? input.files[0] : null;
 
     if (file) {
-      this.selectedFileName = file.name;
+      this.activeImageFileName = file.name;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreviewUrl = reader.result as string;
+      };
+      reader.readAsDataURL(file);
       this.combinationForm.get('imagePath')?.patchValue(file);
       this.combinationForm.get('imagePath')?.updateValueAndValidity();
     } else {
-      this.selectedFileName = null;
+      this.activeImageFileName = null;
+      this.imagePreviewUrl = null;
       this.combinationForm.get('imagePath')?.patchValue(null);
       this.combinationForm.get('imagePath')?.updateValueAndValidity();
     }
@@ -433,7 +441,7 @@ export class AddCombinationsComponent {
       this.fileUploadService.uploadCombiantionImage(formImageData).subscribe({
         next: (response) => {
           combinationData.imagePath = response.fileName;
-          this.selectedFileName = response.fileName;
+          this.activeImageFileName = response.fileName;
           saveCombination(combinationData);
         },
         error: (err) => {

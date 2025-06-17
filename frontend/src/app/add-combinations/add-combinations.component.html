@@ -217,17 +217,40 @@
       </div>
 
       <div class="mb-3">
-        <label for="imagePath" class="form-label">Carica un immagine</label>
+        <label for="imagePath" class="form-label">
+          @if(RemoteImageFileName != null){<i
+            class="bi bi-exclamation-triangle-fill text-danger"
+          ></i>
+          Sostituisci l'immagine:
+          {{ RemoteImageFileName }}
+          }@else{ Carica un'immagine }</label
+        >
         <div class="input-group">
           <input
             type="file"
             id="imagePath"
             class="form-control"
-            placeholder="es. percorso/immagine.jpg"
             accept="image/jpg,image/jpeg,image/png,image/gif,image/webp,image/svg"
             (change)="onFileSelected($event)"
           />
         </div>
+        @if(activeImageFileName == null && RemoteImageFileName != null) {
+        <div class="img">
+          <img
+            [src]="'/api/files/combination-image/' + RemoteImageFileName"
+            [alt]="'Immagine della combianzione'"
+            class="img-fluid rounded mt-3"
+          />
+        </div>
+        }@else if(activeImageFileName != null){
+        <div class="img">
+          <img
+            [src]="imagePreviewUrl"
+            [alt]="'Immagine selezionata per la combianzione'"
+            class="img-fluid rounded mt-3"
+          />
+        </div>
+        }
       </div>
 
       @if(errorMessage()) {

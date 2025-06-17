@@ -65,7 +65,7 @@
     </div>
     <div class="col description-column-body">
       @if(combination.author !== 'Girolamo Moretti'){
-      <div class="float-md-end d-flex gap-1 flex-column mb-3">
+      <div class="float-md-end d-flex gap-1 flex-column mb-3 ms-3">
         <button
           type="button"
           (click)="this.openConfirmDeletionModal()"
@@ -87,8 +87,8 @@
 
       @if(combination.imagePath) {
       <img
-        [src]="'assets/imgCombinations/' + combination.imagePath"
-        [alt]="combination.title"
+        [src]="'/api/files/combination-image/' + combination.imagePath"
+        [alt]="'Immagine di una scrittura con ' + combination.title"
         class="img-fluid rounded mb-3"
       />
       }

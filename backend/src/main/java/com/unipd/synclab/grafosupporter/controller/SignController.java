@@ -9,11 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.unipd.synclab.grafosupporter.model.Sign;
 import com.unipd.synclab.grafosupporter.service.SignService;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping("/signs")
-@CrossOrigin(origins = "http://localhost:4200")
 public class SignController {
     private final SignService signService;
 

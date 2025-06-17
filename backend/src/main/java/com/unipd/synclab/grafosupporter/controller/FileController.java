@@ -1,30 +1,75 @@
 package com.unipd.synclab.grafosupporter.controller;
 
+import com.unipd.synclab.grafosupporter.service.FileStorageService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.util.StringUtils;
+import org.springframework.web.server.ResponseStatusException;
 
+import jakarta.servlet.ServletContext;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import com.unipd.synclab.grafosupporter.service.FileStorageService;
+import java.util.concurrent.TimeUnit;
 
 @RestController
-@RequestMapping("/file-upload")
-@CrossOrigin(origins = "http://localhost:4200")
-public class FileUploadController {
+@RequestMapping("/files")
+public class FileController {
 
     private final FileStorageService fileStorageService;
+    private final ServletContext servletContext;
 
-    public FileUploadController(FileStorageService fileStorageService) {
+    @Autowired
+    public FileController(FileStorageService fileStorageService, ServletContext servletContext) {
         this.fileStorageService = fileStorageService;
+        this.servletContext = servletContext;
+    }
+
+    @GetMapping("/combination-image/{filename:.+}")
+    public ResponseEntity<Resource> serveCombinationImage(@PathVariable String filename) {
+        try {
+
+            Path filePath = fileStorageService.getImagePath(filename);
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                String contentType = servletContext.getMimeType(filePath.toAbsolutePath().toString());
+                if (contentType == null) {
+                    contentType = "application/octet-stream";
+                }
+
+                CacheControl cacheControl = CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic();
+
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                        .cacheControl(cacheControl)
+                        .body(resource);
+            } else {
+                throw new FileNotFoundException("File non trovato: " + filename);
+            }
+        } catch (MalformedURLException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Errore interno nel recupero del file.",
+                    e);
+        } catch (FileNotFoundException e) {
+
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "File non trovato: " + filename, e);
+        }
     }
 
     @PostMapping("/combination-image")
