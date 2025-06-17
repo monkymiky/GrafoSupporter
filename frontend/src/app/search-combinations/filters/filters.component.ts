@@ -16,6 +16,7 @@ import {
 } from '@angular/forms';
 import { Grado } from './filter.interface';
 import { SharedStateService } from '../../shared/shared-state.service';
+import { NgbTooltip, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 
 interface SingleSignForm {
   id: number;
@@ -26,7 +27,8 @@ interface SingleSignForm {
 
 @Component({
   selector: 'app-filters',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, NgbTooltip],
+  providers: [NgbTooltipConfig],
   templateUrl: './filters.component.html',
   styleUrl: './filters.component.css',
 })
@@ -58,7 +60,10 @@ export class FiltersComponent {
     return result;
   });
 
-  constructor() {
+  constructor(config: NgbTooltipConfig) {
+    config.container = 'body';
+    config.placement = 'bottom';
+    config.tooltipClass = 'tooltipW';
     effect(() => {
       const currentSignsData = this.signsData();
       this.signsForm = this.formBuilder.group({

@@ -11,10 +11,15 @@
         >
         <div [ngbTooltip]="tipContent" placement="end" class="d-flex z-3">
           @if(sign.isOptional == true){
-          <div [ngbTooltip]="tipContent2" placement="top" class="d-flex z-3">
-            <ng-template #tipContent2>
-              segno opzionale per la combinazione</ng-template
-            >
+          <ng-template #tipContent2>
+            segno opzionale per la combinazione</ng-template
+          >
+          <div
+            [ngbTooltip]="tipContent2"
+            placement="top"
+            container="body"
+            class="d-flex z-3"
+          >
             <i class="bi bi-question-circle text-secondary"></i>
           </div>
           }
@@ -39,7 +44,9 @@
         <div>
           <p class="fw-bold mb-1">{{ combination.title }}</p>
 
-          <p class="text-muted mb-0">{{ combination.shortDescription }}</p>
+          <p class="text-muted mb-0" [class.hidden]="!isExpanded">
+            {{ combination.shortDescription }}
+          </p>
         </div>
 
         <i

@@ -1,12 +1,74 @@
 @if (errorMessage()) {
 <div>{{ errorMessage() }}</div>
 } @if (signsForm) {
-
+<ng-template #gradi>
+  <div>
+    I valori selezionabili per ogni grado sono cosi definiti:
+    <div>B = Basso (1-2/10)</div>
+    <div>MB = Medio-Basso, Sottomedia (3-4/10)</div>
+    <div>M = Medio (5/10)</div>
+    <div>MA = Medio-Alto, Sopramedia (6-7/10)</div>
+    <div>A = Alto (8-10/10)</div>
+  </div>
+</ng-template>
+<div
+  class="d-flex sticky-top bg-light"
+  [ngbTooltip]="gradi"
+  placement="bottom"
+  container="body"
+>
+  <div class="ms-auto">Grado:</div>
+  <ng-template #basso> Basso (1-2/10)</ng-template>
+  <ng-template #medioB> Medio-Basso (3-4/10)</ng-template>
+  <ng-template #medio> Medio (5/10)</ng-template>
+  <ng-template #medioA> Medio-Alto (6-7/10)</ng-template>
+  <ng-template #alto> Alto (8-10/10)</ng-template>
+  <div
+    class="d-inline mx-3"
+    [ngbTooltip]="basso"
+    placement="top"
+    container="body"
+  >
+    B
+  </div>
+  <div
+    class="d-inline medioBasso"
+    [ngbTooltip]="medioB"
+    placement="top"
+    container="body"
+  >
+    MB
+  </div>
+  <div
+    class="d-inline me-2"
+    [ngbTooltip]="medio"
+    placement="top"
+    container="body"
+  >
+    M
+  </div>
+  <div
+    class="d-inline medioAlto"
+    [ngbTooltip]="medioA"
+    placement="top"
+    container="body"
+  >
+    MA
+  </div>
+  <div
+    class="d-inline alto"
+    [ngbTooltip]="alto"
+    placement="top"
+    container="body"
+  >
+    A
+  </div>
+</div>
 <form [formGroup]="signsForm" (ngSubmit)="onSubmit()">
-  <div formArrayName="rowSelections" class="p-1 pb-3 mb-3">
+  <div formArrayName="rowSelections" class="pb-3 mb-3">
     @for (signCtrl of rowSelectionsFormArray.controls; track i; let i = $index;
     ) {
-    <div class="d-flex" [class.bg-white]="$even">
+    <div class="d-flex ps-2" [class.bg-white]="$even" [class.rounded]="$even">
       @if (signsData()[i]; as currentSignData) {
       <div>{{ currentSignData.signName }}</div>
       <div class="ms-auto">
@@ -41,7 +103,7 @@
       type="submit"
       [disabled]="!signsForm.valid"
     >
-      Applica Filtri
+      Cerca
     </button>
     <p></p>
   </div>

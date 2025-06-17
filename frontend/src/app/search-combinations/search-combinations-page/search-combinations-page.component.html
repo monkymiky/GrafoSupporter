@@ -1,9 +1,18 @@
-<button
-  class="btn btn-outline-primary d-lg-none m-3"
-  (click)="openSidebar(sidebar)"
->
-  ☰ Cerca
-</button>
+<div class="d-flex">
+  <button
+    class="btn btn-outline-primary d-lg-none m-3"
+    (click)="openSidebar(sidebar)"
+  >
+    ☰ Cerca
+  </button>
+  <button
+    type="button"
+    (click)="openModalCombiantion()"
+    class="btn btn-outline-success ms-auto d-lg-none my-3 me-3"
+  >
+    <i class="bi bi-plus-lg"></i>
+  </button>
+</div>
 
 <!-- Sidebar dinamica (offcanvas) -->
 <ng-template #sidebar let-offcanvas>
@@ -15,7 +24,7 @@
       (click)="offcanvas.close()"
     ></button>
   </div>
-  <div class="offcanvas-body">
+  <div class="offcanvas-body pt-0 mt-0">
     <div class="flex-column">
       <app-filters></app-filters>
     </div>
@@ -23,28 +32,22 @@
 </ng-template>
 
 <div class="d-flex flex-column vh-100">
-  <header class="container-fluid bg-light">
-    <div class="row">
+  <header class="container-fluid bg-secondary-subtle">
+    <div class="row desktop-only">
       <div
-        class="col-5 col-xl-4 d-none d-lg-block border align-items-center py-3 px-4"
+        class="col-5 col-xl-4 d-none d-lg-block border-bottom align-items-center text-center py-3 px-4"
       >
-        Cerca
-        <div class="inline grado-header">
-          Grado:
-          <div class="inline grado basso">Basso</div>
-
-          <div class="inline grado alto me-2">Alto</div>
-        </div>
+        Seleziona i segni per la ricerca
       </div>
       <div
-        class="col-7 col-xl-8 flex-grow-1 border-light text-center d-flex py-2"
+        class="col-7 col-xl-8 flex-grow-1 border-bottom text-center d-flex py-2"
       >
         <div class="container-fluid">
           <div class="row align-items-center">
             <div class="col-3">Segni della combinazione</div>
             <div class="col-6">Significato</div>
             <div class="col-3 d-flex">
-              <div class="ms-auto">
+              <div class="ms-auto flex-shrink-0">
                 Aggiungi:
                 <button
                   type="button"
@@ -62,7 +65,9 @@
   </header>
 
   <div class="d-flex flex-grow-1 overflow-hidden">
-    <aside class="col-5 col-xl-4 bg-light p-3 overflow-auto d-none d-lg-block">
+    <aside
+      class="col-5 col-xl-4 bg-light px-3 pb-3 overflow-auto d-none d-lg-block"
+    >
       <app-filters></app-filters>
     </aside>
 
