@@ -21,4 +21,5 @@ public class Sign {
     private Long id;
     private String name;
     private String temperamento;
+    private String tipo;
 }
