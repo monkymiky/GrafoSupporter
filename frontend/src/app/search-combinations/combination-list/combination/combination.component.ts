@@ -29,16 +29,8 @@ export class SingleCombination {
   ngOnInit() {
     for (const sign of this.combination.signs) {
       for (const signData of this.sharedState.signs()) {
-        if (sign.signId == signData[0]) {
-          this.temperaments.push(signData[1][1]);
-          console.log(
-            'id: ' +
-              sign.signId +
-              ' segno: ' +
-              sign.name +
-              ' temperamento: ' +
-              signData[1][1]
-          );
+        if (sign.signId == signData.id) {
+          this.temperaments.push(signData.temperamento ?? '');
         }
       }
     }

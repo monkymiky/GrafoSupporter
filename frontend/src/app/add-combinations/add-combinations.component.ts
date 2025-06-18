@@ -353,8 +353,8 @@ export class AddCombinationsComponent {
 
     const getSignNameById = (id: number | null): string => {
       if (id === null) return 'ID nullo';
-      const sign = this.sharedState.signs().find((s) => s[0] == id);
-      return sign?.[1][0] ?? `Nome non trovato per ID: ${id}`;
+      const sign = this.sharedState.signs().find((s) => s.id == id);
+      return sign?.name ?? `Nome non trovato per ID: ${id}`;
     };
 
     const combinationData: Combination = {

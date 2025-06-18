@@ -16,8 +16,8 @@
             this.signFormGroup.controls.signId.dirty)
         "
       >
-        @for(sign of availableSigns; track sign[0]) {
-        <option [value]="sign[0]">{{ sign[1][0] }}</option>
+        @for(sign of availableSigns; track sign.id) {
+        <option [value]="sign.id">{{ sign.temperamento }}</option>
         }
       </select>
     </div>

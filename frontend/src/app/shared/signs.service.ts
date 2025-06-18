@@ -2,10 +2,11 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 
-interface SignApiResponseItem {
+export interface SignApiResponseItem {
   id: number;
   name: string;
   temperamento: string | null;
+  tipo: string;
 }
 
 @Injectable({
@@ -15,15 +16,15 @@ export class SignsService {
   private apiUrl = '/api/signs';
   private http = inject(HttpClient);
 
-  getSigns(): Observable<[number, [string, string]][]> {
+  getSigns(): Observable<SignApiResponseItem[]> {
     return this.http.get<SignApiResponseItem[]>(this.apiUrl).pipe(
       map((responseArray) => {
-        const signs = [] as [number, [string, string]][];
+        const signs = [] as SignApiResponseItem[];
         if (responseArray && Array.isArray(responseArray)) {
           for (const item of responseArray) {
             const temperamentoValue =
               item.temperamento === null ? '' : item.temperamento;
-            signs.push([item.id, [item.name, temperamentoValue]]);
+            signs.push(item);
           }
         }
         return signs;

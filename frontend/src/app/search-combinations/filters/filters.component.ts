@@ -21,7 +21,8 @@ import { NgbTooltip, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 interface SingleSignForm {
   id: number;
   signName: string;
-  temperamento: string;
+  temperamento: string | null;
+  type: string;
   radioOptions: { value: number }[];
 }
 
@@ -40,13 +41,28 @@ export class FiltersComponent {
 
   readonly errorMessage = signal<string | null>(null);
 
+  singsTypes: Signal<string[]> = computed(() => {
+    const result: string[] = [];
+    for (const singleSing of this.sharedState.signs()) {
+      if (!result.includes(singleSing.tipo)) {
+        result.push(singleSing.tipo);
+      }
+    }
+    return result;
+  });
+
   signsData: Signal<SingleSignForm[]> = computed(() => {
     const result: SingleSignForm[] = [];
-    for (const [id, [signName, temperamento]] of this.sharedState.signs()) {
+    for (const singleSing of this.sharedState.signs()) {
+      const id = singleSing.id;
+      const signName = singleSing.name;
+      const temperamento = singleSing.temperamento;
+      const type = singleSing.tipo;
       result.push({
         id,
         signName,
         temperamento,
+        type,
         radioOptions: [
           { value: Grado.ASSENTE },
           { value: Grado.BASSO },
@@ -62,7 +78,6 @@ export class FiltersComponent {
 
   constructor(config: NgbTooltipConfig) {
     config.container = 'body';
-    config.placement = 'bottom';
     config.tooltipClass = 'tooltipW';
     effect(() => {
       const currentSignsData = this.signsData();
@@ -93,6 +108,11 @@ export class FiltersComponent {
     } else {
       currentControl.setValue(radioValue);
     }
+  }
+  filteredSignsByType(type: string) {
+    return this.signsData()
+      .map((data, i) => ({ ...data, index: i }))
+      .filter((d) => d.type === type);
   }
 
   onSubmit(): void {
