@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 
 import { Grado } from '../search-combinations/filters/filter.interface';
 import { catchError, Observable, of, startWith, switchMap, tap } from 'rxjs';
@@ -21,7 +21,14 @@ export class SharedStateService {
     return map;
   }
   triggerCombinationsSearch = signal(0);
-  filters = signal<Map<number, Grado>>(this.initializeFiltersMap());
+  filters = computed<Map<number, Grado>>(() => {
+    const map = new Map<number, Grado>();
+
+    for (const sign of this.signs()) {
+      map.set(sign.id, Grado.ASSENTE);
+    }
+    return map;
+  });
 
   triggerSignsRequest = signal(0);
   private signsObservable: Observable<SignApiResponseItem[]> = toObservable(
@@ -40,5 +47,8 @@ export class SharedStateService {
   );
   signs = toSignal(this.signsObservable, {
     initialValue: [] as SignApiResponseItem[],
+  });
+  signsMap = computed(() => {
+    return new Map(this.signs().map((sign) => [sign.id, sign]));
   });
 }

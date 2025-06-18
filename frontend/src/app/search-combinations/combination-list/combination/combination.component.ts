@@ -27,13 +27,11 @@ export class SingleCombination {
   public temperaments: string[] = [];
 
   ngOnInit() {
-    for (const sign of this.combination.signs) {
-      for (const signData of this.sharedState.signs()) {
-        if (sign.signId == signData.id) {
-          this.temperaments.push(signData.temperamento ?? '');
-        }
-      }
-    }
+    const signsMap = this.sharedState.signsMap();
+    this.temperaments = this.combination.signs.map((sign) => {
+      const signData = signsMap.get(sign.signId);
+      return signData?.temperamento ?? '';
+    });
   }
 
   @HostBinding('style.display') display = 'contents';
