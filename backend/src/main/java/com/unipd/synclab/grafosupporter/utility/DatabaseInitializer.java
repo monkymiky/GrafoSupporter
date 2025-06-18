@@ -9,7 +9,7 @@ import com.unipd.synclab.grafosupporter.model.Sign;
 import com.unipd.synclab.grafosupporter.model.Combination;
 import com.unipd.synclab.grafosupporter.model.ValuatedSign;
 import com.unipd.synclab.grafosupporter.repository.BookRepository;
-import com.unipd.synclab.grafosupporter.repository.SignCombinationRepository;
+import com.unipd.synclab.grafosupporter.repository.CombinationRepository;
 import com.unipd.synclab.grafosupporter.repository.SignRepository;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class DatabaseInitializer {
         @Autowired
         SignRepository signRepository;
         @Autowired
-        SignCombinationRepository signCombinationRepository;
+        CombinationRepository signCombinationRepository;
 
         private Book processBook(Long id, String combinationTitle) {
                 Optional<Book> book = bookRepository.findById(id);

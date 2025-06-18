@@ -31,19 +31,12 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/files")
 public class FileController {
-
-    private final FileStorageService fileStorageService;
-    private final ServletContext servletContext;
-
-    private final UploadProperties uploadProperties;
-
     @Autowired
-    public FileController(FileStorageService fileStorageService, ServletContext servletContext,
-            UploadProperties uploadProperties) {
-        this.fileStorageService = fileStorageService;
-        this.servletContext = servletContext;
-        this.uploadProperties = uploadProperties;
-    }
+    private FileStorageService fileStorageService;
+    @Autowired
+    private ServletContext servletContext;
+    @Autowired
+    private UploadProperties uploadProperties;
 
     @GetMapping("/combination-image/{filename:.+}")
     public ResponseEntity<Resource> serveCombinationImage(@PathVariable String filename) {

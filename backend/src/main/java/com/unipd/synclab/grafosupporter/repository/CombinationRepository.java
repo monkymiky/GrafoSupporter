@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import com.unipd.synclab.grafosupporter.model.Combination;
 
-public interface SignCombinationRepository
+public interface CombinationRepository
                 extends JpaRepository<Combination, Long>, JpaSpecificationExecutor<Combination> {
 
         @Override

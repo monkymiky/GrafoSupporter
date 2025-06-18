@@ -1,5 +1,6 @@
 package com.unipd.synclab.grafosupporter.utility;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.unipd.synclab.grafosupporter.dto.ValuatedSignDto;
@@ -11,11 +12,8 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Component
 public class ValuatedSignMapper {
-    private final SignRepository signRepository;
-
-    public ValuatedSignMapper(SignRepository signRepository) {
-        this.signRepository = signRepository;
-    }
+    @Autowired
+    private SignRepository signRepository;
 
     public ValuatedSignDto toValuatedSignDto(ValuatedSign valuatedSign) {
         Sign sign = valuatedSign.getSign();

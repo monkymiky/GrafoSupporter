@@ -1,5 +1,6 @@
 package com.unipd.synclab.grafosupporter.utility;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.unipd.synclab.grafosupporter.model.Combination;
@@ -12,15 +13,11 @@ import com.unipd.synclab.grafosupporter.dto.CombinationDto;
 import com.unipd.synclab.grafosupporter.dto.ValuatedSignDto;
 
 @Component
-public class SignCombinationMapper {
-
-    private final BookMapper bookMapper;
-    private final ValuatedSignMapper valuatedSignMapper;
-
-    public SignCombinationMapper(BookMapper bookMapper, ValuatedSignMapper valuatedSignMapper) {
-        this.bookMapper = bookMapper;
-        this.valuatedSignMapper = valuatedSignMapper;
-    }
+public class CombinationMapper {
+    @Autowired
+    private BookMapper bookMapper;
+    @Autowired
+    private ValuatedSignMapper valuatedSignMapper;
 
     public CombinationDto toCombinationResponseDto(Combination combination) {
         if (combination == null) {

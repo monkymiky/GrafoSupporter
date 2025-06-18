@@ -17,23 +17,23 @@ import com.unipd.synclab.grafosupporter.dto.CombinationDto;
 import com.unipd.synclab.grafosupporter.model.Sign;
 import com.unipd.synclab.grafosupporter.model.ValuatedSign;
 import com.unipd.synclab.grafosupporter.model.Combination;
-import com.unipd.synclab.grafosupporter.repository.SignCombinationRepository;
+import com.unipd.synclab.grafosupporter.repository.CombinationRepository;
 import com.unipd.synclab.grafosupporter.repository.SignRepository;
 import com.unipd.synclab.grafosupporter.repository.specifications.SignCombinationSpecifications;
 
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.transaction.annotation.Transactional;
-import com.unipd.synclab.grafosupporter.utility.SignCombinationMapper;
+import com.unipd.synclab.grafosupporter.utility.CombinationMapper;
 
 @Service
-public class SignCombinationService {
+public class CombinationService {
     @Autowired
     SignRepository signRepository;
     @Autowired
-    SignCombinationRepository signCombinationRepository;
+    CombinationRepository signCombinationRepository;
     @Autowired
-    SignCombinationMapper signCombinationResponseMapper;
+    CombinationMapper signCombinationResponseMapper;
     @Autowired
     FileStorageService fileStorageService;
 

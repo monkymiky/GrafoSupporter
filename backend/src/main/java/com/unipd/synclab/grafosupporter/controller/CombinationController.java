@@ -19,48 +19,45 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.unipd.synclab.grafosupporter.dto.CombinationDto;
 import com.unipd.synclab.grafosupporter.model.Combination;
-import com.unipd.synclab.grafosupporter.service.FileStorageService;
-import com.unipd.synclab.grafosupporter.service.SignCombinationService;
-import com.unipd.synclab.grafosupporter.utility.SignCombinationMapper;
+import com.unipd.synclab.grafosupporter.service.CombinationService;
+import com.unipd.synclab.grafosupporter.utility.CombinationMapper;
 
 @RestController
 @RequestMapping("/combinations")
-public class SignCombinationController {
+public class CombinationController {
     @Autowired
-    private SignCombinationService signCombinationService;
+    private CombinationService combinationService;
     @Autowired
-    private SignCombinationMapper signCombinationMapper;
-    @Autowired
-    FileStorageService fileStorageService;
+    private CombinationMapper combinationMapper;
 
     @PostMapping("/withoutNumbers")
     public List<CombinationDto> getSignCombinationsWithoutValue(@RequestBody Map<Long, Integer> searchedSign) {
         System.out.println("Input ricevuto: " + searchedSign);
-        return signCombinationService.getSignCombinationsWithoutValue(searchedSign);
+        return combinationService.getSignCombinationsWithoutValue(searchedSign);
     }
 
     @GetMapping("/{combination_id}")
     public Combination getSignCombinationsById(@PathVariable("combination_id") Long combination_id) {
-        return signCombinationService.getSignCombinationsById(combination_id);
+        return combinationService.getSignCombinationsById(combination_id);
     }
 
     @PostMapping
     public void addSignCombination(@RequestBody CombinationDto signCombinationDto) {
         System.out.println("debug");
-        Combination signCombination = signCombinationMapper.toCombinationEntity(signCombinationDto);
-        signCombinationService.addSignCombination(signCombination);
+        Combination signCombination = combinationMapper.toCombinationEntity(signCombinationDto);
+        combinationService.addSignCombination(signCombination);
     }
 
     @PutMapping("/{combination_id}")
     public void editSignCombination(@RequestBody CombinationDto signCombinationDto,
             @PathVariable("combination_id") Long combination_id) {
-        signCombinationService.editSignCombination(signCombinationMapper.toCombinationEntity(signCombinationDto));
+        combinationService.editSignCombination(combinationMapper.toCombinationEntity(signCombinationDto));
     }
 
     @DeleteMapping("/{combination_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteSignCombination(@PathVariable("combination_id") Long combination_id) {
-        signCombinationService.deleteSignCombination(combination_id);
+        combinationService.deleteSignCombination(combination_id);
     }
 
 }

@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -13,11 +14,8 @@ import com.unipd.synclab.grafosupporter.service.SignService;
 @RestController
 @RequestMapping("/signs")
 public class SignController {
-    private final SignService signService;
-
-    public SignController(SignService signService) {
-        this.signService = signService;
-    }
+    @Autowired
+    private SignService signService;
 
     @GetMapping
     public List<Sign> getMethodName() {

@@ -63,10 +63,12 @@
 
   @if (isExpanded) {
   <div class="combination-body row g-0">
+    @if(combination.author == "Girolamo Moretti"){
     <div class="signs-column-body col-auto">
       <p>Condizione testuale originale:</p>
       <p>{{ combination.originalTextCondition }}</p>
     </div>
+    }
     <div class="col description-column-body">
       @if(combination.author !== 'Girolamo Moretti'){
       <div class="float-md-end d-flex gap-1 flex-column mb-3 ms-3">
