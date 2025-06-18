@@ -24,6 +24,25 @@ export class SingleCombination {
   private combinationService = inject(CombinationService);
   private sharedState = inject(SharedStateService);
   public isExpanded = false;
+  public temperaments: string[] = [];
+
+  ngOnInit() {
+    for (const sign of this.combination.signs) {
+      for (const signData of this.sharedState.signs()) {
+        if (sign.signId == signData[0]) {
+          this.temperaments.push(signData[1][1]);
+          console.log(
+            'id: ' +
+              sign.signId +
+              ' segno: ' +
+              sign.name +
+              ' temperamento: ' +
+              signData[1][1]
+          );
+        }
+      }
+    }
+  }
 
   @HostBinding('style.display') display = 'contents';
 

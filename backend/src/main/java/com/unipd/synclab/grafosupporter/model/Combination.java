@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderColumn;
 import jakarta.persistence.CascadeType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -45,6 +46,7 @@ public class Combination {
     private String ImagePath;
 
     @OneToMany(mappedBy = "combination", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderColumn(name = "sign_order")
     private List<ValuatedSign> signs;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,7 +1,7 @@
 <div class="card combination-card mb-3" [class.is-expanded]="isExpanded">
   <div class="combination-row row g-0">
     <div class="signs-column col-auto" (click)="toggleExpand()">
-      @for (sign of combination.signs; track sign.name) {
+      @for (sign of combination.signs; track sign.name; let i = $index) {
 
       <div>
         <ng-template #tipContent>
@@ -27,6 +27,10 @@
           <div
             [class.ms-4]="!sign.isOptional"
             [class.ms-2]="sign.isOptional"
+            [class.text-success]="temperaments[i] == 'Attesa'"
+            [class.text-danger]="temperaments[i] == 'Assalto'"
+            [class.text-warning]="temperaments[i] == 'Resistenza'"
+            [class.text-info]="temperaments[i] == 'Cessione'"
             class="text-nowrap me-2"
           >
             {{ sign.name }}
