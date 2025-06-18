@@ -16,10 +16,14 @@ services:
   backend:
     build: 
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: backend/Dockerfile.dev
     container_name: grafosupporter_backend
     ports:
       - "8080:8080"
+      - "5005:5005"  # Porta per il debug remoto
+    volumes:
+      - ./backend:/app
+      - ~/.m2:/root/.m2
     depends_on:
       - db         
     environment:
