@@ -38,39 +38,14 @@ public class CombinationService {
     FileStorageService fileStorageService;
 
     @Transactional(readOnly = true)
-    public Combination getSignCombinationsById(Long id) {
-        Optional<Combination> signCombination = signCombinationRepository.findById(id);
-        if (signCombination.isPresent())
-            return signCombination.get();
-        else
-            throw new InvalidParameterException("signCombination with id = " + id + " doesnt'exist.");
-    }
-
-    @Transactional(readOnly = true)
     public List<CombinationDto> getSignCombinationsWithoutValue(Map<Long, Integer> serchedSign) {
         if (serchedSign == null || serchedSign.isEmpty()) {
             throw new InvalidParameterException("non è possibile cercare combinazioni che non contengono segni");
         }
-        // List<Sign> allSigns = signRepository.findAll();
+
         Specification<Combination> spec = SignCombinationSpecifications
                 .allSignsInCombinationMustMatchCriteria(serchedSign);
         List<Combination> foundCombinations = signCombinationRepository.findAll(spec);
-
-        // List<List<ValuatedSignDto>> valuatedSignsDtos = foundCombinations.stream()
-        // .map(signCombination -> signCombination.getSigns().stream()
-        // .map(sign -> {
-        // Sign foundSign = allSigns.stream()
-        // .filter(s -> s.getId().equals(sign.getSign().getId()))
-        // .findFirst()
-        // .orElseThrow(() -> new EntityNotFoundException(
-        // "Sign not found with id: " + sign.getSign().getId()));
-        // return new ValuatedSignDto(sign.getSign().getId(), sign.getMax(),
-        // sign.getMin(),
-        // sign.getClassification(), sign.getIsOptional(), foundSign.getName(),
-        // foundSign.getTemperamento());
-        // })
-        // .collect(Collectors.toList()))
-        // .collect(Collectors.toList());
 
         List<CombinationDto> signCombinationDtos = foundCombinations.stream()
                 .map(signCombination -> signCombinationResponseMapper.toCombinationResponseDto(signCombination))

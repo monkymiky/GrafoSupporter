@@ -36,11 +36,6 @@ public class CombinationController {
         return combinationService.getSignCombinationsWithoutValue(searchedSign);
     }
 
-    @GetMapping("/{combination_id}")
-    public Combination getSignCombinationsById(@PathVariable("combination_id") Long combination_id) {
-        return combinationService.getSignCombinationsById(combination_id);
-    }
-
     @PostMapping
     public void addSignCombination(@RequestBody CombinationDto signCombinationDto) {
         System.out.println("debug");
