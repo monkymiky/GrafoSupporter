@@ -22,7 +22,7 @@ public class BookMapper {
                 book.getId(),
                 book.getTitle(),
                 book.getWriter(),
-                book.getPubblicationJear(),
+                book.getPublicationYear(),
                 book.getEditor(),
                 book.getIsbn());
     }

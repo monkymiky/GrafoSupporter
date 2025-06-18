@@ -24,7 +24,7 @@ public class Book {
     private Long id;
     private String title;
     private String writer;
-    private Integer pubblicationJear;
+    private Integer publicationYear;
     private String editor;
     private String isbn;
 }

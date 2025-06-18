@@ -39,11 +39,11 @@ public class Combination {
     @Column(length = 2048)
     private String longDescription;
     @Column(length = 2048)
-    private String OriginalTextCondition;
+    private String originalTextCondition;
     @Column(length = 125)
-    private String Author;
+    private String author;
     @Column(length = 512)
-    private String ImagePath;
+    private String imagePath;
 
     @OneToMany(mappedBy = "combination", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderColumn(name = "sign_order")

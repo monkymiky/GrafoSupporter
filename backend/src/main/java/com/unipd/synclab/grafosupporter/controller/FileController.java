@@ -1,5 +1,6 @@
 package com.unipd.synclab.grafosupporter.controller;
 
+import com.unipd.synclab.grafosupporter.config.UploadProperties;
 import com.unipd.synclab.grafosupporter.service.FileStorageService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,14 @@ public class FileController {
     private final FileStorageService fileStorageService;
     private final ServletContext servletContext;
 
+    private final UploadProperties uploadProperties;
+
     @Autowired
-    public FileController(FileStorageService fileStorageService, ServletContext servletContext) {
+    public FileController(FileStorageService fileStorageService, ServletContext servletContext,
+            UploadProperties uploadProperties) {
         this.fileStorageService = fileStorageService;
         this.servletContext = servletContext;
+        this.uploadProperties = uploadProperties;
     }
 
     @GetMapping("/combination-image/{filename:.+}")
@@ -88,7 +93,7 @@ public class FileController {
                     response.put("message", "Solo file immagine sono consentiti.");
                     return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
                 }
-                if (imageFile.getSize() > 5 * 1024 * 1024) {
+                if (imageFile.getSize() > uploadProperties.getMaxFileSize()) {
                     response.put("message", "Il file è troppo grande. Dimensione massima 5MB.");
                     return new ResponseEntity<>(response, HttpStatus.PAYLOAD_TOO_LARGE);
                 }

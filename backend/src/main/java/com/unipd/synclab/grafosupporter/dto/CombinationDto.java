@@ -15,9 +15,9 @@ public class CombinationDto {
     private String title;
     private String shortDescription;
     private String longDescription;
-    private String OriginalTextCondition;
-    private String Author;
-    private String ImagePath;
+    private String originalTextCondition;
+    private String author;
+    private String imagePath;
     private List<ValuatedSignDto> signs;
     private BookDto sourceBook;
 }
