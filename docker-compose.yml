@@ -1,0 +1,44 @@
+services:
+  
+  db:
+    image: postgres:16
+    container_name: pg
+    environment:
+      POSTGRES_DB: grafosupporterDB
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  
+  backend:
+    build: 
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: grafosupporter_backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db         
+    environment:
+      DB_USER: user
+      DB_PASS: pass
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/grafosupporterDB
+
+  frontend:
+    build: ./frontend
+    container_name: grafosupporter_frontend
+    ports:
+     - "4200:4200"
+    depends_on:
+     - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.angular/cache 
+    
+
+volumes:
+  postgres_data:

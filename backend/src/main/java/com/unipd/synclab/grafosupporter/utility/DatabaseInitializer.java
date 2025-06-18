@@ -75,11 +75,12 @@ public class DatabaseInitializer {
                 return null;
         }
 
-        public void populateDatabaseFromJson(String file) {
+        public void populateDatabaseFromJson() {
                 if (signCombinationRepository.count() > 0) {
                         System.out.println("SignCombinationDatabase already initialized.");
                         return;
                 }
+
                 ClassPathResource resource = new ClassPathResource("defaultData.json");
                 ObjectMapper objectMapper = new ObjectMapper();
                 try (InputStream inputStream = resource.getInputStream()) {
@@ -128,6 +129,7 @@ public class DatabaseInitializer {
                         System.out.println("SignCombinationDatabase initialized from JSON.");
                 } catch (IOException e) {
                         System.err.println("Errore nella lettura/parsing del file JSON: " + e.getMessage());
+                        throw new RuntimeException("Failed to populate database from defaultData.json", e);
                 }
         }
 
@@ -292,10 +294,7 @@ public class DatabaseInitializer {
                         System.out.println("SignDatabase already initialized.");
                 }
 
-                populateDatabaseFromJson(
-                                new String(Files.readAllBytes(Paths.get(
-                                                "src/main/resources/defaultData.json")),
-                                                StandardCharsets.UTF_8));
+                populateDatabaseFromJson();
         }
 
 }

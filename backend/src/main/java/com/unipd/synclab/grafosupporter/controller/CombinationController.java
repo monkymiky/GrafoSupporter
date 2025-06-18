@@ -30,23 +30,23 @@ public class CombinationController {
     @Autowired
     private CombinationMapper combinationMapper;
 
-    @PostMapping
-    public List<CombinationDto> getSignCombinationsWithoutValue(@RequestBody Map<Long, Integer> searchedSign) {
+    @PostMapping("/get")
+    public List<CombinationDto> getSignCombinations(@RequestBody Map<Long, Integer> searchedSign) {
         System.out.println("Input ricevuto: " + searchedSign);
-        return combinationService.getSignCombinationsWithoutValue(searchedSign);
+        return combinationService.getSignCombinations(searchedSign);
     }
 
-    @PostMapping
-    public void addSignCombination(@RequestBody CombinationDto signCombinationDto) {
+    @PostMapping("/add")
+    public void addSignCombination(@RequestBody CombinationDto combinationDto) {
         System.out.println("debug");
-        Combination signCombination = combinationMapper.toCombinationEntity(signCombinationDto);
+        Combination signCombination = combinationMapper.toCombinationEntity(combinationDto);
         combinationService.addSignCombination(signCombination);
     }
 
     @PutMapping("/{combination_id}")
-    public void editSignCombination(@RequestBody CombinationDto signCombinationDto,
+    public void editSignCombination(@RequestBody CombinationDto combinationDto,
             @PathVariable("combination_id") Long combination_id) {
-        combinationService.editSignCombination(combinationMapper.toCombinationEntity(signCombinationDto));
+        combinationService.editSignCombination(combinationMapper.toCombinationEntity(combinationDto));
     }
 
     @DeleteMapping("/{combination_id}")

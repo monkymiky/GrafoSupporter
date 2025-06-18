@@ -38,7 +38,7 @@ public class CombinationService {
     FileStorageService fileStorageService;
 
     @Transactional(readOnly = true)
-    public List<CombinationDto> getSignCombinationsWithoutValue(Map<Long, Integer> serchedSign) {
+    public List<CombinationDto> getSignCombinations(Map<Long, Integer> serchedSign) {
         if (serchedSign == null || serchedSign.isEmpty()) {
             throw new InvalidParameterException("non è possibile cercare combinazioni che non contengono segni");
         }

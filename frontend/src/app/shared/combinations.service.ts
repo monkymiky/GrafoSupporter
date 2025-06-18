@@ -17,12 +17,12 @@ export class CombinationService {
       filtersObject[key] = value;
     });
 
-    return this.http.post<Combination[]>(this.apiUrl, filtersObject);
+    return this.http.post<Combination[]>(this.apiUrl + '/get', filtersObject);
   }
 
   createCombination(combination: Combination): Observable<Combination> {
     const { id, ...combinationData } = combination;
-    return this.http.post<Combination>(this.apiUrl, combinationData);
+    return this.http.post<Combination>(this.apiUrl + '/add', combinationData);
   }
 
   updateCombination(
