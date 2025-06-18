@@ -32,15 +32,15 @@
         },
         {
           "id": 20,
-          "max": 0,
-          "min": 0,
+          "max": 5,
+          "min": 5,
           "optional": true,
           "classification": "M"
         },
         {
           "id": 40,
-          "max": 0,
-          "min": 0,
+          "max": 2,
+          "min": 4,
           "optional": true,
           "classification": "S"
         }
