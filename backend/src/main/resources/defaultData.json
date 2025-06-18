@@ -3,7 +3,7 @@
     {
       "title": "Titolo: Questo è un esempio di combinazione",
       "description_short": "Descrizione Breve: Cliccami per visualizzare le altre informazioni",
-      "description_long": "Descrizione Lunga:<p>Le informazioni che puoi visualizzare in una combianzione sono: </p><p>- I segni della combianzione con il loro intervallo in cui la combinazione ha significato: </p><p class='ms-4'>possono avere un '+' affianco, ciò significa che sono opzionali e che quindi la combianzione ha senso anche senza che questi segni siano presenti o siano nel range specificato.</p><p class='ms-4'> Il testo di ogni sengo può essere di 5 colori che indicano il temperamento:</p><p>   - nero: dipende dal contesto </p><p>   - azzurro: Cessione</p><p>    - giallo: Resistenza</p> <p>    - verde: Attesa</p> <p>    - rosso: assalto</p> <p>Con i bottoni rosso e giallo è possibile andare a eliminare o modificare una combinazione se è stata inserita dall'utente. Apri il secondo esempio per vederli!</p><p>PS: l'intervallo di grado per un segno 0-0/10 indica che il segno deve essere necessariamente assente perche la combinazione abbia significato.</p>",
+      "description_long": "Descrizione Lunga: Le informazioni che puoi visualizzare in una combianzione sono:   - I segni della combianzione con il loro intervallo in cui la combinazione ha significato: possono avere un '+' affianco, ciò significa che sono opzionali e che quindi la combianzione ha senso anche senza che questi segni siano presenti o siano nel range specificato.  Il testo di ogni sengo può essere di 5 colori che indicano il temperamento:     (nero: dipende dal contesto)      (azzurro: Cessione)      (giallo: Resistenza)       (verde: Attesa)       (rosso: assalto)   Con i bottoni bidone (rosso) e  penna (giallo) è possibile andare a eliminare o modificare una combinazione se è stata inserita dall'utente. Apri il secondo esempio per vederli!  PS: l'intervallo di grado per un segno 0-0/10 indica che il segno deve essere necessariamente assente perche la combinazione abbia significato. ",
       "original_text_condition": "qua puoi controllare la condizione testuale uguale a come l'ha scritta moretti nei suoi libri",
       "author": "Girolamo Moretti",
       "source": 1,
@@ -49,7 +49,7 @@
     {
       "title": "Titolo: Questo è un altro esempio di combinazione",
       "description_short": "Descrizione Breve: Cliccami per visualizzare le altre informazioni",
-      "description_long": "Descrizione Lunga: Ora incomincia pure la ricerca delle combinazioni selezionando nella barra laterale il grado di tutti i segni che hai trovato durante l'analisi! <p>ATTENTO! se alcuni non li inserisci il sistema li considera come assenti e non ti mostrerà le combinazioni che li riguardano (a meno che non siano segni opzionali) siccome le combinazioni sono veramente tante e altrimenti sarebbe da visualizzarne sempre tantissime!</p>",
+      "description_long": "Descrizione Lunga: Ora incomincia pure la ricerca delle combinazioni selezionando nella barra laterale il grado di tutti i segni che hai trovato durante l'analisi!  ATTENTO! se alcuni non li inserisci il sistema li considera come assenti e non ti mostrerà le combinazioni che li riguardano (a meno che non siano segni opzionali) siccome le combinazioni sono veramente tante e altrimenti sarebbe da visualizzarne sempre tantissime! ",
       "original_text_condition": "",
       "author": "Utente",
       "source": null,
