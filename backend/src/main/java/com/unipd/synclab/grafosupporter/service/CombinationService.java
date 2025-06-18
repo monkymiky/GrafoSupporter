@@ -90,19 +90,19 @@ public class CombinationService {
         existingCombination.getSigns().clear();
 
         if (combinationData.getSigns() != null) {
+            List<Long> signIds = combinationData.getSigns().stream().map(s -> s.getSign().getId())
+                    .collect(Collectors.toList());
+            Map<Long, Sign> signsMap = signRepository.findAllById(signIds).stream()
+                    .collect(Collectors.toMap(Sign::getId, sign -> sign));
             for (ValuatedSign signData : combinationData.getSigns()) {
                 ValuatedSign newSign = new ValuatedSign();
 
-                Sign signRef = signRepository.findById(signData.getSign().getId())
-                        .orElseThrow(
-                                () -> new EntityNotFoundException("Sign not found: " + signData.getSign().getId()));
-
+                Sign signRef = signsMap.get(signData.getSign().getId());
                 newSign.setSign(signRef);
                 newSign.setMin(signData.getMin());
                 newSign.setMax(signData.getMax());
                 newSign.setClassification(signData.getClassification());
                 newSign.setIsOptional(signData.getIsOptional());
-
                 newSign.setCombination(existingCombination);
                 existingCombination.getSigns().add(newSign);
             }
