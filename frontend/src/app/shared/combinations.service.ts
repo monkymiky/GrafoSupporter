@@ -12,17 +12,12 @@ export class CombinationService {
   private http = inject(HttpClient);
 
   searchCombinations(filters: Map<number, number>): Observable<Combination[]> {
-    console.log(this.apiUrl + '/withoutNumbers');
-
     const filtersObject: { [key: number]: Grado } = {};
     filters.forEach((value, key) => {
       filtersObject[key] = value;
     });
 
-    return this.http.post<Combination[]>(
-      this.apiUrl + '/withoutNumbers',
-      filtersObject
-    );
+    return this.http.post<Combination[]>(this.apiUrl, filtersObject);
   }
 
   createCombination(combination: Combination): Observable<Combination> {

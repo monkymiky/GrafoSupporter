@@ -30,7 +30,7 @@ public class CombinationController {
     @Autowired
     private CombinationMapper combinationMapper;
 
-    @PostMapping("/withoutNumbers")
+    @PostMapping
     public List<CombinationDto> getSignCombinationsWithoutValue(@RequestBody Map<Long, Integer> searchedSign) {
         System.out.println("Input ricevuto: " + searchedSign);
         return combinationService.getSignCombinationsWithoutValue(searchedSign);
