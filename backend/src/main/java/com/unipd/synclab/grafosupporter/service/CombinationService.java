@@ -38,13 +38,13 @@ public class CombinationService {
     FileStorageService fileStorageService;
 
     @Transactional(readOnly = true)
-    public List<CombinationDto> getCombinations(Map<Long, Integer> serchedSign) {
-        if (serchedSign == null || serchedSign.isEmpty()) {
+    public List<CombinationDto> getCombinations(Map<Long, Integer> searchedSign) {
+        if (searchedSign == null || searchedSign.isEmpty()) {
             throw new InvalidParameterException("non è possibile cercare combinazioni che non contengono segni");
         }
 
         Specification<Combination> spec = CombinationSpecifications
-                .allSignsInCombinationMustMatchCriteria(serchedSign);
+                .allSignsInCombinationMustMatchCriteria(searchedSign);
         List<Combination> foundCombinations = combinationRepository.findAll(spec);
 
         List<CombinationDto> combinationDtos = foundCombinations.stream()

@@ -15,5 +15,5 @@ export class SignFormFieldComponent {
   @Input({ required: true }) signFormGroup!: FormGroup<SingleSignFormModel>;
   @Input({ required: true }) signIndex!: number;
   @Input() availableSigns: SignApiResponseItem[] = [];
-  renge = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  range = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 }

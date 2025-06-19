@@ -12,7 +12,7 @@ public class BookMapper {
                 dto.getId(),
                 dto.getTitle(),
                 dto.getWriter(),
-                dto.getPubblicationJear(),
+                dto.getPublicationYear(),
                 dto.getEditor(),
                 dto.getIsbn());
     }
