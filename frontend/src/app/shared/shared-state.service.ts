@@ -21,14 +21,16 @@ export class SharedStateService {
     return map;
   }
   triggerCombinationsSearch = signal(0);
-  filters = computed<Map<number, Grado>>(() => {
+  filtersInitializer = computed<Map<number, Grado>>(() => {
     const map = new Map<number, Grado>();
 
     for (const sign of this.signs()) {
       map.set(sign.id, Grado.ASSENTE);
     }
+    this.filters.set(map);
     return map;
   });
+  filters = signal(new Map<number, Grado>());
 
   triggerSignsRequest = signal(0);
   private signsObservable: Observable<SignApiResponseItem[]> = toObservable(
