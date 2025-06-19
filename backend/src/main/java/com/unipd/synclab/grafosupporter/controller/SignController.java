@@ -18,7 +18,7 @@ public class SignController {
     private SignService signService;
 
     @GetMapping
-    public List<Sign> getMethodName() {
+    public List<Sign> getAllSign() {
         return signService.getAllSign();
     }
 }

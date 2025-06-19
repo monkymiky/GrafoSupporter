@@ -5,13 +5,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component // Rende la classe una Spring Bean, così può essere iniettata
-@ConfigurationProperties(prefix = "app.upload") // Mappa le proprietà che iniziano con "app.upload"
+@Component
+@ConfigurationProperties(prefix = "app.upload")
 public class UploadProperties {
 
     private String combinationImagesDirectory;
-    private long maxFileSize; // Usiamo long per la dimensione in bytes
-    private List<String> allowedImageTypes; // Spring convertirà la stringa separata da virgole in List<String>
+    private long maxFileSize;
+    private List<String> allowedImageTypes;
 
     public String getCombinationImagesDirectory() {
         return combinationImagesDirectory;
@@ -37,7 +37,6 @@ public class UploadProperties {
         this.allowedImageTypes = allowedImageTypes;
     }
 
-    // Puoi aggiungere un metodo toString() per debug
     @Override
     public String toString() {
         return "UploadProperties{" +

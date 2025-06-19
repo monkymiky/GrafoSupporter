@@ -15,10 +15,10 @@ public interface CombinationRepository
                 extends JpaRepository<Combination, Long>, JpaSpecificationExecutor<Combination> {
 
         @Override
-        @EntityGraph(value = "SignCombination.withSignsAndBooks")
+        @EntityGraph(value = "Combination.withSignsAndBooks")
         List<Combination> findAll(Specification<Combination> spec);
 
         @Override
-        @EntityGraph(value = "SignCombination.withSignsAndBooks")
+        @EntityGraph(value = "Combination.withSignsAndBooks")
         Page<Combination> findAll(Specification<Combination> spec, Pageable pageable);
 }

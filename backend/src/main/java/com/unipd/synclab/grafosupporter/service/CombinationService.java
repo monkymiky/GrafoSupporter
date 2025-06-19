@@ -19,7 +19,7 @@ import com.unipd.synclab.grafosupporter.model.ValuatedSign;
 import com.unipd.synclab.grafosupporter.model.Combination;
 import com.unipd.synclab.grafosupporter.repository.CombinationRepository;
 import com.unipd.synclab.grafosupporter.repository.SignRepository;
-import com.unipd.synclab.grafosupporter.repository.specifications.SignCombinationSpecifications;
+import com.unipd.synclab.grafosupporter.repository.specifications.CombinationSpecifications;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -31,39 +31,39 @@ public class CombinationService {
     @Autowired
     SignRepository signRepository;
     @Autowired
-    CombinationRepository signCombinationRepository;
+    CombinationRepository combinationRepository;
     @Autowired
-    CombinationMapper signCombinationResponseMapper;
+    CombinationMapper combinationResponseMapper;
     @Autowired
     FileStorageService fileStorageService;
 
     @Transactional(readOnly = true)
-    public List<CombinationDto> getSignCombinations(Map<Long, Integer> serchedSign) {
+    public List<CombinationDto> getCombinations(Map<Long, Integer> serchedSign) {
         if (serchedSign == null || serchedSign.isEmpty()) {
             throw new InvalidParameterException("non è possibile cercare combinazioni che non contengono segni");
         }
 
-        Specification<Combination> spec = SignCombinationSpecifications
+        Specification<Combination> spec = CombinationSpecifications
                 .allSignsInCombinationMustMatchCriteria(serchedSign);
-        List<Combination> foundCombinations = signCombinationRepository.findAll(spec);
+        List<Combination> foundCombinations = combinationRepository.findAll(spec);
 
-        List<CombinationDto> signCombinationDtos = foundCombinations.stream()
-                .map(signCombination -> signCombinationResponseMapper.toCombinationResponseDto(signCombination))
+        List<CombinationDto> combinationDtos = foundCombinations.stream()
+                .map(combination -> combinationResponseMapper.toCombinationResponseDto(combination))
                 .collect(Collectors.toList());
 
-        return signCombinationDtos;
+        return combinationDtos;
     };
 
     @Transactional
-    public void addSignCombination(Combination signCombination) {
-        signCombinationRepository.save(signCombination);
+    public void addCombination(Combination combination) {
+        combinationRepository.save(combination);
     }
 
     @Transactional
-    public void editSignCombination(Combination combinationData) {
-        Combination existingCombination = signCombinationRepository.findById(combinationData.getId())
+    public void editCombination(Combination combinationData) {
+        Combination existingCombination = combinationRepository.findById(combinationData.getId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Impossible to edit - SignCombination not found with id: " + combinationData.getId()));
+                        "Impossible to edit - Combination not found with id: " + combinationData.getId()));
 
         if (existingCombination.getImagePath() != null
                 && existingCombination.getImagePath() != combinationData.getImagePath()) {
@@ -73,10 +73,10 @@ public class CombinationService {
             }
         }
 
-        Combination signCombinationToEdit = signCombinationRepository.findById(combinationData.getId())
+        Combination combinationToEdit = combinationRepository.findById(combinationData.getId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Impossible to edit - SignCombination not found with id: " + combinationData.getId()));
-        if (signCombinationToEdit.getSourceBook() != null)
+                        "Impossible to edit - Combination not found with id: " + combinationData.getId()));
+        if (combinationToEdit.getSourceBook() != null)
             throw new InvalidParameterException(
                     "non è possibile eliminare la combianzione con id=" + combinationData.getId()
                             + " perche l'autore è moretti");
@@ -110,14 +110,14 @@ public class CombinationService {
     }
 
     @Transactional
-    public void deleteSignCombination(Long id) {
-        if (!signCombinationRepository.existsById(id)) {
-            throw new EntityNotFoundException("SignCombination not found with id: " + id);
+    public void deleteCombination(Long id) {
+        if (!combinationRepository.existsById(id)) {
+            throw new EntityNotFoundException("Combination not found with id: " + id);
         }
-        if (signCombinationRepository.findById(id).get().getSourceBook() != null)
+        if (combinationRepository.findById(id).get().getSourceBook() != null)
             throw new InvalidParameterException(
                     "non è possibile eliminare la combianzione con id=" + id + " perche l'autore è moretti");
-        signCombinationRepository.deleteById(id);
+        combinationRepository.deleteById(id);
     }
 
 }

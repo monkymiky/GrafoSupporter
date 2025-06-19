@@ -31,28 +31,28 @@ public class CombinationController {
     private CombinationMapper combinationMapper;
 
     @PostMapping("/get")
-    public List<CombinationDto> getSignCombinations(@RequestBody Map<Long, Integer> searchedSign) {
+    public List<CombinationDto> getCombinations(@RequestBody Map<Long, Integer> searchedSign) {
         System.out.println("Input ricevuto: " + searchedSign);
-        return combinationService.getSignCombinations(searchedSign);
+        return combinationService.getCombinations(searchedSign);
     }
 
     @PostMapping("/add")
-    public void addSignCombination(@RequestBody CombinationDto combinationDto) {
+    public void addCombination(@RequestBody CombinationDto combinationDto) {
         System.out.println("debug");
-        Combination signCombination = combinationMapper.toCombinationEntity(combinationDto);
-        combinationService.addSignCombination(signCombination);
+        Combination combination = combinationMapper.toCombinationEntity(combinationDto);
+        combinationService.addCombination(combination);
     }
 
     @PutMapping("/{combination_id}")
-    public void editSignCombination(@RequestBody CombinationDto combinationDto,
+    public void editCombination(@RequestBody CombinationDto combinationDto,
             @PathVariable("combination_id") Long combination_id) {
-        combinationService.editSignCombination(combinationMapper.toCombinationEntity(combinationDto));
+        combinationService.editCombination(combinationMapper.toCombinationEntity(combinationDto));
     }
 
     @DeleteMapping("/{combination_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteSignCombination(@PathVariable("combination_id") Long combination_id) {
-        combinationService.deleteSignCombination(combination_id);
+    public void deleteCombination(@PathVariable("combination_id") Long combination_id) {
+        combinationService.deleteCombination(combination_id);
     }
 
 }

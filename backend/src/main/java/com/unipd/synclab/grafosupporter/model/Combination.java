@@ -25,7 +25,7 @@ import jakarta.persistence.Column;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@NamedEntityGraph(name = "SignCombination.withSignsAndBooks", attributeNodes = { @NamedAttributeNode("signs"),
+@NamedEntityGraph(name = "Combination.withSignsAndBooks", attributeNodes = { @NamedAttributeNode("signs"),
         @NamedAttributeNode("sourceBook") })
 public class Combination {
     @Id

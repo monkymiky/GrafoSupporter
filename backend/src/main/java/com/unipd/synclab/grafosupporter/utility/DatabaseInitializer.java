@@ -61,7 +61,7 @@ public class DatabaseInitializer {
         @Autowired
         SignRepository signRepository;
         @Autowired
-        CombinationRepository signCombinationRepository;
+        CombinationRepository combinationRepository;
 
         private Book processBook(Long id, String combinationTitle) {
                 Optional<Book> book = bookRepository.findById(id);
@@ -76,8 +76,8 @@ public class DatabaseInitializer {
         }
 
         public void populateDatabaseFromJson() {
-                if (signCombinationRepository.count() > 0) {
-                        System.out.println("SignCombinationDatabase already initialized.");
+                if (combinationRepository.count() > 0) {
+                        System.out.println("CombinationDatabase already initialized.");
                         return;
                 }
 
@@ -125,8 +125,8 @@ public class DatabaseInitializer {
                                 combinations.add(combination);
                         }
 
-                        signCombinationRepository.saveAll(combinations);
-                        System.out.println("SignCombinationDatabase initialized from JSON.");
+                        combinationRepository.saveAll(combinations);
+                        System.out.println("CombinationDatabase initialized from JSON.");
                 } catch (IOException e) {
                         System.err.println("Errore nella lettura/parsing del file JSON: " + e.getMessage());
                         throw new RuntimeException("Failed to populate database from defaultData.json", e);

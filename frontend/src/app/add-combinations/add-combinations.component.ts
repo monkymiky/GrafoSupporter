@@ -477,25 +477,4 @@ export class AddCombinationsComponent {
   get imagePathCtrl() {
     return this.combinationForm.controls.imagePath;
   }
-
-  // private getInvalidControls(
-  //   form: FormGroup | FormArray,
-  //   path: string = ''
-  // ): string[] {
-  //   let invalidControls: string[] = [];
-
-  //   Object.entries(form.controls).forEach(([key, control]) => {
-  //     const currentPath = path ? `${path}.${key}` : key;
-
-  //     if (control instanceof FormGroup || control instanceof FormArray) {
-  //       invalidControls = invalidControls.concat(
-  //         this.getInvalidControls(control, currentPath)
-  //       );
-  //     } else if (control.invalid) {
-  //       invalidControls.push(currentPath);
-  //     }
-  //   });
-
-  //   return invalidControls;
-  //}
 }
