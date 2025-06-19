@@ -41,7 +41,7 @@ export class FiltersComponent {
 
   readonly errorMessage = signal<string | null>(null);
 
-  singsTypes: Signal<string[]> = computed(() => {
+  signsTypes: Signal<string[]> = computed(() => {
     const result: string[] = [];
     for (const singleSing of this.sharedState.signs()) {
       if (!result.includes(singleSing.tipo)) {

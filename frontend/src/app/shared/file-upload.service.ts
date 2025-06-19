@@ -10,7 +10,7 @@ export class FileUploadService {
 
   constructor(private http: HttpClient) {}
 
-  uploadCombiantionImage(formData: FormData): Observable<any> {
+  uploadCombinationImage(formData: FormData): Observable<any> {
     return this.http.post(this.apiUrl + '/combination-image', formData);
   }
 }

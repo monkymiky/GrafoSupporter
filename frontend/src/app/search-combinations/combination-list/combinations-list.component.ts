@@ -15,7 +15,7 @@ import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
   styleUrl: './combinations-list.component.css',
 })
 export class CombinationListComponent {
-  combiantionsService = inject(CombinationService);
+  combinationsService = inject(CombinationService);
   sharedState = inject(SharedStateService);
   signsService = inject(SignsService);
   errorMessage = signal('');
@@ -25,7 +25,7 @@ export class CombinationListComponent {
   ).pipe(
     switchMap(() => {
       console.log('signal ricevuto' + this.sharedState.filters);
-      return this.combiantionsService
+      return this.combinationsService
         .searchCombinations(this.sharedState.filters())
         .pipe(
           tap(() => this.errorMessage.set('')),

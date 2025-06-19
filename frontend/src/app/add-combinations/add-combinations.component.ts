@@ -351,10 +351,10 @@ export class AddCombinationsComponent {
 
     const formValue = this.combinationForm.getRawValue();
 
+    const signsMap = this.sharedState.signsMap();
     const getSignNameById = (id: number | null): string => {
       if (id === null) return 'ID nullo';
-      const sign = this.sharedState.signs().find((s) => s.id == id);
-      return sign?.name ?? `Nome non trovato per ID: ${id}`;
+      return signsMap.get(id)?.name ?? `Nome non trovato per ID: ${id}`;
     };
 
     const combinationData: Combination = {
@@ -438,7 +438,7 @@ export class AddCombinationsComponent {
       const formImageData = new FormData();
       formImageData.append('imageFile', imageValue);
 
-      this.fileUploadService.uploadCombiantionImage(formImageData).subscribe({
+      this.fileUploadService.uploadCombinationImage(formImageData).subscribe({
         next: (response) => {
           combinationData.imagePath = response.fileName;
           this.activeImageFileName = response.fileName;

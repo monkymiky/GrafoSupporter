@@ -29,7 +29,7 @@
 </div>
 <form [formGroup]="signsForm" (ngSubmit)="onSubmit()">
   <div formArrayName="rowSelections" class="pb-3 mb-3">
-    @for(signType of singsTypes(); track signType) {
+    @for(signType of signsTypes(); track signType) {
     <div class="bg-secondary-subtle text-center rounded-top">
       {{ signType }}
     </div>

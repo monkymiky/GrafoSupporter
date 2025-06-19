@@ -17,18 +17,6 @@ export class SignsService {
   private http = inject(HttpClient);
 
   getSigns(): Observable<SignApiResponseItem[]> {
-    return this.http.get<SignApiResponseItem[]>(this.apiUrl).pipe(
-      map((responseArray) => {
-        const signs = [] as SignApiResponseItem[];
-        if (responseArray && Array.isArray(responseArray)) {
-          for (const item of responseArray) {
-            const temperamentoValue =
-              item.temperamento === null ? '' : item.temperamento;
-            signs.push(item);
-          }
-        }
-        return signs;
-      })
-    );
+    return this.http.get<SignApiResponseItem[]>(this.apiUrl);
   }
 }

@@ -77,7 +77,7 @@ public class DatabaseInitializer {
 
         public void populateDatabaseFromJson() {
                 if (combinationRepository.count() > 0) {
-                        System.out.println("CombinationDatabase already initialized.");
+                        System.out.println("CombinationDatabase gia inizializzato.");
                         return;
                 }
 
@@ -126,10 +126,10 @@ public class DatabaseInitializer {
                         }
 
                         combinationRepository.saveAll(combinations);
-                        System.out.println("CombinationDatabase initialized from JSON.");
+                        System.out.println("CombinationDatabase inizializzato dal JSON.");
                 } catch (IOException e) {
                         System.err.println("Errore nella lettura/parsing del file JSON: " + e.getMessage());
-                        throw new RuntimeException("Failed to populate database from defaultData.json", e);
+                        throw new RuntimeException("fallito il popolamento del database dal file defaultData.json", e);
                 }
         }
 
@@ -179,9 +179,9 @@ public class DatabaseInitializer {
                                         "Edizioni Messaggero Padova", "9788825010091"));
 
                         bookRepository.saveAll(books);
-                        System.out.println("BookDatabase initialized with default Books.");
+                        System.out.println("BookDatabase inizializzato con libri di default.");
                 } else {
-                        System.out.println("BookDatabase already initialized.");
+                        System.out.println("BookDatabase gia inizializzato.");
                 }
 
                 if (signRepository.count() == 0) {
@@ -289,9 +289,9 @@ public class DatabaseInitializer {
                         signs.add(new Sign(null, "Ricci Vezzosità", "Attesa", "Ricci"));
 
                         signRepository.saveAll(signs);
-                        System.out.println("SignDatabase initialized with default Signs.");
+                        System.out.println("SignDatabase inizializzato con segni default.");
                 } else {
-                        System.out.println("SignDatabase already initialized.");
+                        System.out.println("SignDatabase gia inizializzato.");
                 }
 
                 populateDatabaseFromJson();
