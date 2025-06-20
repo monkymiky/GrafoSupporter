@@ -1,3 +1,5 @@
+@use "../../../variables.scss" as *;
+
 .segni {
   flex: 0 0 17.7rem;
 }
@@ -5,6 +7,9 @@
   height: calc(100vh - 7.5rem);
   border-bottom-right-radius: 0.325rem;
   border-bottom-left-radius: 0.325rem;
+}
+.text-purple {
+  color: $text-purple;
 }
 @media screen and (max-width: 576px) {
   .d-sm-none-max {

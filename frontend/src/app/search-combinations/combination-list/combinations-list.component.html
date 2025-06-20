@@ -1,7 +1,14 @@
 <div class="container-fluid ps-0 scrollable">
   <div class="row align-items-center d-lx-none steaky-top d-sm-none-max">
     <div class="col-xl-8 flex-grow-1 text-center d-flex mb-2">
-      <div class="rounded me-1 bg-violet segni">Segni</div>
+      <div
+        class="rounded me-1 bg-violet segni"
+        [ngbTooltip]="segni"
+        placement="bottom"
+        container="body"
+      >
+        <i class="bi bi-question-circle-fill bg-withe me-2"></i>Segni
+      </div>
       <div class="rounded ms-1 bg-violet flex-grow-1">Significato</div>
     </div>
   </div>
@@ -14,3 +21,17 @@
     }
   </div>
 </div>
+
+<ng-template #segni>
+  <div>
+    Ogni segno colorato in base al temperamento:
+
+    <div class="text-info">Azzurro = Cessione</div>
+    <div class="text-purple">Viola = Resistenza</div>
+    <div class="text-danger">Rosso = Assalto</div>
+    <div class="text-success">Verde = Attesa</div>
+    <div calss="text-light">
+      Nero = temperamento diverso in base al contesto
+    </div>
+  </div>
+</ng-template>

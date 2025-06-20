@@ -6,11 +6,16 @@ import { catchError, Observable, of, startWith, switchMap, tap } from 'rxjs';
 import { Combination } from './combination.interface';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { SharedStateService } from '../../shared/shared-state.service';
-import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbAccordionModule,
+  NgbTooltipConfig,
+  NgbTooltip,
+} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-combination-list',
-  imports: [SingleCombination, NgbAccordionModule],
+  imports: [SingleCombination, NgbAccordionModule, NgbTooltip],
+  providers: [NgbTooltipConfig],
   templateUrl: './combinations-list.component.html',
   styleUrl: './combinations-list.component.scss',
 })
@@ -41,4 +46,9 @@ export class CombinationListComponent {
   readonly combinationsDisplayed = toSignal(this.combinationsObservable, {
     initialValue: [] as Combination[],
   });
+
+  constructor(config: NgbTooltipConfig) {
+    config.container = 'body';
+    config.tooltipClass = 'tooltipW';
+  }
 }
