@@ -36,20 +36,11 @@ interface SingleSignForm {
 export class FiltersComponent {
   private formBuilder = inject(FormBuilder);
   private sharedState = inject(SharedStateService);
+  signsTypes = this.sharedState.signsTypes;
 
   signsForm!: FormGroup;
 
   readonly errorMessage = signal<string | null>(null);
-
-  signsTypes: Signal<string[]> = computed(() => {
-    const result: string[] = [];
-    for (const singleSing of this.sharedState.signs()) {
-      if (!result.includes(singleSing.tipo)) {
-        result.push(singleSing.tipo);
-      }
-    }
-    return result;
-  });
 
   signsData: Signal<SingleSignForm[]> = computed(() => {
     const result: SingleSignForm[] = [];

@@ -53,4 +53,13 @@ export class SharedStateService {
   signsMap = computed(() => {
     return new Map(this.signs().map((sign) => [sign.id, sign]));
   });
+  signsTypes = computed(() => {
+    const result: string[] = [];
+    for (const singleSing of this.signs()) {
+      if (!result.includes(singleSing.tipo)) {
+        result.push(singleSing.tipo);
+      }
+    }
+    return result;
+  });
 }

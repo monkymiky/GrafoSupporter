@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SingleSignFormModel } from '../add-combinations.component';
 import { SignApiResponseItem } from '../../shared/signs.service';
+import { SharedStateService } from '../../shared/shared-state.service';
 
 @Component({
   selector: 'app-sign-form-field',
@@ -15,5 +16,13 @@ export class SignFormFieldComponent {
   @Input({ required: true }) signFormGroup!: FormGroup<SingleSignFormModel>;
   @Input({ required: true }) signIndex!: number;
   @Input() availableSigns: SignApiResponseItem[] = [];
+  sharedService = inject(SharedStateService);
+
+  filteredSignsByType(type: string) {
+    return this.availableSigns
+      .map((sign, i) => ({ ...sign, index: i }))
+      .filter((s) => s.tipo === type);
+  }
+
   range = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 }
