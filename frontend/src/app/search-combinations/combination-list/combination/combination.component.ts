@@ -14,7 +14,7 @@ import { AddCombinationsComponent } from '../../../add-combinations/add-combinat
   selector: 'app-single-combination',
   standalone: true,
   templateUrl: './combination.component.html',
-  styleUrls: ['./combination.component.css'],
+  styleUrls: ['./combination.component.scss'],
   imports: [NgbAccordionModule, NgbTooltip],
 })
 export class SingleCombination {

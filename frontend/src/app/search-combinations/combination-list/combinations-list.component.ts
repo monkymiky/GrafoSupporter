@@ -12,7 +12,7 @@ import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
   selector: 'app-combination-list',
   imports: [SingleCombination, NgbAccordionModule],
   templateUrl: './combinations-list.component.html',
-  styleUrl: './combinations-list.component.css',
+  styleUrl: './combinations-list.component.scss',
 })
 export class CombinationListComponent {
   combinationsService = inject(CombinationService);

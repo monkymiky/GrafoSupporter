@@ -1,14 +1,11 @@
-<div class="d-flex">
-  <button
-    class="btn btn-outline-primary d-lg-none m-3"
-    (click)="openSidebar(sidebar)"
-  >
+<div class="d-flex d-xl-none">
+  <button class="btn btn-outline-primary m-3" (click)="openSidebar(sidebar)">
     ☰ Cerca
   </button>
   <button
     type="button"
     (click)="openModalCombiantion()"
-    class="btn btn-outline-success ms-auto d-lg-none my-3 me-3"
+    class="btn btn-outline-success ms-auto my-3 me-3"
   >
     <i class="bi bi-plus-lg"></i>
   </button>
@@ -16,62 +13,56 @@
 
 <!-- Sidebar dinamica (offcanvas) -->
 <ng-template #sidebar let-offcanvas>
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title">Menu</h5>
+  <div class="offcanvas-header pb-0">
+    <h5 class="offcanvas-title">Seleziona i segni</h5>
     <button
       type="button"
       class="btn-close"
       (click)="offcanvas.close()"
     ></button>
   </div>
-  <div class="offcanvas-body pt-0 mt-0">
+  <div class="offcanvas-body pt-0 mt-0" id="offbody">
     <div class="flex-column">
       <app-filters></app-filters>
     </div>
   </div>
 </ng-template>
-
-<div class="d-flex flex-column vh-100">
-  <header class="container-fluid bg-secondary-subtle">
-    <div class="row desktop-only">
+<div class="container-fluid">
+  <header class="row desktop-only mb-3">
+    <div
+      class="col-5 col-xl-4 align-items-center text-center d-none d-xl-block"
+    >
       <div
-        class="col-5 col-xl-4 d-none d-lg-block border-bottom align-items-center text-center py-3 px-4"
+        class="border-primary rounded-bottom flex-grow-1 bg-violet my-auto h2 py-2 px-4 ms-3"
       >
-        Seleziona i segni per la ricerca
+        Seleziona i segni
       </div>
+    </div>
+    <div class="col-12 col-lg-8 flex-grow-1 align-items-center">
       <div
-        class="col-7 col-xl-8 flex-grow-1 border-bottom text-center d-flex py-2"
+        class="flex-grow-1 d-flex py-2 pe-2 align-items-center border-primary rounded-bottom bg-violet me-3 d-none d-xl-flex"
       >
-        <div class="container-fluid">
-          <div class="row align-items-center">
-            <div class="col-3">Segni della combinazione</div>
-            <div class="col-6">Significato</div>
-            <div class="col-3 d-flex">
-              <div class="ms-auto flex-shrink-0">
-                Aggiungi:
-                <button
-                  type="button"
-                  (click)="openModalCombiantion()"
-                  class="btn btn-outline-success ms-2 me-4"
-                >
-                  <i class="bi bi-plus-lg"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div class="flex-grow-1 text-center my-auto h2">Combinazioni</div>
+
+        <div class="ms-auto h5 my-auto">Aggiungi:</div>
+
+        <button
+          type="button"
+          (click)="openModalCombiantion()"
+          class="btn btn-primary ms-2 me-4"
+        >
+          <i class="bi bi-plus-lg fw-bold h5"></i>
+        </button>
       </div>
     </div>
   </header>
-
-  <div class="d-flex flex-grow-1 overflow-hidden">
-    <aside
-      class="col-5 col-xl-4 bg-light px-3 pb-3 overflow-auto d-none d-lg-block"
-    >
-      <app-filters></app-filters>
+  <div class="row">
+    <aside class="col-xl-4 d-none d-xl-block">
+      <div class="rounded ms-3 border">
+        <app-filters></app-filters>
+      </div>
     </aside>
-
-    <main class="col-7 col-xl-8 flex-grow-1 overflow-auto p-3">
+    <main class="col-12 col-xl-8 overflow-auto pe-3">
       <div
         [class.d-none]="this.sharedState.errorMessage() == ''"
         class="alert alert-danger"

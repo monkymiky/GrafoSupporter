@@ -9,7 +9,7 @@ import { SignApiResponseItem } from '../../shared/signs.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './sign-form-field.component.html',
-  styleUrl: './sign-form-field.component.css',
+  styleUrl: './sign-form-field.component.scss',
 })
 export class SignFormFieldComponent {
   @Input({ required: true }) signFormGroup!: FormGroup<SingleSignFormModel>;

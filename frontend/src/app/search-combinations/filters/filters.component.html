@@ -12,61 +12,72 @@
   </div>
 </ng-template>
 <div
-  class="d-flex sticky-top bg-light"
+  class="d-flex sticky-top rounded-top bg-violet"
   [ngbTooltip]="gradi"
   placement="bottom"
   container="body"
 >
   <div class="ms-auto">
-    <i class="bi bi-question-circle text-secondary"></i> Grado:
+    <i class="bi bi-question-circle-fill bg-withe"></i> Grado:
   </div>
 
-  <div class="d-inline mx-3">B</div>
-  <div class="d-inline medioBasso">MB</div>
-  <div class="d-inline me-2">M</div>
-  <div class="d-inline medioAlto">MA</div>
-  <div class="d-inline alto">A</div>
+  <div class="d-inline grado ms-3">B</div>
+  <div class="d-inline grado">MB</div>
+  <div class="d-inline grado">M</div>
+  <div class="d-inline grado">MA</div>
+  <div class="d-inline grado alto">A</div>
 </div>
-<form [formGroup]="signsForm" (ngSubmit)="onSubmit()">
-  <div formArrayName="rowSelections" class="pb-3 mb-3">
-    @for(signType of signsTypes(); track signType) {
-    <div class="bg-secondary-subtle text-center rounded-top">
-      {{ signType }}
-    </div>
-    @for (signData of filteredSignsByType(signType); let j = $index; track j;) {
+<div class="overflow-auto scrollable bg-white small-no-x-margin">
+  <form [formGroup]="signsForm" (ngSubmit)="onSubmit()">
     <div
-      class="d-flex ps-2 rounded"
-      [class.bg-white]="$even"
-      [class.rounded]="$even"
+      formArrayName="rowSelections"
+      class="pt-2 mb-3 mx-3 extra-bottom-padding small-no-x-margin"
     >
-      <div>{{ signData.signName }}</div>
-      <div class="ms-auto">
-        @for (option of signData.radioOptions; track option.value) {
-        @if(option.value != 0) {
-        <label>
-          <input
-            class="form-check-input form-check-inline border-secondary"
-            type="radio"
-            [formControlName]="signData.index.toString()"
-            [value]="option.value"
-            (click)="onRadioClick(signData.index, option.value)"
-          />
-        </label>
-        } }
+      @for(signType of signsTypes(); track signType) {
+      <div
+        class="rounded mb-2 pb-1 border-emphasis small-no-x-padding small-no-x-margin"
+      >
+        <div class="text-center fw-bold rounded-top my-1">
+          {{ signType }}
+        </div>
+        @for (signData of filteredSignsByType(signType); let j = $index; track
+        j;) {
+        <div
+          class="d-flex ps-1 rounded mx-1"
+          [class.bg-gray1]="$even"
+          [class.rounded]="$even"
+        >
+          <div class="flex-shrink-1">{{ signData.signName }}</div>
+          <div class="ms-auto flex-nowrap flex-shrink-0 align-self-center">
+            @for (option of signData.radioOptions; track option.value) {
+            @if(option.value != 0) {
+            <label class="text-center">
+              <input
+                class="form-check-input form-check-inline border-secondary"
+                type="radio"
+                [formControlName]="signData.index.toString()"
+                [value]="option.value"
+                (click)="onRadioClick(signData.index, option.value)"
+              />
+            </label>
+            } }
+          </div>
+        </div>
+        }
       </div>
-    </div>
-    } }
+      }
 
-    <button
-      class="btn btn-outline-success mt-3 float-end"
-      type="submit"
-      [disabled]="!signsForm.valid"
-    >
-      Cerca
-    </button>
-    <p></p>
-  </div>
-</form>
+      <button
+        class="btn btn-primary-inverted mt-1 float-end fw-bold"
+        type="submit"
+        [disabled]="!signsForm.valid"
+      >
+        Cerca
+      </button>
+    </div>
+  </form>
+</div>
+
 } @else {
 <p>Inizializzazione filtri...</p>
 }

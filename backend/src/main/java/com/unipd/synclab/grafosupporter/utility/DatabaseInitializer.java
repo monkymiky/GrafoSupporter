@@ -264,7 +264,7 @@ public class DatabaseInitializer {
                         signs.add(new Sign(null, "Legata", "Resistenza", "Collegamenti"));
                         signs.add(new Sign(null, "Piantata sul rigo", "Resistenza", "Rigo di base"));
                         signs.add(new Sign(null, "Allungata o Alta", "Resistenza", "Calibro"));
-                        signs.add(new Sign(null, "Stretto di lettere", "Resistenza", ""));
+                        signs.add(new Sign(null, "Stretto di lettere", "Resistenza", "Larghezze"));
                         signs.add(new Sign(null, "Stretto tra lettere", "Resistenza", "Larghezze"));
                         signs.add(new Sign(null, "Nitida", "Resistenza", "Chiarezza e Confusione"));
                         signs.add(new Sign(null, "Aggrovigliata", "Resistenza", "Chiarezza e Confusione"));

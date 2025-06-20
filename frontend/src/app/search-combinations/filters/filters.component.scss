@@ -1,0 +1,28 @@
+.alto {
+  margin-right: 2.75rem;
+}
+.grado {
+  width: 2.05rem;
+  text-align: center;
+}
+.scrollable {
+  height: calc(100vh - 6.5rem);
+  border-bottom-right-radius: 0.325rem;
+  border-bottom-left-radius: 0.325rem;
+}
+.extra-bottom-padding {
+  padding-bottom: 2.5rem;
+}
+@media screen and (max-width: 992px) {
+  .small-no-x-padding {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+  }
+  .small-no-x-margin {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+  }
+  .alto {
+    margin-right: 0.75rem;
+  }
+}

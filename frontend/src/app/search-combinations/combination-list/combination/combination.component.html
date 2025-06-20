@@ -62,10 +62,10 @@
   </div>
 
   @if (isExpanded) {
-  <div class="combination-body row g-0">
+  <div class="combination-body row g-0 bg-gray1">
     @if(combination.author == "Girolamo Moretti"){
     <div class="signs-column-body col-auto">
-      <p>Condizione testuale originale:</p>
+      <p class="fw-bold">Condizione testuale originale:</p>
       <p>{{ combination.originalTextCondition }}</p>
     </div>
     }
@@ -103,10 +103,9 @@
 
       @if(this.combination.sourceBook?.title){
       <p>
-        Fonte: {{ this.combination.sourceBook?.title }}, Anno pubblicazione:
-        {{ this.combination.sourceBook?.pubblicationJear }}, Edito da
-        {{ this.combination.sourceBook?.editor }}, ISBN :
-        {{ this.combination.sourceBook?.isbn }}
+        Fonte: {{ this.combination.sourceBook?.title }}; Editore:
+        {{ this.combination.sourceBook?.editor }}; ISBN:
+        {{ this.combination.sourceBook?.isbn }}.
       </p>
       }
     </div>

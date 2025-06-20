@@ -31,7 +31,7 @@
       <div class="input-group flex-nowrap">
         <select
           id="range-min-{{ signIndex }}"
-          class="form-control select-number"
+          class="form-control select-number text-end ps-1 pe-3"
           formControlName="min"
           [class.is-invalid]="
             signFormGroup.controls['min'].invalid && signFormGroup.touched
@@ -43,10 +43,10 @@
           }
         </select>
 
-        <span class="input-group-text">-</span>
+        <span class="input-group-text px-1">-</span>
         <select
           id="range-max-{{ signIndex }}"
-          class="form-control select-number"
+          class="form-control select-number pe-1"
           formControlName="max"
           [class.is-invalid]="
             signFormGroup.controls['max'].invalid && signFormGroup.touched
@@ -116,7 +116,7 @@
   } @else if (signFormGroup.hasError('RequiredSignCanTBeAbsent') &&
   (signFormGroup.dirty || signFormGroup.touched)) {
   <div class="invalid-feedback d-block mt-1">
-    I primi due segni sono obbligatori e non puossono essere assenti (intervallo
+    I primi due segni sono obbligatori e non possono essere assenti (intervallo
     0-0).
   </div>
   }

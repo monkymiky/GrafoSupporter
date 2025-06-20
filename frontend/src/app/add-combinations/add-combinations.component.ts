@@ -142,7 +142,7 @@ export function fileTypeValidator(allowedTypes: string[]): ValidatorFn {
   selector: 'app-add-combinations',
   imports: [CommonModule, ReactiveFormsModule, SignFormFieldComponent],
   templateUrl: './add-combinations.component.html',
-  styleUrl: './add-combinations.component.css',
+  styleUrl: './add-combinations.component.scss',
 })
 export class AddCombinationsComponent {
   activeModal = inject(NgbActiveModal);
@@ -153,6 +153,7 @@ export class AddCombinationsComponent {
   activeImageFileName: string | null = null;
   RemoteImageFileName: string | null = null;
   imagePreviewUrl: string | null = null;
+  input: HTMLInputElement | null = null;
 
   combinationForm!: FormGroup<CombinationFormModel>;
 
@@ -320,8 +321,8 @@ export class AddCombinationsComponent {
   }
 
   onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const file: File | null = input.files ? input.files[0] : null;
+    this.input = event.target as HTMLInputElement;
+    const file: File | null = this.input.files ? this.input.files[0] : null;
 
     if (file) {
       this.activeImageFileName = file.name;
@@ -419,6 +420,11 @@ export class AddCombinationsComponent {
                 "Combinazione inserita con successo, se vuoi puoi inserirne un'altra."
               );
               this.combinationForm.reset();
+              this.activeImageFileName = null;
+              this.RemoteImageFileName = null;
+              if (this.input && this.input.files) {
+                this.input.value = '';
+              }
             }
           },
           error: (err) => {

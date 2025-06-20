@@ -31,7 +31,7 @@ interface SingleSignForm {
   imports: [ReactiveFormsModule, CommonModule, NgbTooltip],
   providers: [NgbTooltipConfig],
   templateUrl: './filters.component.html',
-  styleUrl: './filters.component.css',
+  styleUrl: './filters.component.scss',
 })
 export class FiltersComponent {
   private formBuilder = inject(FormBuilder);

@@ -10,7 +10,7 @@ import { SharedStateService } from '../../shared/shared-state.service';
   standalone: true,
   imports: [FiltersComponent, CombinationListComponent],
   templateUrl: './search-combinations-page.component.html',
-  styleUrl: './search-combinations-page.component.css',
+  styleUrl: './search-combinations-page.component.scss',
 })
 export class SearchCombinationsPageComponent {
   sharedState = inject(SharedStateService);

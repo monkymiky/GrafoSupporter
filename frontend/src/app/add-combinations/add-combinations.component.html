@@ -107,22 +107,20 @@
         }
       </div>
 
-      @if (combinationForm.hasError('duplicateSigns')) {
-      <div class="alert alert-danger mt-3" role="alert">
-        Non è possibile inserire in una combinazione lo stesso segno più di una
-        volta.
-      </div>
-      }
       <div class="d-flex">
         <button
           type="button"
           (click)="addOtherSign()"
-          class="btn btn-sm btn-outline-success m-auto"
+          class="btn btn-sm btn-primary-inverted m-auto"
         >
           <i class="bi bi-plus-lg"></i>
         </button>
       </div>
-
+      @if (combinationForm.hasError('duplicateSigns')) {
+      <div class="form-error mt-0 ms-3" role="alert">
+        Non è possibile selezionare più volte lo stesso segno.
+      </div>
+      }
       <hr />
       <div class="mb-3">
         <label for="title" class="form-label">Titolo Descrittivo*</label>
@@ -269,7 +267,7 @@
     >
       Annulla
     </button>
-    <button type="submit" class="btn btn-primary" (click)="onSubmit()">
+    <button type="submit" class="btn btn-primary-inverted" (click)="onSubmit()">
       {{ submitButtonText() }}
     </button>
   </div>
