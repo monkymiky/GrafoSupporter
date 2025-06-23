@@ -163,7 +163,7 @@ public class CombinationService {
         signs2.add(sign2);
         CombinationDto ex2 = new CombinationDto(
                 2L,
-                "Questo è un altro esempio di combinazione",
+                "Questo è un esempio di 'combinazione inserita dall'utente'",
                 "Cliccami per visualizzare le altre informazioni",
                 "Ora incomincia pure la ricerca delle combinazioni selezionando nella barra laterale il grado di tutti i segni che hai trovato durante l'analisi!  ATTENTO! se alcuni non li inserisci il sistema li considera come assenti e non ti mostrerà le combinazioni che li riguardano (a meno che non siano segni opzionali) siccome le combinazioni sono veramente tante e altrimenti sarebbe da visualizzarne sempre tantissime!",
                 "",
