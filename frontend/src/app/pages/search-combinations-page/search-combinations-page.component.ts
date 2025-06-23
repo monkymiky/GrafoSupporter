@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { FiltersComponent } from '../filters/filters.component';
-import { CombinationListComponent } from '../combination-list/combinations-list.component';
+import { FiltersComponent } from '../../search-combinations/filters/filters.component';
+import { CombinationListComponent } from '../../search-combinations/combination-list/combinations-list.component';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { AddCombinationsComponent } from '../../add-combinations/add-combinations.component';
 import { SharedStateService } from '../../shared/shared-state.service';

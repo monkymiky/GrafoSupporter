@@ -36,7 +36,7 @@
       </div>
       <div class="d-flex justify-content-between align-items-center">
         <div
-          class="sign-block border rounded p-3 mb-3 flex-grow-1"
+          class="sign-block border p-3 mb-3 flex-grow-1"
           formGroupName="firstSign"
         >
           <app-sign-form-field
@@ -57,7 +57,7 @@
 
       <div class="d-flex justify-content-between align-items-center">
         <div
-          class="sign-block border rounded p-3 mb-3 flex-grow-1"
+          class="sign-block border p-3 mb-3 flex-grow-1"
           formGroupName="secondSign"
         >
           <app-sign-form-field
@@ -81,7 +81,7 @@
         $index) {
         <div class="d-flex justify-content-between align-items-center">
           <div
-            class="sign-block border rounded px-2 pt-3 mb-3 flex-grow-1"
+            class="sign-block border px-2 pt-3 mb-3 flex-grow-1"
             [formGroupName]="$index"
           >
             <div
@@ -111,7 +111,7 @@
         <button
           type="button"
           (click)="addOtherSign()"
-          class="btn btn-sm btn-primary-inverted m-auto"
+          class="btn btn-sm btn-primary m-auto"
         >
           <i class="bi bi-plus-lg"></i>
         </button>
@@ -237,7 +237,7 @@
           <img
             [src]="'/api/files/combination-image/' + RemoteImageFileName"
             [alt]="'Immagine della combianzione'"
-            class="img-fluid rounded mt-3"
+            class="img-fluid mt-3"
           />
         </div>
         }@else if(activeImageFileName != null){
@@ -245,7 +245,7 @@
           <img
             [src]="imagePreviewUrl"
             [alt]="'Immagine selezionata per la combianzione'"
-            class="img-fluid rounded mt-3"
+            class="img-fluid mt-3"
           />
         </div>
         }
@@ -267,7 +267,7 @@
     >
       Annulla
     </button>
-    <button type="submit" class="btn btn-primary-inverted" (click)="onSubmit()">
+    <button type="submit" class="btn btn-primary" (click)="onSubmit()">
       {{ submitButtonText() }}
     </button>
   </div>

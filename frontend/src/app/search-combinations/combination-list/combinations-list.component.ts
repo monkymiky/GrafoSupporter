@@ -29,11 +29,18 @@ export class CombinationListComponent {
     this.sharedState.triggerCombinationsSearch
   ).pipe(
     switchMap(() => {
-      console.log('signal ricevuto' + this.sharedState.filters);
       return this.combinationsService
         .searchCombinations(this.sharedState.filters())
         .pipe(
-          tap(() => this.errorMessage.set('')),
+          tap((combinations) => {
+            this.errorMessage.set('');
+            this.sharedState.noResult.set('');
+            if (combinations.length == 0) {
+              this.sharedState.noResult.set(
+                'Ci dispiace, nel sistema non sono state trovate combinazioni con questi parametri.'
+              );
+            }
+          }),
           catchError((err) => {
             this.errorMessage.set(
               `Errore caricamento combinazioni : ${err.message}`

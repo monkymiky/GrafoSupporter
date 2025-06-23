@@ -12,7 +12,7 @@
   </div>
 </ng-template>
 <div
-  class="d-flex sticky-top rounded-top bg-violet"
+  class="d-flex sticky-top -top bg-title"
   [ngbTooltip]="gradi"
   placement="bottom"
   container="body"
@@ -35,18 +35,14 @@
     >
       @for(signType of signsTypes(); track signType) {
       <div
-        class="rounded mb-2 pb-1 border-emphasis small-no-x-padding small-no-x-margin"
+        class="mb-2 pb-1 border-emphasis no-rounded small-no-x-padding small-no-x-margin"
       >
-        <div class="text-center fw-bold rounded-top my-1">
+        <div class="text-center fw-bold -top my-1">
           {{ signType }}
         </div>
         @for (signData of filteredSignsByType(signType); let j = $index; track
         j;) {
-        <div
-          class="d-flex ps-1 rounded mx-1"
-          [class.bg-gray1]="$even"
-          [class.rounded]="$even"
-        >
+        <div class="d-flex ps-1 mx-1" [class.bg-light-title]="$even">
           <div class="flex-shrink-1">{{ signData.signName }}</div>
           <div class="ms-auto flex-nowrap flex-shrink-0 align-self-center">
             @for (option of signData.radioOptions; track option.value) {
@@ -68,7 +64,7 @@
       }
 
       <button
-        class="btn btn-primary-inverted mt-1 float-end fw-bold"
+        class="btn btn-primary mt-1 float-end fw-bold"
         type="submit"
         [disabled]="!signsForm.valid"
       >

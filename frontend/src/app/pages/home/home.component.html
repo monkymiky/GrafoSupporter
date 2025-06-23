@@ -1,1 +1,39 @@
-<p>home works!</p>
+<div class="above-the-fold" [class.above-the-fold-up]="goDownNow">
+  <button
+    [class.disabled-animation]="goDownNow"
+    [class.go-down-transition]="goDownNow"
+    class="go-down d-flex vertical-flex"
+    (click)="goDown()"
+    (mouseenter)="stop()"
+  >
+    <div class="vertical-line">|</div>
+    <div class="fw-bold">Inizia la Ricerca</div>
+    <i class="bi bi-arrow-down"></i>
+  </button>
+  <div class="scene-3d">
+    <div
+      class="cylinder"
+      [class.paused]="!isHovering"
+      [class.running]="isHovering"
+    >
+      @for (index of imageIndex; track $index) {
+      <div
+        class="cylinder-panel"
+        [style.transform]="
+          'rotateY(' + $index * panelAngle + 'deg) translateZ(50vw)'
+        "
+      >
+        <img [src]="image" />
+      </div>
+      }
+    </div>
+  </div>
+  <div class="ellipse top" (mouseenter)="stop()" (mouseleave)="play()"></div>
+  <img
+    class="title"
+    src="/api/files/combination-image/logo4.png"
+    alt=" Grafosupporter"
+  />
+  <div class="ellipse bottom" (mouseenter)="stop()" (mouseleave)="play()"></div>
+  <div class="bottom-hider" (mouseenter)="stop()"></div>
+</div>

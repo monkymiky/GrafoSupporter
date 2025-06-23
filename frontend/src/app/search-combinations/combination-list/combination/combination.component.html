@@ -1,4 +1,7 @@
-<div class="card combination-card mb-3" [class.is-expanded]="isExpanded">
+<div
+  class="card combination-card no-rounded mb-3"
+  [class.is-expanded]="isExpanded"
+>
   <div class="combination-row row g-0">
     <div class="signs-column col-auto" (click)="toggleExpand()">
       @for (sign of combination.signs; track sign.name; let i = $index) {
@@ -62,7 +65,7 @@
   </div>
 
   @if (isExpanded) {
-  <div class="combination-body row g-0 bg-gray1">
+  <div class="combination-body row g-0 bg-light-title">
     @if(combination.author == "Girolamo Moretti"){
     <div class="signs-column-body col-auto">
       <p class="fw-bold">Condizione testuale originale:</p>
@@ -95,7 +98,7 @@
       <img
         [src]="'/api/files/combination-image/' + combination.imagePath"
         [alt]="'Immagine di una scrittura con ' + combination.title"
-        class="img-fluid rounded mb-3"
+        class="img-fluid mb-3"
       />
       }
 

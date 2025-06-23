@@ -16,7 +16,7 @@ export const routes: Routes = [
         path: 'ricerca-combinazioni',
         loadComponent: () =>
           import(
-            './search-combinations/search-combinations-page/search-combinations-page.component'
+            './pages/search-combinations-page/search-combinations-page.component'
           ).then((m) => m.SearchCombinationsPageComponent),
         title: 'Ricerca Combinazioni',
       },

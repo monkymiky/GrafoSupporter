@@ -1,7 +1,14 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 
 import { Grado } from '../search-combinations/filters/filter.interface';
-import { catchError, Observable, of, startWith, switchMap, tap } from 'rxjs';
+import {
+  catchError,
+  distinctUntilChanged,
+  Observable,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { SignsService } from './signs.service';
 import { SignApiResponseItem } from './signs.service';
@@ -11,15 +18,9 @@ import { SignApiResponseItem } from './signs.service';
 })
 export class SharedStateService {
   errorMessage = signal('');
+  noResult = signal('');
   private signsService = inject(SignsService);
 
-  private initializeFiltersMap(): Map<number, Grado> {
-    const map = new Map<number, Grado>();
-    for (let i = 1; i <= 57; i++) {
-      map.set(i, Grado.ASSENTE);
-    }
-    return map;
-  }
   triggerCombinationsSearch = signal(0);
   filtersInitializer = computed<Map<number, Grado>>(() => {
     const map = new Map<number, Grado>();
@@ -36,14 +37,14 @@ export class SharedStateService {
   private signsObservable: Observable<SignApiResponseItem[]> = toObservable(
     this.triggerSignsRequest
   ).pipe(
-    startWith([]),
     switchMap(() => {
       return this.signsService.getSigns().pipe(
         tap(() => this.errorMessage.set('')),
         catchError((err) => {
           this.errorMessage.set(`Errore caricamento segni : ${err.message}`);
           return of([] as SignApiResponseItem[]);
-        })
+        }),
+        distinctUntilChanged()
       );
     })
   );

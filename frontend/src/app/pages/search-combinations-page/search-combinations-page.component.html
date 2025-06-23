@@ -1,0 +1,84 @@
+<div class="page-limiter">
+  <div class="d-flex d-xl-none">
+    <button class="btn btn-outline-primary m-3" (click)="openSidebar(sidebar)">
+      ☰ Cerca
+    </button>
+    <button
+      type="button"
+      (click)="openModalCombiantion()"
+      class="btn btn-outline-success ms-auto my-3 me-3"
+    >
+      <i class="bi bi-plus-lg"></i>
+    </button>
+  </div>
+
+  <ng-template #sidebar let-offcanvas>
+    <div class="offcanvas-header pb-0">
+      <h5 class="offcanvas-title">Seleziona i segni</h5>
+      <button
+        type="button"
+        class="btn-close"
+        (click)="offcanvas.close()"
+      ></button>
+    </div>
+    <div class="offcanvas-body pt-0 mt-0" id="offbody">
+      <div class="flex-column">
+        <app-filters></app-filters>
+      </div>
+    </div>
+  </ng-template>
+  <div class="container-fluid">
+    <header class="row desktop-only mb-3">
+      <div
+        class="col-5 col-xl-4 align-items-center text-center d-none d-xl-block"
+      >
+        <div
+          class="border-primary -bottom flex-grow-1 bg-title my-auto h2 py-2 px-4 ms-3"
+        >
+          Seleziona i segni
+        </div>
+      </div>
+      <div class="col-12 col-lg-8 flex-grow-1 align-items-center">
+        <div
+          class="flex-grow-1 d-flex py-2 pe-2 align-items-center border-primary -bottom bg-title me-3 d-none d-xl-flex"
+        >
+          <div class="flex-grow-1 text-center my-auto h2">Combinazioni</div>
+
+          <div class="ms-auto my-auto">Aggiungi:</div>
+
+          <button
+            type="button"
+            (click)="openModalCombiantion()"
+            class="btn btn-primary-inverted btn-add"
+          >
+            <i class="bi bi-plus-lg add-icon"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+    <div class="row">
+      <aside class="col-xl-4 d-none d-xl-block">
+        <div class="ms-3 border">
+          <app-filters></app-filters>
+        </div>
+      </aside>
+      <main class="col-12 col-xl-8 overflow-auto pe-3">
+        <div
+          [class.d-none]="this.sharedState.errorMessage() == ''"
+          class="alert alert-danger me-3"
+          role="alert"
+        >
+          {{ this.sharedState.errorMessage() }}
+        </div>
+        <div
+          [class.d-none]="this.sharedState.noResult() == ''"
+          class="alert alert-warning me-3"
+          role="alert"
+        >
+          {{ this.sharedState.noResult() }}
+        </div>
+        <app-combination-list></app-combination-list>
+      </main>
+    </div>
+  </div>
+</div>
