@@ -30,16 +30,10 @@ export class SingleCombination {
   private combinationService = inject(CombinationService);
   private sharedState = inject(SharedStateService);
   public isExpanded = false;
-  public temperaments: string[] = [];
   public isTooltipDisabled = false;
   private mobileBreakpoint = 768;
 
   ngOnInit() {
-    const signsMap = this.sharedState.signsMap();
-    this.temperaments = this.combination.signs.map((sign) => {
-      const signData = signsMap.get(sign.signId);
-      return signData?.temperamento ?? '';
-    });
     this.checkWindowSize();
   }
   private checkWindowSize() {

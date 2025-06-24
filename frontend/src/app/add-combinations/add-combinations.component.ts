@@ -353,9 +353,9 @@ export class AddCombinationsComponent {
     const formValue = this.combinationForm.getRawValue();
 
     const signsMap = this.sharedState.signsMap();
-    const getSignNameById = (id: number | null): string => {
-      if (id === null) return 'ID nullo';
-      return signsMap.get(id)?.name ?? `Nome non trovato per ID: ${id}`;
+    const getSignDataById = (id: number | null) => {
+      if (id === null) return null;
+      return signsMap.get(id) ?? null;
     };
 
     const combinationData: Combination = {
@@ -370,28 +370,40 @@ export class AddCombinationsComponent {
       signs: [
         {
           signId: +formValue.firstSign.signId!,
-          name: getSignNameById(formValue.firstSign.signId),
+          name:
+            getSignDataById(formValue.firstSign.signId)?.name ??
+            'Nome non trovato',
           min: formValue.firstSign.min,
           max: formValue.firstSign.max,
           isOptional: formValue.firstSign.isOptional,
           classification: formValue.firstSign.classification,
+          temperamento:
+            getSignDataById(formValue.firstSign.signId)?.temperamento ?? null,
         },
         {
           signId: +formValue.secondSign.signId!,
-          name: getSignNameById(formValue.secondSign.signId),
+          name:
+            getSignDataById(formValue.secondSign.signId)?.name ??
+            'Nome non trovato',
           min: formValue.secondSign.min,
           max: formValue.secondSign.max,
           isOptional: formValue.secondSign.isOptional,
           classification: formValue.secondSign.classification,
+          temperamento:
+            getSignDataById(formValue.secondSign.signId)?.temperamento ?? null,
         },
-        ...(formValue.otherSigns || []).map((sign) => ({
-          signId: +sign.signId!,
-          name: getSignNameById(sign.signId),
-          min: sign.min,
-          max: sign.max,
-          isOptional: sign.isOptional,
-          classification: sign.classification as classification,
-        })),
+        ...(formValue.otherSigns || []).map((sign) => {
+          const signData = getSignDataById(sign.signId);
+          return {
+            signId: +sign.signId!,
+            name: signData?.name ?? 'Nome non trovato',
+            min: sign.min,
+            max: sign.max,
+            isOptional: sign.isOptional,
+            classification: sign.classification as classification,
+            temperamento: signData?.temperamento ?? null,
+          };
+        }),
       ],
     };
 

@@ -34,10 +34,10 @@
           <div
             [class.ms-4]="!sign.isOptional"
             [class.ms-2]="sign.isOptional"
-            [class.text-success]="temperaments[i] == 'Attesa'"
-            [class.text-danger]="temperaments[i] == 'Assalto'"
-            [class.text-purple]="temperaments[i] == 'Resistenza'"
-            [class.text-info]="temperaments[i] == 'Cessione'"
+            [class.text-success]="sign.temperamento == 'Attesa'"
+            [class.text-danger]="sign.temperamento == 'Assalto'"
+            [class.text-purple]="sign.temperamento == 'Resistenza'"
+            [class.text-info]="sign.temperamento == 'Cessione'"
             class="me-2 sign-name"
           >
             {{ sign.name }}

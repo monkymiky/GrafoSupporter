@@ -11,4 +11,5 @@ export interface Sign {
   min: number;
   isOptional: boolean;
   classification: classification;
+  temperamento: string | null;
 }
