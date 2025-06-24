@@ -6,11 +6,7 @@ main {
   position: fixed;
   top: 3.5rem;
 }
-img {
-  width: 5rem;
-  height: auto;
-  object-fit: cover;
-}
+
 .app-navbar {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
@@ -26,4 +22,9 @@ footer {
   width: 100vw;
   z-index: 100 !important;
   font-size: small;
+}
+.logo-navbar {
+  width: 6.3rem;
+  height: auto;
+  object-fit: cover;
 }

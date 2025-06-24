@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
     this.isHovering = false;
   }
 
-  image: string = '/api/files/combination-image/scrittura-home.jpg';
+  image: string = '/api/files/combination-image/scrittura-home3.png';
 
   panelAngle = 0;
 
