@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
+import { signsResolver } from './shared/signs.resolver';
 
 export const routes: Routes = [
   {
@@ -19,6 +20,9 @@ export const routes: Routes = [
             './pages/search-combinations-page/search-combinations-page.component'
           ).then((m) => m.SearchCombinationsPageComponent),
         title: 'Ricerca Combinazioni',
+        resolve: {
+          signs: signsResolver,
+        },
       },
     ],
   },

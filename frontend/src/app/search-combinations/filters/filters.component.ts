@@ -82,9 +82,6 @@ export class FiltersComponent {
     });
   }
 
-  ngOnInit(): void {
-    this.sharedState.triggerSignsRequest.set(Date.now());
-  }
   get rowSelectionsFormArray(): FormArray {
     return this.signsForm.get('rowSelections') as FormArray;
   }
