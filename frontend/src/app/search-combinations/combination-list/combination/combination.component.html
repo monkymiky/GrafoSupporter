@@ -12,7 +12,11 @@
           Modificante } @case ("A") {Accidentale} @default {non classificato}
           }</ng-template
         >
-        <div [ngbTooltip]="tipContent" placement="end" class="d-flex z-3">
+        <div
+          [ngbTooltip]="isTooltipDisabled ? null : tipContent"
+          placement="end"
+          class="d-flex z-3"
+        >
           @if(sign.isOptional == true){
           <ng-template #tipContent2>
             segno opzionale per la combinazione</ng-template
@@ -34,11 +38,11 @@
             [class.text-danger]="temperaments[i] == 'Assalto'"
             [class.text-purple]="temperaments[i] == 'Resistenza'"
             [class.text-info]="temperaments[i] == 'Cessione'"
-            class="text-nowrap me-2"
+            class="me-2 sign-name"
           >
             {{ sign.name }}
           </div>
-          <div class="ms-auto text-nowrap">
+          <div class="text-nowrap sign-grado">
             {{ sign.min }}-{{ sign.max }}/10
           </div>
         </div>

@@ -7,13 +7,12 @@
 }
 .scrollable {
   height: calc(100vh - 13rem);
-  border-bottom-right-radius: 0.325rem;
-  border-bottom-left-radius: 0.325rem;
 }
+
 .extra-bottom-padding {
   padding-bottom: 2.5rem;
 }
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 1200px) {
   .small-no-x-padding {
     padding-left: 0px !important;
     padding-right: 0px !important;
@@ -24,5 +23,8 @@
   }
   .alto {
     margin-right: 0.75rem;
+  }
+  .scrollable {
+    height: calc(100vh - 5.5rem);
   }
 }

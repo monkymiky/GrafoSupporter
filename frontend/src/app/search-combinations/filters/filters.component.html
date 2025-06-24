@@ -31,7 +31,7 @@
   <form [formGroup]="signsForm" (ngSubmit)="onSubmit()">
     <div
       formArrayName="rowSelections"
-      class="pt-2 mb-3 mx-3 extra-bottom-padding small-no-x-margin"
+      class="pt-2 mb-3 ms-3 extra-bottom-padding small-no-x-margin me-2"
     >
       @for(signType of signsTypes(); track signType) {
       <div
@@ -68,7 +68,7 @@
         type="submit"
         [disabled]="!signsForm.valid"
       >
-        Cerca
+        Cerca <i class="bi bi-search"></i>
       </button>
     </div>
   </form>

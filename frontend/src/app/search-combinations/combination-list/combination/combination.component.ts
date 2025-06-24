@@ -1,4 +1,10 @@
-import { Component, Input, inject, HostBinding } from '@angular/core';
+import {
+  Component,
+  Input,
+  inject,
+  HostBinding,
+  HostListener,
+} from '@angular/core';
 import { Combination } from '../combination.interface';
 import {
   NgbAccordionModule,
@@ -25,6 +31,8 @@ export class SingleCombination {
   private sharedState = inject(SharedStateService);
   public isExpanded = false;
   public temperaments: string[] = [];
+  public isTooltipDisabled = false;
+  private mobileBreakpoint = 768;
 
   ngOnInit() {
     const signsMap = this.sharedState.signsMap();
@@ -32,8 +40,15 @@ export class SingleCombination {
       const signData = signsMap.get(sign.signId);
       return signData?.temperamento ?? '';
     });
+    this.checkWindowSize();
   }
-
+  private checkWindowSize() {
+    this.isTooltipDisabled = window.innerWidth < this.mobileBreakpoint;
+  }
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    this.checkWindowSize();
+  }
   @HostBinding('style.display') display = 'contents';
 
   toggleExpand() {

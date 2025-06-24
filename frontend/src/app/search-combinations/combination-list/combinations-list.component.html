@@ -1,4 +1,6 @@
-<div class="container-fluid ps-0 scrollable">
+<div
+  class="container-fluid ps-0 scrollable overflow-y-scroll overflow-x-hidden"
+>
   <div class="row align-items-center d-lx-none steaky-top d-sm-none-max">
     <div class="col-xl-8 flex-grow-1 text-center d-flex mb-2">
       <div
@@ -12,7 +14,7 @@
       <div class="ms-1 bg-title flex-grow-1">Significato</div>
     </div>
   </div>
-  <div class="row overflow-auto">
+  <div class="row">
     @for(singleCombination of this.combinationsDisplayed(); track
     singleCombination.id){
     <app-single-combination

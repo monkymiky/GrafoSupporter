@@ -1,18 +1,22 @@
 @use "../../../variables.scss" as *;
 
 .segni {
-  flex: 0 0 17.7rem;
+  flex: 0 0 20.7rem;
 }
 .scrollable {
-  height: calc(100vh - 13.5rem);
-  border-bottom-right-radius: 0.325rem;
-  border-bottom-left-radius: 0.325rem;
+  height: calc(100vh - 11.5rem);
+  padding-right: 6px;
 }
 .text-purple {
   color: $text-purple;
 }
-@media screen and (max-width: 576px) {
+@media screen and (max-width: 768px) {
   .d-sm-none-max {
     display: none;
+  }
+}
+@media screen and (max-height: 800px) {
+  .scrollable {
+    height: calc(100vh - 7rem);
   }
 }

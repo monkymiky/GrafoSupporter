@@ -43,8 +43,7 @@ export class SharedStateService {
         catchError((err) => {
           this.errorMessage.set(`Errore caricamento segni : ${err.message}`);
           return of([] as SignApiResponseItem[]);
-        }),
-        distinctUntilChanged()
+        })
       );
     })
   );

@@ -5,7 +5,7 @@ $enable-rounded: false;
 @import "bootstrap/scss/bootstrap";
 
 .tooltipW > .tooltip-inner {
-  min-width: 17rem;
+  max-width: 17rem;
   text-align: left;
 }
 @media screen and (min-width: 1400px) {
@@ -23,7 +23,6 @@ body,
 html {
   height: 100%;
   overflow: hidden;
-  /*background-color: rgb(33, 37, 41) !important ;*/
 }
 .bg-title {
   background-color: $title;
@@ -33,7 +32,7 @@ html {
   background-color: $lightBG !important;
 }
 .btn-primary-inverted {
-  color: $text-light;
+  color: $title;
   background-color: $yesButtons !important;
   border-color: $yesButtons !important;
 }
@@ -50,7 +49,7 @@ button.btn-primary {
 button.btn-primary:hover,
 button.btn-primary:active {
   background-color: $yesButtons !important;
-  color: white !important;
+  color: black !important;
 }
 .border-emphasis {
   border-color: $border !important;
@@ -60,4 +59,25 @@ button.btn-primary:active {
 }
 .no-rounded {
   border-radius: 0 !important;
+}
+/* Applica stile "mobile-like" a tutte le scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* Per browser WebKit (Chrome, Edge, Safari) */
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  border: none;
 }
