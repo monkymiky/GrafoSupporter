@@ -28,3 +28,8 @@
     height: calc(100vh - 5.5rem);
   }
 }
+@media screen and (max-height: 800px) {
+  .scrollable {
+    height: calc(100vh - 8.5rem);
+  }
+}
