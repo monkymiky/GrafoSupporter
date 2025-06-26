@@ -3,7 +3,6 @@ package com.unipd.synclab.grafosupporter.controller;
 import com.unipd.synclab.grafosupporter.config.UploadProperties;
 import com.unipd.synclab.grafosupporter.service.FileStorageService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.CacheControl;
@@ -31,12 +30,16 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/files")
 public class FileController {
-    @Autowired
-    private FileStorageService fileStorageService;
-    @Autowired
-    private ServletContext servletContext;
-    @Autowired
-    private UploadProperties uploadProperties;
+    private final FileStorageService fileStorageService;
+    private final ServletContext servletContext;
+    private final UploadProperties uploadProperties;
+
+    public FileController(FileStorageService fileStorageService, ServletContext servletContext,
+            UploadProperties uploadProperties) {
+        this.fileStorageService = fileStorageService;
+        this.servletContext = servletContext;
+        this.uploadProperties = uploadProperties;
+    }
 
     @GetMapping("/combination-image/{filename:.+}")
     public ResponseEntity<Resource> serveCombinationImage(@PathVariable String filename) {
@@ -94,8 +97,6 @@ public class FileController {
                 String extension = StringUtils.getFilenameExtension(filename);
                 String newFilename = UUID.randomUUID().toString() + "." + extension;
                 Path filePath = fileStorageService.getImagePath(newFilename);
-
-                System.out.println("DEBUG: Tentativo di salvare il file a: " + filePath.toAbsolutePath().toString());
 
                 try (InputStream inputStream = imageFile.getInputStream()) {
                     Files.copy(inputStream, filePath);

@@ -5,11 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,34 +22,35 @@ import com.unipd.synclab.grafosupporter.utility.CombinationMapper;
 @RestController
 @RequestMapping("/combinations")
 public class CombinationController {
-    @Autowired
-    private CombinationService combinationService;
-    @Autowired
-    private CombinationMapper combinationMapper;
+    private final CombinationService combinationService;
+    private final CombinationMapper combinationMapper;
 
-    @PostMapping("/get")
+    public CombinationController(CombinationService combinationService, CombinationMapper combinationMapper) {
+        this.combinationService = combinationService;
+        this.combinationMapper = combinationMapper;
+    }
+
+    @PostMapping("/search")
     public List<CombinationDto> getCombinations(@RequestBody Map<Long, Integer> searchedSign) {
-        System.out.println("Input ricevuto: " + searchedSign);
         return combinationService.getCombinations(searchedSign);
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public void addCombination(@RequestBody CombinationDto combinationDto) {
-        System.out.println("debug");
         Combination combination = combinationMapper.toCombinationEntity(combinationDto);
         combinationService.addCombination(combination);
     }
 
-    @PutMapping("/{combination_id}")
+    @PutMapping("/{combinationId}")
     public void editCombination(@RequestBody CombinationDto combinationDto,
-            @PathVariable("combination_id") Long combination_id) {
+            @PathVariable("combinationId") Long combinationId) {
         combinationService.editCombination(combinationMapper.toCombinationEntity(combinationDto));
     }
 
-    @DeleteMapping("/{combination_id}")
+    @DeleteMapping("/{combinationId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCombination(@PathVariable("combination_id") Long combination_id) {
-        combinationService.deleteCombination(combination_id);
+    public void deleteCombination(@PathVariable("combinationId") Long combinationId) {
+        combinationService.deleteCombination(combinationId);
     }
 
 }

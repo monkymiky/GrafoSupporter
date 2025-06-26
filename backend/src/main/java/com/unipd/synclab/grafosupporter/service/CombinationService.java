@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -30,14 +29,21 @@ import com.unipd.synclab.grafosupporter.utility.CombinationMapper;
 
 @Service
 public class CombinationService {
-    @Autowired
-    SignRepository signRepository;
-    @Autowired
-    CombinationRepository combinationRepository;
-    @Autowired
-    CombinationMapper combinationResponseMapper;
-    @Autowired
-    FileStorageService fileStorageService;
+    private final SignRepository signRepository;
+    private final CombinationRepository combinationRepository;
+    private final CombinationMapper combinationResponseMapper;
+    private final FileStorageService fileStorageService;
+
+    public CombinationService(
+            SignRepository signRepository,
+            CombinationRepository combinationRepository,
+            CombinationMapper combinationResponseMapper,
+            FileStorageService fileStorageService) {
+        this.signRepository = signRepository;
+        this.combinationRepository = combinationRepository;
+        this.combinationResponseMapper = combinationResponseMapper;
+        this.fileStorageService = fileStorageService;
+    }
 
     @Transactional(readOnly = true)
     public List<CombinationDto> getCombinations(Map<Long, Integer> searchedSign) {
@@ -59,12 +65,10 @@ public class CombinationService {
                 .allSignsInCombinationMustMatchCriteria(searchedSign);
         List<Combination> foundCombinations = combinationRepository.findAll(spec);
 
-        List<CombinationDto> combinationDtos = foundCombinations.stream()
-                .map(combination -> combinationResponseMapper.toCombinationResponseDto(combination))
-                .collect(Collectors.toList());
-
-        return combinationDtos;
-    };
+        return foundCombinations.stream()
+                .map(combinationResponseMapper::toCombinationResponseDto)
+                .toList();
+    }
 
     @Transactional
     public void addCombination(Combination combination) {
@@ -78,7 +82,7 @@ public class CombinationService {
                         "Impossible to edit - Combination not found with id: " + combinationData.getId()));
 
         if (existingCombination.getImagePath() != null
-                && existingCombination.getImagePath() != combinationData.getImagePath()) {
+                && !existingCombination.getImagePath().equals(combinationData.getImagePath())) {
             Path existingFilePath = fileStorageService.getImagePath(existingCombination.getImagePath());
             if (Files.exists(existingFilePath)) {
                 fileStorageService.deleteFile(existingCombination.getImagePath());
@@ -103,7 +107,7 @@ public class CombinationService {
 
         if (combinationData.getSigns() != null) {
             List<Long> signIds = combinationData.getSigns().stream().map(s -> s.getSign().getId())
-                    .collect(Collectors.toList());
+                    .toList();
             Map<Long, Sign> signsMap = signRepository.findAllById(signIds).stream()
                     .collect(Collectors.toMap(Sign::getId, sign -> sign));
             for (ValuatedSign signData : combinationData.getSigns()) {
@@ -123,10 +127,10 @@ public class CombinationService {
 
     @Transactional
     public void deleteCombination(Long id) {
-        if (!combinationRepository.existsById(id)) {
+        Optional<Combination> combiantion = combinationRepository.findById(id);
+        if (!combiantion.isPresent()) {
             throw new EntityNotFoundException("Combination not found with id: " + id);
-        }
-        if (combinationRepository.findById(id).get().getSourceBook() != null)
+        } else if (combiantion.get().getSourceBook() != null)
             throw new InvalidParameterException(
                     "non è possibile eliminare la combianzione con id=" + id + " perche l'autore è moretti");
         combinationRepository.deleteById(id);
@@ -138,7 +142,7 @@ public class CombinationService {
         ValuatedSignDto sign3 = new ValuatedSignDto(11L, 5, 1, "A", true, "Angoli B", "Resistenza");
         ValuatedSignDto sign4 = new ValuatedSignDto(20L, 6, 4, "A", true, "Ascendente", "Assalto");
         ValuatedSignDto sign5 = new ValuatedSignDto(40L, 8, 6, "A", true, "Grossolana", "Attesa");
-        ArrayList<ValuatedSignDto> signs1 = new ArrayList<ValuatedSignDto>();
+        ArrayList<ValuatedSignDto> signs1 = new ArrayList<>();
         signs1.add(sign1);
         signs1.add(sign2);
         signs1.add(sign3);
@@ -158,7 +162,7 @@ public class CombinationService {
                 signs1,
                 book);
 
-        ArrayList<ValuatedSignDto> signs2 = new ArrayList<ValuatedSignDto>();
+        ArrayList<ValuatedSignDto> signs2 = new ArrayList<>();
         signs2.add(sign1);
         signs2.add(sign2);
         CombinationDto ex2 = new CombinationDto(
@@ -171,7 +175,7 @@ public class CombinationService {
                 "scrittura2.jpg",
                 signs2,
                 null);
-        ArrayList<CombinationDto> result = new ArrayList<CombinationDto>();
+        ArrayList<CombinationDto> result = new ArrayList<>();
         result.add(ex1);
         result.add(ex2);
         return result;

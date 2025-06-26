@@ -1,23 +1,24 @@
 package com.unipd.synclab.grafosupporter.utility;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.unipd.synclab.grafosupporter.model.Combination;
 import com.unipd.synclab.grafosupporter.model.ValuatedSign;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.unipd.synclab.grafosupporter.dto.CombinationDto;
 import com.unipd.synclab.grafosupporter.dto.ValuatedSignDto;
 
 @Component
 public class CombinationMapper {
-    @Autowired
-    private BookMapper bookMapper;
-    @Autowired
-    private ValuatedSignMapper valuatedSignMapper;
+    private final BookMapper bookMapper;
+    private final ValuatedSignMapper valuatedSignMapper;
+
+    public CombinationMapper(BookMapper bookMapper, ValuatedSignMapper valuatedSignMapper) {
+        this.bookMapper = bookMapper;
+        this.valuatedSignMapper = valuatedSignMapper;
+    }
 
     public CombinationDto toCombinationResponseDto(Combination combination) {
         if (combination == null) {
@@ -40,7 +41,7 @@ public class CombinationMapper {
         if (combination.getSigns() != null) {
             List<ValuatedSignDto> signsDto = combination.getSigns().stream()
                     .map(valuatedSignMapper::toValuatedSignDto)
-                    .collect(Collectors.toList());
+                    .toList();
             dto.setSigns(signsDto);
         }
 
@@ -73,7 +74,7 @@ public class CombinationMapper {
                         valuatedSign.setCombination(combinationEntity);
                         return valuatedSign;
                     })
-                    .collect(Collectors.toList());
+                    .toList();
             combinationEntity.setSigns(valuatedSigns);
         }
 

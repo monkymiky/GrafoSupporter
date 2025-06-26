@@ -8,8 +8,8 @@ import { Grado } from '../search-combinations/filters/filter.interface';
   providedIn: 'root',
 })
 export class CombinationService {
-  private apiUrl = '/api/combinations';
-  private http = inject(HttpClient);
+  readonly apiUrl = '/api/combinations';
+  readonly http = inject(HttpClient);
 
   searchCombinations(filters: Map<number, number>): Observable<Combination[]> {
     const filtersObject: { [key: number]: Grado } = {};
@@ -17,12 +17,15 @@ export class CombinationService {
       filtersObject[key] = value;
     });
 
-    return this.http.post<Combination[]>(this.apiUrl + '/get', filtersObject);
+    return this.http.post<Combination[]>(
+      this.apiUrl + '/search',
+      filtersObject
+    );
   }
 
   createCombination(combination: Combination): Observable<Combination> {
     const { id, ...combinationData } = combination;
-    return this.http.post<Combination>(this.apiUrl + '/add', combinationData);
+    return this.http.post<Combination>(this.apiUrl, combinationData);
   }
 
   updateCombination(

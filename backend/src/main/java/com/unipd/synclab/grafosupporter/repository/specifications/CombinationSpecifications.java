@@ -19,6 +19,9 @@ import java.util.Map;
 import org.springframework.data.jpa.domain.Specification;
 
 public class CombinationSpecifications {
+    private CombinationSpecifications() {
+    }
+
     private static Predicate buildMatchValuesPredicate(CriteriaBuilder cb, Expression<Integer> backendMinExpression,
             Expression<Integer> backendMaxExpression,
             Integer frontendValue) {

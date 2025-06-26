@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { SingleCombination } from './combination/combination.component';
 import { CombinationService } from '../../shared/combinations.service';
 import { SignsService } from '../../shared/signs.service';
-import { catchError, Observable, of, startWith, switchMap, tap } from 'rxjs';
+import { catchError, Observable, of, switchMap, tap } from 'rxjs';
 import { Combination } from './combination.interface';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { SharedStateService } from '../../shared/shared-state.service';
@@ -25,7 +25,7 @@ export class CombinationListComponent {
   signsService = inject(SignsService);
   errorMessage = signal('');
 
-  private combinationsObservable: Observable<Combination[]> = toObservable(
+  readonly combinationsObservable: Observable<Combination[]> = toObservable(
     this.sharedState.triggerCombinationsSearch
   ).pipe(
     switchMap(() => {
