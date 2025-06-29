@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SingleCombination } from './combination/combination.component';
 import { CombinationService } from '../../shared/combinations.service';
 import { SignsService } from '../../shared/signs.service';
@@ -23,7 +23,6 @@ export class CombinationListComponent {
   combinationsService = inject(CombinationService);
   sharedState = inject(SharedStateService);
   signsService = inject(SignsService);
-  errorMessage = signal('');
 
   readonly combinationsObservable: Observable<Combination[]> = toObservable(
     this.sharedState.triggerCombinationsSearch
@@ -33,7 +32,7 @@ export class CombinationListComponent {
         .searchCombinations(this.sharedState.filters())
         .pipe(
           tap((combinations) => {
-            this.errorMessage.set('');
+            this.sharedState.setMessage(0, '');
             this.sharedState.noResult.set('');
             if (combinations.length == 0) {
               this.sharedState.noResult.set(
@@ -42,7 +41,8 @@ export class CombinationListComponent {
             }
           }),
           catchError((err) => {
-            this.errorMessage.set(
+            this.sharedState.setMessage(
+              1,
               `Errore caricamento combinazioni : ${err.message}`
             );
             return of([] as Combination[]);

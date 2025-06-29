@@ -71,13 +71,13 @@ public class CombinationService {
     }
 
     @Transactional
-    public void addCombination(Combination combination) {
-        combinationRepository.save(combination);
+    public Combination addCombination(Combination combination) {
+        return combinationRepository.save(combination);
     }
 
     @Transactional
-    public void editCombination(Combination combinationData) {
-        Combination existingCombination = combinationRepository.findById(combinationData.getId())
+    public Combination editCombination(Long id, Combination combinationData) {
+        Combination existingCombination = combinationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Impossible to edit - Combination not found with id: " + combinationData.getId()));
 
@@ -123,6 +123,7 @@ public class CombinationService {
                 existingCombination.getSigns().add(newSign);
             }
         }
+        return combinationRepository.save(existingCombination);
     }
 
     @Transactional

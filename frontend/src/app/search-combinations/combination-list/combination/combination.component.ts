@@ -26,12 +26,12 @@ import { AddCombinationsComponent } from '../../../add-combinations/add-combinat
 export class SingleCombination {
   @Input() combination!: Combination;
 
-  private modalService = inject(NgbModal);
-  private combinationService = inject(CombinationService);
-  private sharedState = inject(SharedStateService);
+  private readonly modalService = inject(NgbModal);
+  private readonly combinationService = inject(CombinationService);
+  private readonly sharedState = inject(SharedStateService);
   public isExpanded = false;
   public isTooltipDisabled = false;
-  private mobileBreakpoint = 768;
+  private readonly mobileBreakpoint = 768;
 
   ngOnInit() {
     this.checkWindowSize();

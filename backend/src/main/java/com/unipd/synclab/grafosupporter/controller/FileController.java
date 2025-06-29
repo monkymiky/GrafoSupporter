@@ -14,12 +14,14 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import jakarta.servlet.ServletContext;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -84,36 +86,39 @@ public class FileController {
 
         try {
 
-            if (imageFile.getContentType() != null) {
-                if (!imageFile.getContentType().startsWith("image/")) {
-                    response.put("message", "Solo file immagine sono consentiti.");
-                    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-                }
-                if (imageFile.getSize() > uploadProperties.getMaxFileSize()) {
-                    response.put("message", "Il file è troppo grande. Dimensione massima 5MB.");
-                    return new ResponseEntity<>(response, HttpStatus.PAYLOAD_TOO_LARGE);
-                }
-                String filename = StringUtils.cleanPath(imageFile.getOriginalFilename());
-                String extension = StringUtils.getFilenameExtension(filename);
-                String newFilename = UUID.randomUUID().toString() + "." + extension;
-                Path filePath = fileStorageService.getImagePath(newFilename);
-
-                try (InputStream inputStream = imageFile.getInputStream()) {
-                    Files.copy(inputStream, filePath);
-                }
-
-                response.put("message", "Immagine caricata con successo!");
-                response.put("fileName", newFilename);
-                response.put("filePath", filePath.toAbsolutePath().toString());
-                return new ResponseEntity<>(response, HttpStatus.OK);
-
-            } else {
+            String contentType = imageFile.getContentType();
+            if (contentType == null) {
                 response.put("message", "Tentativo upload di un file vuoto o senza content type");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-        } catch (
+            if (!contentType.startsWith("image/")) {
+                response.put("message", "Solo file immagine sono consentiti.");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+            if (imageFile.getSize() > uploadProperties.getMaxFileSize()) {
+                response.put("message", "Il file è troppo grande. Dimensione massima 5MB.");
+                return new ResponseEntity<>(response, HttpStatus.PAYLOAD_TOO_LARGE);
+            }
 
-        IOException e) {
+            String filename = StringUtils.cleanPath(imageFile.getOriginalFilename());
+            String extension = StringUtils.getFilenameExtension(filename);
+            String newFilename = UUID.randomUUID().toString() + "." + extension;
+            Path filePath = fileStorageService.getImagePath(newFilename);
+
+            try (InputStream inputStream = imageFile.getInputStream()) {
+                Files.copy(inputStream, filePath);
+            }
+
+            response.put("message", "Immagine caricata con successo!");
+            response.put("fileName", newFilename);
+
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentContextPath()
+                    .path("/files/combination-image/{filename}")
+                    .buildAndExpand(newFilename)
+                    .toUri();
+            return ResponseEntity.created(location).body(response);
+        } catch (IOException e) {
             response.put("message", "Errore durante il caricamento dell'immagine: " + e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

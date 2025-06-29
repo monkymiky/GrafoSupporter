@@ -34,8 +34,8 @@ interface SingleSignForm {
   styleUrl: './filters.component.scss',
 })
 export class FiltersComponent {
-  private formBuilder = inject(FormBuilder);
-  private sharedState = inject(SharedStateService);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly sharedState = inject(SharedStateService);
   signsTypes = this.sharedState.signsTypes;
 
   signsForm!: FormGroup;

@@ -1,25 +1,22 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
-
+import { computed, Injectable, signal, WritableSignal } from '@angular/core';
 import { Grado } from '../search-combinations/filters/filter.interface';
-import {
-  catchError,
-  distinctUntilChanged,
-  Observable,
-  of,
-  switchMap,
-  tap,
-} from 'rxjs';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { SignsService } from './signs.service';
 import { SignApiResponseItem } from './signs.service';
+
+export enum MessageType {
+  'empty' = 0,
+  'error' = 1,
+  'warning' = 2,
+  'success' = 3,
+  'info' = 4,
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class SharedStateService {
-  errorMessage = signal('');
+  message = signal('');
+  messegeType: WritableSignal<MessageType> = signal(0);
   noResult = signal('');
-  private signsService = inject(SignsService);
 
   triggerCombinationsSearch = signal(0);
 
@@ -40,4 +37,9 @@ export class SharedStateService {
     }
     return result;
   });
+
+  public setMessage(type: MessageType, content: string) {
+    this.message.set(content);
+    this.messegeType.set(type);
+  }
 }

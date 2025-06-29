@@ -1,11 +1,14 @@
 package com.unipd.synclab.grafosupporter.controller;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -31,20 +34,31 @@ public class CombinationController {
     }
 
     @PostMapping("/search")
-    public List<CombinationDto> getCombinations(@RequestBody Map<Long, Integer> searchedSign) {
-        return combinationService.getCombinations(searchedSign);
+    public ResponseEntity<List<CombinationDto>> getCombinations(@RequestBody Map<Long, Integer> searchedSign) {
+        List<CombinationDto> combinations = combinationService.getCombinations(searchedSign);
+        return ResponseEntity.ok(combinations);
     }
 
     @PostMapping
-    public void addCombination(@RequestBody CombinationDto combinationDto) {
-        Combination combination = combinationMapper.toCombinationEntity(combinationDto);
-        combinationService.addCombination(combination);
+    public ResponseEntity<CombinationDto> addCombination(@RequestBody CombinationDto combinationDto) {
+        Combination savedCombination = combinationService
+                .addCombination(combinationMapper.toCombinationEntity(combinationDto));
+        CombinationDto savedCombinationDto = combinationMapper.toCombinationResponseDto(savedCombination);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(savedCombination.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(savedCombinationDto);
     }
 
     @PutMapping("/{combinationId}")
-    public void editCombination(@RequestBody CombinationDto combinationDto,
-            @PathVariable("combinationId") Long combinationId) {
-        combinationService.editCombination(combinationMapper.toCombinationEntity(combinationDto));
+    public ResponseEntity<CombinationDto> editCombination(
+            @PathVariable("combinationId") Long combinationId,
+            @RequestBody CombinationDto combinationDto) {
+        Combination combinationToUpdate = combinationMapper.toCombinationEntity(combinationDto);
+        Combination updatedCombination = combinationService.editCombination(combinationId, combinationToUpdate);
+        CombinationDto updatedDto = combinationMapper.toCombinationResponseDto(updatedCombination);
+        return ResponseEntity.ok(updatedDto);
     }
 
     @DeleteMapping("/{combinationId}")
