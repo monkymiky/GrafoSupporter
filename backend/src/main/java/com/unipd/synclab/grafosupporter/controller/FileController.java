@@ -44,7 +44,7 @@ public class FileController {
     }
 
     @GetMapping("/combination-image/{filename:.+}")
-    public ResponseEntity<Resource> serveCombinationImage(@PathVariable String filename) {
+    public ResponseEntity<Resource> getCombinationImage(@PathVariable String filename) {
         try {
 
             Path filePath = fileStorageService.getImagePath(filename);
@@ -78,9 +78,9 @@ public class FileController {
     @PostMapping("/combination-image")
     public ResponseEntity<Map<String, String>> uploadImage(@RequestPart("imageFile") MultipartFile imageFile) {
         Map<String, String> response = new HashMap<>();
-
+        final String MESSAGE = "message";
         if (imageFile.isEmpty()) {
-            response.put("message", "Nessun file selezionato.");
+            response.put(MESSAGE, "Nessun file selezionato.");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
@@ -88,20 +88,20 @@ public class FileController {
 
             String contentType = imageFile.getContentType();
             if (contentType == null) {
-                response.put("message", "Tentativo upload di un file vuoto o senza content type");
+                response.put(MESSAGE, "Tentativo upload di un file vuoto o senza content type");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             if (!contentType.startsWith("image/")) {
-                response.put("message", "Solo file immagine sono consentiti.");
+                response.put(MESSAGE, "Solo file immagine sono consentiti.");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             if (imageFile.getSize() > uploadProperties.getMaxFileSize()) {
-                response.put("message", "Il file è troppo grande. Dimensione massima 5MB.");
+                response.put(MESSAGE, "Il file è troppo grande. Dimensione massima 5MB.");
                 return new ResponseEntity<>(response, HttpStatus.PAYLOAD_TOO_LARGE);
             }
 
-            String filename = StringUtils.cleanPath(imageFile.getOriginalFilename());
-            String extension = StringUtils.getFilenameExtension(filename);
+            String originalFilename = imageFile.getOriginalFilename();
+            String extension = StringUtils.getFilenameExtension(originalFilename);
             String newFilename = UUID.randomUUID().toString() + "." + extension;
             Path filePath = fileStorageService.getImagePath(newFilename);
 
@@ -109,7 +109,7 @@ public class FileController {
                 Files.copy(inputStream, filePath);
             }
 
-            response.put("message", "Immagine caricata con successo!");
+            response.put(MESSAGE, "Immagine caricata con successo!");
             response.put("fileName", newFilename);
 
             URI location = ServletUriComponentsBuilder
@@ -119,7 +119,7 @@ public class FileController {
                     .toUri();
             return ResponseEntity.created(location).body(response);
         } catch (IOException e) {
-            response.put("message", "Errore durante il caricamento dell'immagine: " + e.getMessage());
+            response.put(MESSAGE, "Errore durante il caricamento dell'immagine: " + e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
