@@ -22,6 +22,8 @@ import com.unipd.synclab.grafosupporter.model.Combination;
 import com.unipd.synclab.grafosupporter.service.CombinationService;
 import com.unipd.synclab.grafosupporter.utility.CombinationMapper;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/combinations")
 public class CombinationController {
@@ -40,7 +42,7 @@ public class CombinationController {
     }
 
     @PostMapping
-    public ResponseEntity<CombinationDto> addCombination(@RequestBody CombinationDto combinationDto) {
+    public ResponseEntity<CombinationDto> addCombination(@Valid @RequestBody CombinationDto combinationDto) {
         Combination savedCombination = combinationService
                 .addCombination(combinationMapper.toCombinationEntity(combinationDto));
         CombinationDto savedCombinationDto = combinationMapper.toCombinationResponseDto(savedCombination);
@@ -54,7 +56,7 @@ public class CombinationController {
     @PutMapping("/{combinationId}")
     public ResponseEntity<CombinationDto> editCombination(
             @PathVariable("combinationId") Long combinationId,
-            @RequestBody CombinationDto combinationDto) {
+            @Valid @RequestBody CombinationDto combinationDto) {
         Combination combinationToUpdate = combinationMapper.toCombinationEntity(combinationDto);
         Combination updatedCombination = combinationService.editCombination(combinationId, combinationToUpdate);
         CombinationDto updatedDto = combinationMapper.toCombinationResponseDto(updatedCombination);

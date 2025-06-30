@@ -49,55 +49,41 @@ public class CombinationSpecifications {
     }
 
     public static Specification<Combination> allSignsInCombinationMustMatchCriteria(
-            Map<Long, Integer> referenceCriteriaSigns) {
-        // la condizione "tutti i segni soddisfano la condizione x" equivale a dire
-        // "non esiste alcun segno che non soddisfa x"
+            Map<Long, Integer> signMapInput) {
         return (Root<Combination> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
 
-            if (referenceCriteriaSigns == null || referenceCriteriaSigns.isEmpty()) {
+            if (signMapInput == null || signMapInput.isEmpty()) {
                 return cb.disjunction();
             }
 
             Subquery<Long> subquery = query.subquery(Long.class);
             Root<Combination> subRoot = subquery.correlate(root);
-            Join<Combination, ValuatedSign> valuatedSignFromCombination = subRoot.join("signs");
+            Join<Combination, ValuatedSign> valuatedSignsOfTheCombination = subRoot.join("signs");
 
             subquery.select(cb.literal(1L));
-            // Identifico le combinazioni "problematiche" per poi escluderle e tenere solo
-            // le altre
-            // per ogni chiave/valore nella mappa referenceCriteriaSigns,
-            // creiamo una condizione che soddisfa il valuatedSignFromCombination.
-            // Poi neghiamo l'OR di tutte queste condizioni soddisfacenti.
 
-            List<Predicate> orConditionsForSatisfactoryMatch = new ArrayList<>();
-            for (Map.Entry<Long, Integer> criteriaEntry : referenceCriteriaSigns.entrySet()) {
-                Long criteriaSignId = criteriaEntry.getKey();
-                Integer frontendValue = criteriaEntry.getValue();
+            List<Predicate> criteriaFromMap = new ArrayList<>();
+            for (Map.Entry<Long, Integer> signMapInputTuple : signMapInput.entrySet()) {
+                Long inputSignId = signMapInputTuple.getKey();
+                Integer inputSignRange = signMapInputTuple.getValue();
 
-                Predicate signIdMatchesCriteria = cb.equal(valuatedSignFromCombination.get("sign").get("id"),
-                        criteriaSignId);
-                Predicate signIsOptional = cb.equal(valuatedSignFromCombination.get("isOptional"), true);
-                Predicate valueMatchesCriteria = buildMatchValuesPredicate(cb,
-                        valuatedSignFromCombination.get("min"), valuatedSignFromCombination.get("max"),
-                        frontendValue);
+                Predicate signIdAreEqual = cb.equal(valuatedSignsOfTheCombination.get("sign").get("id"),
+                        inputSignId);
+                Predicate signIsOptional = cb.equal(valuatedSignsOfTheCombination.get("isOptional"), true);
+                Predicate valueIsInRange = buildMatchValuesPredicate(cb,
+                        valuatedSignsOfTheCombination.get("min"), valuatedSignsOfTheCombination.get("max"),
+                        inputSignRange);
 
-                orConditionsForSatisfactoryMatch
-                        .add(cb.or(signIsOptional, cb.and(signIdMatchesCriteria, valueMatchesCriteria)));
+                criteriaFromMap
+                        .add(cb.or(signIsOptional, cb.and(signIdAreEqual, valueIsInRange)));
             }
 
-            // Un ValuatedSign è "soddisfacente" se metcha con un entry della map
-            // referenceCriteriaSigns
-
-            Predicate isSatisfactory = cb.or(orConditionsForSatisfactoryMatch.toArray(new Predicate[0]));
-
-            // Un ValuatedSign è "problematico" se NON matcha con nessun entry di
-            // referenceCriteriaSigns ovvero non è "soddisfacente"
+            Predicate isSatisfactory = cb.or(criteriaFromMap.toArray(new Predicate[0]));
 
             Predicate isProblematic = cb.not(isSatisfactory);
 
             subquery.where(isProblematic);
 
-            // NON ESISTE un ValuatedSign "problematico" --> tutti i ValuatedSign matchano
             return cb.not(cb.exists(subquery));
         };
     }

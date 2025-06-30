@@ -312,8 +312,12 @@ public class DatabaseInitializer {
                 } else {
                         System.out.println("SignDatabase gia inizializzato.");
                 }
-
-                populateDatabaseFromJson();
+                if (combinationRepository.count() == 0) {
+                        populateDatabaseFromJson();
+                        System.out.println("CombinationDatabase inizializzato con combinazioni default.");
+                } else {
+                        System.out.println("CombinationDatabase gia inizializzato.");
+                }
         }
 
 }
