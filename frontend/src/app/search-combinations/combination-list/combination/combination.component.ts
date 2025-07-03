@@ -14,7 +14,7 @@ import {
 import { DeleteComponentModalComponent } from './delete-component-modal/delete-component-modal.component';
 import { CombinationService } from '../../../shared/combinations.service';
 import { SharedStateService } from '../../../shared/shared-state.service';
-import { AddCombinationsComponent } from '../../../add-combinations/add-combinations.component';
+import { CombinationsFormComponent } from '../../../combinations-form/combinations-form.component';
 
 @Component({
   selector: 'app-single-combination',
@@ -50,7 +50,7 @@ export class SingleCombination {
   }
 
   openModifyModal() {
-    const modalRef = this.modalService.open(AddCombinationsComponent, {
+    const modalRef = this.modalService.open(CombinationsFormComponent, {
       size: 'xl',
       centered: true,
       fullscreen: 'lg',

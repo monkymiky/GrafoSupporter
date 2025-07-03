@@ -140,18 +140,18 @@ export function fileTypeValidator(allowedTypes: string[]): ValidatorFn {
 }
 
 @Component({
-  selector: 'app-add-combinations',
+  selector: 'app-combinations-form',
   imports: [CommonModule, ReactiveFormsModule, SignFormFieldComponent],
-  templateUrl: './add-combinations.component.html',
-  styleUrl: './add-combinations.component.scss',
+  templateUrl: './combinations-form.component.html',
+  styleUrl: './combinations-form.component.scss',
 })
-export class AddCombinationsComponent {
+export class CombinationsFormComponent {
   activeModal = inject(NgbActiveModal);
   messageService = inject(MessageService);
-  private formBuilder = inject(FormBuilder);
+  private readonly formBuilder = inject(FormBuilder);
   sharedState = inject(SharedStateService);
-  private combinationsService = inject(CombinationService);
-  private fileUploadService = inject(FileUploadService);
+  private readonly combinationsService = inject(CombinationService);
+  private readonly fileUploadService = inject(FileUploadService);
   activeImageFileName: string | null = null;
   RemoteImageFileName: string | null = null;
   imagePreviewUrl: string | null = null;

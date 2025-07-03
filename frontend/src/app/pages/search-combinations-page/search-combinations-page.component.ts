@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FiltersComponent } from '../../search-combinations/filters/filters.component';
 import { CombinationListComponent } from '../../search-combinations/combination-list/combinations-list.component';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { AddCombinationsComponent } from '../../add-combinations/add-combinations.component';
+import { CombinationsFormComponent } from '../../combinations-form/combinations-form.component';
 import { SharedStateService } from '../../shared/shared-state.service';
 
 @Component({
@@ -15,14 +15,14 @@ import { SharedStateService } from '../../shared/shared-state.service';
 export class SearchCombinationsPageComponent {
   sharedState = inject(SharedStateService);
   offcanvasService = inject(NgbOffcanvas);
-  private modalService = inject(NgbModal);
+  private readonly modalService = inject(NgbModal);
 
   openSidebar(content: any) {
     this.offcanvasService.open(content, { position: 'start' });
   }
 
   openModalCombiantion() {
-    this.modalService.open(AddCombinationsComponent, {
+    this.modalService.open(CombinationsFormComponent, {
       size: 'xl',
       centered: true,
       fullscreen: 'lg',
