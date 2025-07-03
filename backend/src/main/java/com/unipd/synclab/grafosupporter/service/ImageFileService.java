@@ -15,7 +15,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.UUID;
 
 @Service
@@ -25,7 +24,7 @@ public class ImageFileService {
     private final Long maxFileSize;
 
     public ImageFileService(ConfigurationPropertiesManager configProperties) {
-        this.combinationUploadDir = Paths.get(configProperties.getCombinationImagesDirectory())
+        this.combinationUploadDir = Path.of(configProperties.getCombinationImagesDirectory())
                 .toAbsolutePath()
                 .normalize();
         this.maxFileSize = configProperties.getMaxFileSize();

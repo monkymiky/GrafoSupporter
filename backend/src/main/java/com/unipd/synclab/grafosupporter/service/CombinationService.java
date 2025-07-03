@@ -1,8 +1,6 @@
 package com.unipd.synclab.grafosupporter.service;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
@@ -127,7 +125,7 @@ public class CombinationService {
     @Transactional
     public void deleteCombination(Long id) {
         Optional<Combination> combiantion = combinationRepository.findById(id);
-        if (!combiantion.isPresent()) {
+        if (combiantion.isEmpty()) {
             throw new EntityNotFoundException("Combination not found with id: " + id);
         } else if (combiantion.get().getSourceBook() != null)
             throw new InvalidParameterException(

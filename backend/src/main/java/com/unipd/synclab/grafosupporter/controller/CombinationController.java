@@ -56,7 +56,7 @@ public class CombinationController {
 
     @PutMapping("/{combinationId}")
     public ResponseEntity<CombinationDto> editCombination(
-            @PathVariable("combinationId") Long combinationId,
+            @PathVariable Long combinationId,
             @Valid @RequestBody CombinationDto combinationDto) throws IOException {
         Combination combinationToUpdate = combinationMapper.toCombinationEntity(combinationDto);
         Combination updatedCombination = combinationService.editCombination(combinationId, combinationToUpdate);
@@ -66,7 +66,7 @@ public class CombinationController {
 
     @DeleteMapping("/{combinationId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCombination(@PathVariable("combinationId") Long combinationId) {
+    public void deleteCombination(@PathVariable Long combinationId) {
         combinationService.deleteCombination(combinationId);
     }
 
