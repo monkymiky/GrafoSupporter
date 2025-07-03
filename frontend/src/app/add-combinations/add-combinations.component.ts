@@ -22,6 +22,7 @@ import { SignFormFieldComponent } from './sign-form-field/sign-form-field.compon
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FileUploadService } from '../shared/file-upload.service';
 import { finalize } from 'rxjs';
+import { MessageService } from '../shared/error-handling/message.service';
 
 export interface SingleSignFormModel {
   signId: FormControl<number | null>;
@@ -146,6 +147,7 @@ export function fileTypeValidator(allowedTypes: string[]): ValidatorFn {
 })
 export class AddCombinationsComponent {
   activeModal = inject(NgbActiveModal);
+  messageService = inject(MessageService);
   private formBuilder = inject(FormBuilder);
   sharedState = inject(SharedStateService);
   private combinationsService = inject(CombinationService);
@@ -157,8 +159,6 @@ export class AddCombinationsComponent {
 
   combinationForm!: FormGroup<CombinationFormModel>;
 
-  readonly errorMessage = signal<string | null>(null);
-  readonly successMessage = signal<string | null>(null);
   readonly isEditMode = signal(false);
   @Input() combination: Combination | null = null;
 
@@ -307,7 +307,6 @@ export class AddCombinationsComponent {
       this.combinationForm.controls.otherSigns.push(signForm);
     });
 
-    this.errorMessage.set(null);
     this.combinationForm.markAllAsTouched();
   }
 
@@ -342,7 +341,6 @@ export class AddCombinationsComponent {
   }
 
   onSubmit(): void {
-    this.errorMessage.set(null);
     this.combinationForm.markAllAsTouched();
 
     if (this.combinationForm.invalid) {
@@ -428,23 +426,25 @@ export class AddCombinationsComponent {
             if (this.isEditMode()) {
               this.activeModal.close('submit');
             } else {
-              this.successMessage.set(
-                "Combinazione inserita con successo, se vuoi puoi inserirne un'altra."
+              this.messageService.showMessage(
+                "Combinazione inserita con successo, se vuoi puoi inserirne un'altra.",
+                3
               );
               this.combinationForm.reset();
               this.activeImageFileName = null;
               this.RemoteImageFileName = null;
-              if (this.input && this.input.files) {
+              if (this.input?.files) {
                 this.input.value = '';
               }
             }
           },
           error: (err) => {
             const action = this.isEditMode() ? 'aggiornamento' : 'creazione';
-            this.errorMessage.set(
+            this.messageService.showMessage(
               `Errore durante l'${action} della combinazione: ${
-                err.error?.message || err.message
-              }`
+                err.error?.message ?? err.message
+              }`,
+              0
             );
           },
         });
@@ -463,10 +463,11 @@ export class AddCombinationsComponent {
           saveCombination(combinationData);
         },
         error: (err) => {
-          this.errorMessage.set(
+          this.messageService.showMessage(
             `Errore durante l'upload dell'immagine: ${
-              err.error?.message || err.message
-            }`
+              err.error?.message ?? err.message
+            }`,
+            0
           );
         },
       });

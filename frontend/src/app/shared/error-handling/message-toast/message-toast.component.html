@@ -1,0 +1,14 @@
+<div class="toast-container">
+  @for (message of messages(); track message.id) {
+  <div [@toastAnimation] class="toast" [ngClass]="getCssClass(message.type)">
+    <span class="toast-message">{{ message.text }}</span>
+    <button
+      class="toast-close-button btn-close"
+      (click)="close(message.id)"
+      aria-label="Chiudi"
+    >
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+  }
+</div>

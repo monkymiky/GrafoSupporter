@@ -7,7 +7,7 @@ import java.util.List;
 
 @Component
 @ConfigurationProperties(prefix = "app.upload")
-public class UploadProperties {
+public class ConfigurationPropertiesManager {
 
     private String combinationImagesDirectory;
     private long maxFileSize;

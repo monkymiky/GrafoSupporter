@@ -69,17 +69,6 @@
       </div>
     </header>
     <div class="row">
-      <div
-        [class.d-none]="this.sharedState.messegeType() == 0"
-        [class.alert-danger]="this.sharedState.messegeType() == 1"
-        [class.alert-warning]="this.sharedState.messegeType() == 2"
-        [class.alert-success]="this.sharedState.messegeType() == 3"
-        [class.alert-info]="this.sharedState.messegeType() == 4"
-        class="alert me-3"
-        role="alert"
-      >
-        {{ this.sharedState.message() }}
-      </div>
       <aside class="col-xl-4 d-none d-xl-block">
         <div class="ms-3 border">
           <app-filters></app-filters>

@@ -10,20 +10,6 @@
   </div>
 
   <div class="modal-body">
-    <div
-      [class.d-none]="errorMessage() == null"
-      class="alert alert-danger"
-      role="alert"
-    >
-      {{ errorMessage() }}
-    </div>
-    <div
-      [class.d-none]="successMessage() == null"
-      class="alert alert-success"
-      role="alert"
-    >
-      {{ successMessage() }}
-    </div>
     <form [formGroup]="combinationForm" (ngSubmit)="onSubmit()" novalidate>
       <div
         class="row g-3 align-items-center mb-2 header-signs ms-2 header-labels"
@@ -250,12 +236,6 @@
         </div>
         }
       </div>
-
-      @if(errorMessage()) {
-      <div class="alert alert-danger" role="alert">
-        {{ errorMessage() }}
-      </div>
-      }
     </form>
   </div>
 

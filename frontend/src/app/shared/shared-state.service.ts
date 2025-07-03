@@ -14,10 +14,6 @@ export enum MessageType {
   providedIn: 'root',
 })
 export class SharedStateService {
-  message = signal('');
-  messegeType: WritableSignal<MessageType> = signal(0);
-  noResult = signal('');
-
   triggerCombinationsSearch = signal(0);
 
   filters = signal(new Map<number, Grado>());
@@ -37,9 +33,4 @@ export class SharedStateService {
     }
     return result;
   });
-
-  public setMessage(type: MessageType, content: string) {
-    this.message.set(content);
-    this.messegeType.set(type);
-  }
 }

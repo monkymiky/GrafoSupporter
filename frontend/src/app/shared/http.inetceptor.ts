@@ -7,15 +7,15 @@ import {
 } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
-import { SharedStateService } from './shared-state.service';
+import { MessageService } from './error-handling/message.service';
 
 @Injectable()
-export class ErrorInterceptor implements HttpInterceptor {
-  readonly sharedState = inject(SharedStateService);
+export class HttpMessageInterceptor implements HttpInterceptor {
+  readonly messageService = inject(MessageService);
   intercept(request: HttpRequest<any>, next: HttpHandler) {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        let errorMessage = 'An unknown error occurred!';
+        let errorMessage = 'Si è verificato un errore sconosciuto!';
         if (error.error instanceof ErrorEvent) {
           errorMessage = `Client-side error: ${error.error.message}`;
         } else {
@@ -43,7 +43,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           }
         }
         console.error(errorMessage);
-        this.sharedState.setMessage(1, errorMessage);
+        this.messageService.showMessage(errorMessage, 0);
         return throwError(() => new Error(errorMessage));
       })
     );

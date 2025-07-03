@@ -1,5 +1,6 @@
 package com.unipd.synclab.grafosupporter.service;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.InvalidParameterException;
@@ -32,17 +33,17 @@ public class CombinationService {
     private final SignRepository signRepository;
     private final CombinationRepository combinationRepository;
     private final CombinationMapper combinationResponseMapper;
-    private final FileStorageService fileStorageService;
+    private final ImageFileService imageFileService;
 
     public CombinationService(
             SignRepository signRepository,
             CombinationRepository combinationRepository,
             CombinationMapper combinationResponseMapper,
-            FileStorageService fileStorageService) {
+            ImageFileService imageFileService) {
         this.signRepository = signRepository;
         this.combinationRepository = combinationRepository;
         this.combinationResponseMapper = combinationResponseMapper;
-        this.fileStorageService = fileStorageService;
+        this.imageFileService = imageFileService;
     }
 
     @Transactional(readOnly = true)
@@ -76,17 +77,14 @@ public class CombinationService {
     }
 
     @Transactional
-    public Combination editCombination(Long id, Combination combinationData) {
+    public Combination editCombination(Long id, Combination combinationData) throws IOException {
         Combination existingCombination = combinationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Impossible to edit - Combination not found with id: " + combinationData.getId()));
 
         if (existingCombination.getImagePath() != null
                 && !existingCombination.getImagePath().equals(combinationData.getImagePath())) {
-            Path existingFilePath = fileStorageService.getImagePath(existingCombination.getImagePath());
-            if (Files.exists(existingFilePath)) {
-                fileStorageService.deleteFile(existingCombination.getImagePath());
-            }
+            imageFileService.deleteImageFile(existingCombination.getImagePath());
         }
 
         Combination combinationToEdit = combinationRepository.findById(combinationData.getId())

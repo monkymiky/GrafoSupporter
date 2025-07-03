@@ -3,6 +3,7 @@ package com.unipd.synclab.grafosupporter.controller;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +57,7 @@ public class CombinationController {
     @PutMapping("/{combinationId}")
     public ResponseEntity<CombinationDto> editCombination(
             @PathVariable("combinationId") Long combinationId,
-            @Valid @RequestBody CombinationDto combinationDto) {
+            @Valid @RequestBody CombinationDto combinationDto) throws IOException {
         Combination combinationToUpdate = combinationMapper.toCombinationEntity(combinationDto);
         Combination updatedCombination = combinationService.editCombination(combinationId, combinationToUpdate);
         CombinationDto updatedDto = combinationMapper.toCombinationResponseDto(updatedCombination);

@@ -2,6 +2,7 @@ import {
   ApplicationConfig,
   provideZoneChangeDetection,
   importProvidersFrom,
+  ErrorHandler,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
@@ -16,7 +17,8 @@ import {
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
-import { ErrorInterceptor } from './shared/error.inetceptor';
+import { HttpMessageInterceptor } from './shared/http.inetceptor';
+import { GlobalMessageHandler } from './shared/error-handling/global-message-handler';
 
 registerLocaleData(it);
 
@@ -28,6 +30,11 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideHttpClient(),
     provideHttpClient(withInterceptorsFromDi()),
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpMessageInterceptor,
+      multi: true,
+    },
+    { provide: ErrorHandler, useClass: GlobalMessageHandler },
   ],
 };
