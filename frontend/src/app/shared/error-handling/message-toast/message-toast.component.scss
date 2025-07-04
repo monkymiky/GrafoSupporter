@@ -1,3 +1,5 @@
+@use "../../../../variables.scss" as *;
+
 :host {
   display: block;
 }
@@ -29,19 +31,19 @@
 }
 
 .toast-error {
-  background-color: #d32f2f;
+  background-color: $toast-error;
 }
 
 .toast-warning {
-  background-color: #ffa000;
+  background-color: $toast-warning;
 }
 
 .toast-info {
-  background-color: #1976d2;
+  background-color: $toast-info;
 }
 
 .toast-success {
-  background-color: green;
+  background-color: $toast-success;
 }
 
 .toast-message {
