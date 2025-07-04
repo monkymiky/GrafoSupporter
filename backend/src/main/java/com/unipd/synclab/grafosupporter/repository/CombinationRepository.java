@@ -16,9 +16,12 @@ public interface CombinationRepository
 
         @Override
         @EntityGraph(value = "Combination.withSignsAndBooks")
-        List<Combination> findAll(Specification<Combination> spec);
+        @org.springframework.lang.NonNull
+        List<Combination> findAll(@org.springframework.lang.Nullable Specification<Combination> spec);
 
         @Override
         @EntityGraph(value = "Combination.withSignsAndBooks")
-        Page<Combination> findAll(Specification<Combination> spec, Pageable pageable);
+        @org.springframework.lang.NonNull
+        Page<Combination> findAll(@org.springframework.lang.Nullable Specification<Combination> spec,
+                        @org.springframework.lang.Nullable Pageable pageable);
 }
