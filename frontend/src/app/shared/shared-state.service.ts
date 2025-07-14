@@ -1,4 +1,4 @@
-import { computed, Injectable, signal, WritableSignal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { Grado } from '../search-combinations/filters/filter.interface';
 import { SignApiResponseItem } from './signs.service';
 

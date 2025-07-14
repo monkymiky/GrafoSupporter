@@ -54,4 +54,20 @@ export class MessageToastComponent {
   trackById(index: number, item: Message): number {
     return item.id;
   }
+
+  // ngOnInit() {
+  //   this.messageService.showMessage(
+  //     "Ci dispiace qualcosa è andato storto! L'inserimento dell'immagine non è andato a buon fine, riprova tra qualche minuto.",
+  //     0
+  //   );
+  //   this.messageService.showMessage(
+  //     'Attenzione! selezionare almeno due segni per effettuare una ricerca.',
+  //     1
+  //   );
+  //   this.messageService.showMessage(
+  //     "La richiesta è stata ricevuta, l'elaborazione richiederà qualche minuto.",
+  //     2
+  //   );
+  //   this.messageService.showMessage('Combinazione modificata con successo!', 3);
+  // }
 }
