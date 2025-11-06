@@ -16,7 +16,7 @@ export class SignFormFieldComponent {
   @Input({ required: true }) signFormGroup!: FormGroup<SingleSignFormModel>;
   @Input({ required: true }) signIndex!: number;
   @Input() availableSigns: SignApiResponseItem[] = [];
-  sharedService = inject(SharedStateService);
+  sharedState = inject(SharedStateService);
 
   filteredSignsByType(type: string) {
     return this.availableSigns

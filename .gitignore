@@ -1,0 +1,15 @@
+
+.vscode/
+
+target/
+backend/target/
+*.class
+
+.spring-boot-devtools.properties
+
+node_modules/
+frontend/node_modules/
+
+.md
+.env
+

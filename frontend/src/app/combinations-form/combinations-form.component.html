@@ -202,11 +202,11 @@
 
       <div class="mb-3">
         <label for="imagePath" class="form-label">
-          @if(RemoteImageFileName != null){<i
+          @if(remoteImageFileName != null){<i
             class="bi bi-exclamation-triangle-fill text-danger"
           ></i>
           Sostituisci l'immagine:
-          {{ RemoteImageFileName }}
+          {{ remoteImageFileName }}
           }@else{ Carica un'immagine }</label
         >
         <div class="input-group">
@@ -218,10 +218,10 @@
             (change)="onFileSelected($event)"
           />
         </div>
-        @if(activeImageFileName == null && RemoteImageFileName != null) {
+        @if(activeImageFileName == null && remoteImageFileName != null) {
         <div class="img">
           <img
-            [src]="'/api/files/combination-image/' + RemoteImageFileName"
+            [src]="'/api/files/combination-image/' + remoteImageFileName"
             [alt]="'Immagine della combianzione'"
             class="img-fluid mt-3"
           />

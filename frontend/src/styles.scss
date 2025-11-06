@@ -24,6 +24,31 @@ html {
   height: 100%;
   overflow: hidden;
 }
+
+body.active-scrolling,
+html.active-scrolling {
+  height: auto !important;
+  overflow: auto !important;
+  overflow-x: hidden !important;
+}
+
+/* Modifica il main quando lo scrolling è attivo */
+body.active-scrolling main {
+  position: relative !important;
+  height: auto !important;
+  top: auto !important;
+  overflow: visible !important;
+  padding-top: 4rem !important;
+  padding-bottom: 4rem !important;
+  min-height: calc(100vh - 8rem);
+}
+
+/* Modifica il footer quando lo scrolling è attivo */
+body.active-scrolling footer {
+  position: relative !important;
+  top: auto !important;
+  margin-top: 2rem;
+}
 .bg-title {
   background-color: $title;
   color: white !important;

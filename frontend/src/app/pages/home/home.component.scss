@@ -138,3 +138,12 @@ img.title {
 .go-down-transition {
   top: -100vh;
 }
+
+.login-section {
+  position: absolute;
+  width: 35vw;
+  height: auto;
+  left: calc(50% - 17.5vw);
+  top: 60vh;
+  z-index: 2000;
+}

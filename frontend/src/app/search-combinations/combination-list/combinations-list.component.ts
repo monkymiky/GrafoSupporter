@@ -12,6 +12,7 @@ import {
   NgbTooltip,
 } from '@ng-bootstrap/ng-bootstrap';
 import { MessageService } from '../../shared/error-handling/message.service';
+import { MessageType } from '../../shared/error-handling/message.interface';
 
 @Component({
   selector: 'app-combination-list',
@@ -27,7 +28,7 @@ export class CombinationListComponent {
   signsService = inject(SignsService);
 
   readonly combinationsObservable: Observable<Combination[]> = toObservable(
-    this.sharedState.triggerCombinationsSearch
+    this.sharedState.combinationsSearchTrigger
   ).pipe(
     switchMap(() => {
       return this.combinationsService
@@ -37,14 +38,14 @@ export class CombinationListComponent {
             if (combinations.length == 0) {
               this.messageService.showMessage(
                 'Ci dispiace, nel sistema non sono state trovate combinazioni con questi parametri.',
-                2
+                MessageType.warning
               );
             }
           }),
           catchError((err) => {
             this.messageService.showMessage(
               `Errore caricamento combinazioni : ${err.message}`,
-              0
+              MessageType.error
             );
             return of([] as Combination[]);
           })

@@ -24,16 +24,16 @@ export class MessageService {
     ]);
     let delay: number = 0;
     switch (newMessage.type) {
-      case 0:
+      case MessageType.error:
         delay = 15000;
         break;
-      case 1:
+      case MessageType.warning:
         delay = 10000;
         break;
-      case 2:
+      case MessageType.info:
         delay = 10000;
         break;
-      case 3:
+      case MessageType.success:
         delay = 5000;
         break;
       default:

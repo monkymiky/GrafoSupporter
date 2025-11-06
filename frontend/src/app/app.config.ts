@@ -17,8 +17,9 @@ import {
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
-import { HttpMessageInterceptor } from './shared/http.inetceptor';
+import { HttpMessageInterceptor } from './shared/http-message.interceptor';
 import { GlobalMessageHandler } from './shared/error-handling/global-message-handler';
+import { JwtInterceptor } from './shared/interceptors/jwt.interceptor';
 
 registerLocaleData(it);
 
@@ -30,6 +31,11 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideHttpClient(),
     provideHttpClient(withInterceptorsFromDi()),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true,
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpMessageInterceptor,

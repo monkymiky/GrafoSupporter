@@ -23,6 +23,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FileUploadService } from '../shared/file-upload.service';
 import { finalize } from 'rxjs';
 import { MessageService } from '../shared/error-handling/message.service';
+import { MessageType } from '../shared/error-handling/message.interface';
 
 export interface SingleSignFormModel {
   signId: FormControl<number | null>;
@@ -63,7 +64,7 @@ export function intervalValidator(
   return min > max ? { invalidInterval: true } : null;
 }
 
-export function SignIsNotAbsentValidator(
+export function requiredSignNotAbsentValidator(
   control: AbstractControl
 ): ValidationErrors | null {
   const group = control as FormGroup<SingleSignFormModel>;
@@ -153,7 +154,7 @@ export class CombinationsFormComponent {
   private readonly combinationsService = inject(CombinationService);
   private readonly fileUploadService = inject(FileUploadService);
   activeImageFileName: string | null = null;
-  RemoteImageFileName: string | null = null;
+  remoteImageFileName: string | null = null;
   imagePreviewUrl: string | null = null;
   input: HTMLInputElement | null = null;
 
@@ -210,8 +211,8 @@ export class CombinationsFormComponent {
             'image/svg',
           ]),
         ]),
-        firstSign: this.createSingleSignForm(true),
-        secondSign: this.createSingleSignForm(true),
+        firstSign: this.createSignForm(true),
+        secondSign: this.createSignForm(true),
         otherSigns: this.formBuilder.array<FormGroup<SingleSignFormModel>>([]),
       },
       {
@@ -222,13 +223,13 @@ export class CombinationsFormComponent {
     this.combinationForm.controls.secondSign.controls.isOptional.disable();
   }
 
-  private createSingleSignForm(
+  private createSignForm(
     isRequiredAndNotAbsent: boolean
   ): FormGroup<SingleSignFormModel> {
     const groupValidators: ValidatorFn[] = [intervalValidator];
 
     if (isRequiredAndNotAbsent) {
-      groupValidators.push(SignIsNotAbsentValidator);
+      groupValidators.push(requiredSignNotAbsentValidator);
     }
 
     return this.formBuilder.group<SingleSignFormModel>(
@@ -297,12 +298,12 @@ export class CombinationsFormComponent {
     });
 
     if (typeof c.imagePath === 'string') {
-      this.RemoteImageFileName = c.imagePath;
+      this.remoteImageFileName = c.imagePath;
     }
 
     this.combinationForm.controls.otherSigns.clear();
     c.signs.slice(2).forEach((sign) => {
-      const signForm = this.createSingleSignForm(false);
+      const signForm = this.createSignForm(false);
       signForm.patchValue(this.mapSignDataToForm(sign));
       this.combinationForm.controls.otherSigns.push(signForm);
     });
@@ -311,9 +312,7 @@ export class CombinationsFormComponent {
   }
 
   addOtherSign(): void {
-    this.combinationForm.controls.otherSigns.push(
-      this.createSingleSignForm(false)
-    );
+    this.combinationForm.controls.otherSigns.push(this.createSignForm(false));
   }
   removeOtherSign(i: number): void {
     this.combinationForm.controls.otherSigns.removeAt(i);
@@ -418,7 +417,7 @@ export class CombinationsFormComponent {
       saveOperation
         .pipe(
           finalize(() =>
-            this.sharedState.triggerCombinationsSearch.set(Date.now())
+            this.sharedState.combinationsSearchTrigger.set(Date.now())
           )
         )
         .subscribe({
@@ -428,11 +427,11 @@ export class CombinationsFormComponent {
             } else {
               this.messageService.showMessage(
                 "Combinazione inserita con successo, se vuoi puoi inserirne un'altra.",
-                3
+                MessageType.success
               );
               this.combinationForm.reset();
               this.activeImageFileName = null;
-              this.RemoteImageFileName = null;
+              this.remoteImageFileName = null;
               if (this.input?.files) {
                 this.input.value = '';
               }
@@ -444,7 +443,7 @@ export class CombinationsFormComponent {
               `Errore durante l'${action} della combinazione: ${
                 err.error?.message ?? err.message
               }`,
-              0
+              MessageType.error
             );
           },
         });
@@ -467,7 +466,7 @@ export class CombinationsFormComponent {
             `Errore durante l'upload dell'immagine: ${
               err.error?.message ?? err.message
             }`,
-            0
+            MessageType.error
           );
         },
       });

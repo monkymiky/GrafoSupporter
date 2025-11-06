@@ -16,7 +16,7 @@
             this.signFormGroup.controls.signId.dirty)
         "
       >
-        @for(signType of sharedService.signsTypes(); track signType) {
+        @for(signType of sharedState.signTypes(); track signType) {
         <optgroup [label]="signType"></optgroup>
         @for (sign of filteredSignsByType(signType); let j = $index; track j;) {
         <option [value]="sign.id">{{ sign.name }}</option>

@@ -18,7 +18,7 @@ import { Grado } from './filter.interface';
 import { SharedStateService } from '../../shared/shared-state.service';
 import { NgbTooltip, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 
-interface SingleSignForm {
+interface SignFilterFormRow {
   id: number;
   signName: string;
   temperamento: string | null;
@@ -36,19 +36,19 @@ interface SingleSignForm {
 export class FiltersComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly sharedState = inject(SharedStateService);
-  signsTypes = this.sharedState.signsTypes;
+  signTypes = this.sharedState.signTypes;
 
   signsForm!: FormGroup;
 
   readonly errorMessage = signal<string | null>(null);
 
-  signsData: Signal<SingleSignForm[]> = computed(() => {
-    const result: SingleSignForm[] = [];
-    for (const singleSing of this.sharedState.signs()) {
-      const id = singleSing.id;
-      const signName = singleSing.name;
-      const temperamento = singleSing.temperamento;
-      const type = singleSing.tipo;
+  signsData: Signal<SignFilterFormRow[]> = computed(() => {
+    const result: SignFilterFormRow[] = [];
+    for (const singleSign of this.sharedState.signs()) {
+      const id = singleSign.id;
+      const signName = singleSign.name;
+      const temperamento = singleSign.temperamento;
+      const type = singleSign.tipo;
       result.push({
         id,
         signName,
@@ -127,6 +127,6 @@ export class FiltersComponent {
     }
 
     this.sharedState.filters.set(newFilterMap);
-    this.sharedState.triggerCombinationsSearch.set(Date.now());
+    this.sharedState.combinationsSearchTrigger.set(Date.now());
   }
 }

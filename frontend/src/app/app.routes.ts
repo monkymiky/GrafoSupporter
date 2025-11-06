@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { signsResolver } from './shared/signs.resolver';
+import { authGuard } from './shared/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -23,6 +24,15 @@ export const routes: Routes = [
         resolve: {
           signs: signsResolver,
         },
+        canActivate: [authGuard],
+      },
+      {
+        path: 'contatti',
+        loadComponent: () =>
+          import('./pages/contacts/contacts.component').then(
+            (m) => m.ContactsComponent
+          ),
+        title: 'Contatti - GrafoSupporter',
       },
     ],
   },

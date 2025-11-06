@@ -1,0 +1,52 @@
+@if (loginModalService.isOpen()) {
+<div class="modal-backdrop" (click)="close()"></div>
+<div class="modal-container" role="dialog" aria-modal="true">
+  <button class="btn-close" aria-label="Chiudi" (click)="close()"></button>
+
+  <h2 class="text-center mb-3">
+    {{
+      loginModalService.mode() === "signup" ? "Crea il tuo account" : "Accedi"
+    }}
+  </h2>
+
+  <div class="mode-switch btn-group w-100 mb-3" role="group">
+    <button
+      type="button"
+      class="btn"
+      [class.btn-primary]="loginModalService.mode() === 'login'"
+      [class.btn-outline-primary]="loginModalService.mode() !== 'login'"
+      (click)="switchMode('login')"
+    >
+      Login
+    </button>
+    <button
+      type="button"
+      class="btn"
+      [class.btn-primary]="loginModalService.mode() === 'signup'"
+      [class.btn-outline-primary]="loginModalService.mode() !== 'signup'"
+      (click)="switchMode('signup')"
+    >
+      Signup
+    </button>
+  </div>
+
+  <div class="providers">
+    <button
+      type="button"
+      class="btn btn-outline-dark w-100 mb-2 d-flex align-items-center justify-content-center gap-2"
+      (click)="loginWithGoogle()"
+    >
+      <i class="bi bi-google"></i>
+      <span>{{
+        loginModalService.mode() === "signup"
+          ? "Registrati con Google"
+          : "Accedi con Google"
+      }}</span>
+    </button>
+  </div>
+
+  <p class="small text-muted text-center mt-3 mb-0">
+    Procedendo accetti i Termini di servizio e l'Informativa sulla privacy.
+  </p>
+</div>
+}

@@ -3,7 +3,7 @@
     <a class="navbar-brand" routerLink="/"
       ><img
         class="logo-navbar"
-        src="/api/files/combination-image/logo-navbar2.png"
+        src="assets/combination-image/logo-navbar2.png"
         alt=" Grafosupporter"
     /></a>
     <button
@@ -15,7 +15,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav me-auto">
         <li class="nav-item">
           <a
             class="nav-link"
@@ -25,6 +25,7 @@
             >Home</a
           >
         </li>
+        @if (authService.isAuthenticated) {
         <li class="nav-item">
           <a
             class="nav-link"
@@ -33,6 +34,69 @@
             >Ricerca Combinazioni</a
           >
         </li>
+        }
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/contatti" routerLinkActive="active"
+            >Contatti</a
+          >
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+        @if (authService.isAuthenticated) {
+        <li class="nav-item dropdown">
+          <button
+            class="nav-link dropdown-toggle d-flex align-items-center"
+            id="userDropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            #userDropdownEl
+            (keydown.enter)="userDropdownEl.click()"
+          >
+            @if (authService.currentUserValue?.pictureUrl) {
+            <img
+              [src]="authService.currentUserValue?.pictureUrl"
+              alt="Profile"
+              class="rounded-circle me-2"
+              style="width: 32px; height: 32px"
+              crossorigin="anonymous"
+              referrerpolicy="no-referrer"
+              (error)="onImageError($event)"
+            />
+            }
+            <span>{{
+              authService.currentUserValue?.name ||
+                authService.currentUserValue?.email
+            }}</span>
+          </button>
+          <ul
+            class="dropdown-menu dropdown-menu-end"
+            aria-labelledby="userDropdown"
+          >
+            <li>
+              <a
+                class="dropdown-item"
+                (click)="logout()"
+                style="cursor: pointer"
+              >
+                <i class="bi bi-box-arrow-right me-2"></i>Logout
+              </a>
+            </li>
+          </ul>
+        </li>
+        } @else {
+        <li class="nav-item d-flex gap-2">
+          <button
+            class="btn btn-outline-light"
+            (click)="openLogin()"
+            type="button"
+          >
+            Login
+          </button>
+          <button class="btn btn-primary" (click)="openSignup()" type="button">
+            Signup
+          </button>
+        </li>
+        }
       </ul>
     </div>
   </div>
@@ -41,6 +105,8 @@
 <main class="container-fluid mt-3 px-0">
   <router-outlet></router-outlet>
 </main>
+
+<app-login-modal></app-login-modal>
 
 <footer class="mt-auto py-3 bg-light text-center">
   <div class="container">

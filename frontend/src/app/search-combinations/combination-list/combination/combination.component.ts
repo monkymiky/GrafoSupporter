@@ -75,7 +75,7 @@ export class SingleCombination {
             .deleteCombination(this.combination.id)
             .subscribe({
               next: () => {
-                this.sharedState.triggerCombinationsSearch.set(Date.now());
+                this.sharedState.combinationsSearchTrigger.set(Date.now());
                 console.log(
                   `Combinazione ${this.combination.id} eliminata con successo!`
                 );
