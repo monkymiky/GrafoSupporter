@@ -1,4 +1,4 @@
-name: Main CI Pipeline (Build, Test, Analize)
+name: Main CI Pipeline (Build, Test, Static Analize with SonarCloud)
 
 on:
   push:
@@ -42,7 +42,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=monkymiky_GrafoSupporter -f be/pom.xml
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=monkymiky_GrafoSupporter -f backend/pom.xml
 
       #Frontend
       - name: 6. Set up Node.js 20
