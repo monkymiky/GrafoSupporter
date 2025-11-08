@@ -50,7 +50,7 @@ jobs:
         with:
           node-version: 20
           cache: "npm"
-          cache-dependency-path: fe/package-lock.json
+          cache-dependency-path: frontend/package-lock.json
 
       - name: 7. Install Frontend Dependencies and Build
         run: |
