@@ -115,8 +115,8 @@ npm start
 
 ---
 
-\_Autore: Michele Nesler
-\_LinkedIn: www.linkedin.com/in/michele-nesler-88a743198
+Autore: Michele Nesler
+LinkedIn: www.linkedin.com/in/michele-nesler-88a743198
 
 Copyright (c) 2025 Michele Nesler. Tutti i diritti riservati.
 

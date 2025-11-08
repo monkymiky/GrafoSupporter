@@ -6,6 +6,8 @@ RUN npm install
 COPY angular.json .
 COPY tsconfig.json .
 COPY tsconfig.app.json .
+COPY src ./src
+COPY public ./public
 RUN npm run build -- --configuration production
 
 
