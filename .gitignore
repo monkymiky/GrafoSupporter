@@ -10,6 +10,12 @@ backend/target/
 node_modules/
 frontend/node_modules/
 
-.md
+.xcf
 .env
+.code-workspace
+.editorconfig
+frontend/.angular/**
+frontend/node_modules/**
+
+
 
