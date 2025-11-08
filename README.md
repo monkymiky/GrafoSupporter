@@ -28,7 +28,7 @@ L'applicazione è composta da un backend basato su **Spring Boot** e un frontend
 
 - Docker & Docker Compose
 - GitHub Actions (CI/CD)
-- Hosting su VPS (Hetzner) con NGINX come reverse proxy
+- Hosting su VPS (Hetzner) con NGINX come reverse proxy (coming soon)
 
 ## Features Principali
 
@@ -44,9 +44,6 @@ L'applicazione è composta da un backend basato su **Spring Boot** e un frontend
 
 ### Prerequisiti
 
-- Java 17+
-- Maven 3.8+
-- Node.js 20+
 - Docker e Docker Compose
 
 ### 1. Configurazione dei Segreti
@@ -79,13 +76,21 @@ L'applicazione sarà accessibile ai seguenti indirizzi:
 - **Frontend**: `http://localhost:4200`
 - **Backend**: `http://localhost:8080`
 
-### 3. Avvio Manuale (per lo Sviluppo)
+### 2 Avvio Manuale (alternativa per lo sviluppo all'avvio tramite docker)
 
 Se preferisci avviare i servizi manualmente:
 
-**Backend (Spring Boot) su windows:**
+### Prerequisiti :
+
+- Java 17+
+- Maven 3.8+
+- Node.js 20+
+- Un'istanza di PostgreSQL in esecuzione
+- npm 11+
+  **Backend (Spring Boot) su windows:**
 
 ```bash
+# Dalla root del progetto
 cd backend
 ./start-dev.bat # carica le variabili d'ambiente da .env
 ```
@@ -93,6 +98,7 @@ cd backend
 **Backend (Spring Boot) su Linux:**
 
 ```bash
+# Dalla root del progetto
 cd backend
 chmod +x start-dev.sh
 ./start-dev.sh # carica le variabili d'ambiente da .env
@@ -101,13 +107,9 @@ chmod +x start-dev.sh
 **Frontend (Angular):**
 
 ```bash
-# Naviga nella cartella del frontend
+# Dalla root del progetto
 cd frontend
-
-# Installa le dipendenze
 npm install
-
-# Avvia il server di sviluppo
 npm start
 ```
 
