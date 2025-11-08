@@ -21,17 +21,13 @@
             "assets": [
               "src/assets",
               {
-                "glob": "**/*",
-                "input": "public"
-              },
-              {
-                "glob": "**/*",
-                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
+                "glob": "favicon.ico",
+                "input": "public",
                 "output": "/assets/"
               }
             ],
             "styles": [
-              "src/styles.scss",
+              "src/app/styles/styles.scss",
               "node_modules/bootstrap-icons/font/bootstrap-icons.css"
             ],
             "scripts": [
@@ -92,7 +88,8 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "public",
+                "output": "/assets/"
               }
             ],
             "styles": ["src/styles.scss"],

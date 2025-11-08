@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../shared/services/auth.service';
-import { LoginModalService } from '../../shared/services/login-modal.service';
-import { LoginModalComponent } from '../../login-modal/login-modal.component';
+import { AuthService } from '../../core/services/auth.service';
+import { LoginModalService } from '../../shared/components/login-modal/services/login-modal.service';
+import { LoginModalComponent } from '../../shared/components/login-modal/login-modal.component';
 
 @Component({
   selector: 'app-main-layout',

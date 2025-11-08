@@ -17,9 +17,9 @@ import {
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
-import { HttpMessageInterceptor } from './shared/http-message.interceptor';
-import { GlobalMessageHandler } from './shared/error-handling/global-message-handler';
-import { JwtInterceptor } from './shared/interceptors/jwt.interceptor';
+import { HttpMessageInterceptor } from './core/interceptors/http-message.interceptor';
+import { GlobalMessageHandler } from './core/error-handlers/global-message-handler';
+import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 
 registerLocaleData(it);
 

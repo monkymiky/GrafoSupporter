@@ -3,7 +3,9 @@ FROM node:20 AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
-COPY . .
+COPY angular.json .
+COPY tsconfig.json .
+COPY tsconfig.app.json .
 RUN npm run build -- --configuration production
 
 

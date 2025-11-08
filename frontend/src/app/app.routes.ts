@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
-import { signsResolver } from './shared/signs.resolver';
-import { authGuard } from './shared/guards/auth.guard';
+import { signsResolver } from './features/combination-search/components/filters/resolver/signs.resolver';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -11,16 +11,16 @@ export const routes: Routes = [
       {
         path: '',
         loadComponent: () =>
-          import('./pages/home/home.component').then((m) => m.HomeComponent),
-        title: 'Homepage - Grafologo Digitale',
+          import('./layout/home/home.component').then((m) => m.HomeComponent),
+        title: 'Homepage - Grafosupporter',
       },
       {
         path: 'ricerca-combinazioni',
         loadComponent: () =>
           import(
-            './pages/search-combinations-page/search-combinations-page.component'
+            './features/combination-search/combination-search.component'
           ).then((m) => m.SearchCombinationsPageComponent),
-        title: 'Ricerca Combinazioni',
+        title: 'Ricerca Combinazioni - Grafosupporter',
         resolve: {
           signs: signsResolver,
         },
@@ -29,7 +29,7 @@ export const routes: Routes = [
       {
         path: 'contatti',
         loadComponent: () =>
-          import('./pages/contacts/contacts.component').then(
+          import('./features/contacts/contacts.component').then(
             (m) => m.ContactsComponent
           ),
         title: 'Contatti - GrafoSupporter',
