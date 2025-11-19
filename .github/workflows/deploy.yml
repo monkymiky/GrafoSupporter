@@ -49,3 +49,30 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}-frontend
           labels: ${{ steps.meta.outputs.labels }}
+#  deploy-on-server:
+#    name: Deploy on Server
+#    needs: build-and-push-images
+#    runs-on: ubuntu-latest
+
+#    steps:
+#      - name: 1. Checkout repository
+#        uses: actions/checkout@v4
+
+#      - name: 2. Set up SSH connection
+#        uses: webfactory/ssh-agent@v0.9.0
+#        with:
+#          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+#      - name: 3. Deploy application
+#        run: |
+#          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
+#            mkdir -p ~/app && cd ~/app
+#            echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
+#          '
+#          scp ../docker-compose.yml ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/app/docker-compose.yml
+#          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
+#            cd ~/app
+#            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+#            docker-compose pull
+#            docker-compose up -d
+#          '
