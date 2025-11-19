@@ -72,6 +72,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
             echo "${{ secrets.ENV_FILE_CONTENT }}" > ~/.env
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker-compose -f ~/docker-compose.yml pull
-            docker-compose -f ~/docker-compose.yml up -d
+            docker compose -f ~/docker-compose.yml pull
+            docker compose -f ~/docker-compose.yml up -d
           '
