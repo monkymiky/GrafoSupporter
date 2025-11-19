@@ -51,7 +51,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
   deploy-on-server:
-    name: Deploy on Server
+    name: Deploy to Server
     needs: build-and-push-images
     runs-on: ubuntu-latest
 
@@ -59,21 +59,19 @@ jobs:
       - name: 1. Checkout repository
         uses: actions/checkout@v4
 
-      - name: 2. Set up SSH connection
+      - name: 2. Set up SSH
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: 3. Deploy application
+      - name: 3. Copy files to server via scp
+        run: scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/docker-compose.yml
+
+      - name: 4. Run deployment commands on server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
-            mkdir -p ~/app && cd ~/app
-            echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
-          '
-          scp ../docker-compose.yml ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/app/docker-compose.yml
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
-            cd ~/app
+            echo "${{ secrets.ENV_FILE_CONTENT }}" > ~/.env
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker-compose pull
-            docker-compose up -d
+            docker-compose -f ~/docker-compose.yml pull
+            docker-compose -f ~/docker-compose.yml up -d
           '
