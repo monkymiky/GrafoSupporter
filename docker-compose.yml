@@ -13,7 +13,7 @@ services:
     restart: always
 
   backend:
-    image: ghcr.io/monkymiky/GrafoSupporter:latest-backend
+    image: ghcr.io/monkymiky/grafosupporter:latest-backend
     container_name: grafosupporter_backend
     ports:
       - "8080:8080"
@@ -31,7 +31,7 @@ services:
     restart: always
 
   frontend:
-    image: ghcr.io/monkymiky/GrafoSupporter:latest-frontend
+    image: ghcr.io/monkymiky/grafosupporter:latest-frontend
     container_name: grafosupporter_frontend
     ports:
       - "4200:80"
