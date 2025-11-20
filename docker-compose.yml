@@ -27,6 +27,7 @@ services:
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       JWT_SECRET: ${JWT_SECRET}
       APP_BASE_URL: ${APP_BASE_URL}
+      FRONTEND_BASE_URL: ${FRONTEND_BASE_URL}
     volumes:
       - uploads:/app/uploads
     restart: always
