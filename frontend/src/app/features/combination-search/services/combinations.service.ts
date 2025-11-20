@@ -1,14 +1,15 @@
-import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Combination } from '../model/combination.interface';
-import { Grado } from '../model/filter.interface';
+import { inject, Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { Combination } from "../model/combination.interface";
+import { Grado } from "../model/filter.interface";
+import { environment } from "../../../../environments/environment";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class CombinationService {
-  readonly apiUrl = '/api/combinations';
+  readonly apiUrl = `${environment.apiUrl}/combinations`;
   readonly http = inject(HttpClient);
 
   searchCombinations(filters: Map<number, number>): Observable<Combination[]> {
@@ -18,7 +19,7 @@ export class CombinationService {
     });
 
     return this.http.post<Combination[]>(
-      this.apiUrl + '/search',
+      this.apiUrl + "/search",
       filtersObject
     );
   }

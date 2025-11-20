@@ -56,6 +56,9 @@ Questo progetto richiede delle credenziali per l'autenticazione Google e per la 
     ```
     GOOGLE_CLIENT_ID=tuo_client_id
     GOOGLE_CLIENT_SECRET=tuo_secret
+    JWT_SECRET=tuo_secret
+
+    APP_BASE_URL=http://localhost:8080
 
     DB_USER=user
     DB_PASS=pass

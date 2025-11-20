@@ -1,7 +1,8 @@
-import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, map, catchError, of } from 'rxjs';
-import { Router } from '@angular/router';
+import { inject, Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { BehaviorSubject, Observable, tap, map, catchError, of } from "rxjs";
+import { Router } from "@angular/router";
+import { environment } from "../../../environments/environment";
 
 export interface AuthUser {
   token: string;
@@ -12,12 +13,12 @@ export interface AuthUser {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
-  private readonly apiUrl = '/api/auth';
+  private readonly authApiUrl = `${environment.apiUrl}${environment.apiPrefix}/auth`;
 
   private readonly currentUserSubject = new BehaviorSubject<AuthUser | null>(
     this.getStoredUser()
@@ -51,11 +52,11 @@ export class AuthService {
   }
 
   loginWithGoogle(): void {
-    window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+    window.location.href = `${environment.apiUrl}/oauth2/authorization/google`;
   }
 
   handleOAuthCallback(): Observable<AuthUser> {
-    return this.http.get<AuthUser>(`${this.apiUrl}/oauth2/success`).pipe(
+    return this.http.get<AuthUser>(`${this.authApiUrl}/oauth2/success`).pipe(
       tap((user) => {
         this.setUser(user);
       })
@@ -63,19 +64,19 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('auth_user');
+    localStorage.removeItem("auth_user");
     this.currentUserSubject.next(null);
-    this.router.navigate(['/']);
+    this.router.navigate(["/"]);
   }
 
-  getCurrentUser(): Observable<Omit<AuthUser, 'token'>> {
-    return this.http.get<Omit<AuthUser, 'token'>>(`${this.apiUrl}/me`);
+  getCurrentUser(): Observable<Omit<AuthUser, "token">> {
+    return this.http.get<Omit<AuthUser, "token">>(`${this.authApiUrl}/me`);
   }
 
   private validateToken(token: string): Observable<boolean> {
     return this.http
       .post<{ valid: boolean }>(
-        `${this.apiUrl}/validate`,
+        `${this.authApiUrl}/validate`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -96,12 +97,12 @@ export class AuthService {
   }
 
   setUser(user: AuthUser): void {
-    localStorage.setItem('auth_user', JSON.stringify(user));
+    localStorage.setItem("auth_user", JSON.stringify(user));
     this.currentUserSubject.next(user);
   }
 
   private getStoredUser(): AuthUser | null {
-    const stored = localStorage.getItem('auth_user');
+    const stored = localStorage.getItem("auth_user");
     if (!stored) return null;
     try {
       return JSON.parse(stored);

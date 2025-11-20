@@ -4,10 +4,10 @@ services:
     container_name: postgresDB
     environment:
       POSTGRES_DB: grafosupporterDB
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes: # Salva i dati del db su disco (persistono anche se il container viene stoppato)
       - postgres_data:/var/lib/postgresql/data
     restart: always
@@ -16,7 +16,7 @@ services:
     image: ghcr.io/monkymiky/grafosupporter:latest-backend
     container_name: grafosupporter_backend
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
     depends_on:
       - database
     environment:
@@ -26,6 +26,7 @@ services:
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       JWT_SECRET: ${JWT_SECRET}
+      APP_BASE_URL: ${APP_BASE_URL}
     volumes:
       - uploads:/app/uploads
     restart: always
@@ -34,7 +35,7 @@ services:
     image: ghcr.io/monkymiky/grafosupporter:latest-frontend
     container_name: grafosupporter_frontend
     ports:
-      - "4200:80"
+      - "127.0.0.1:4200:80"
     depends_on:
       - backend
     restart: always
