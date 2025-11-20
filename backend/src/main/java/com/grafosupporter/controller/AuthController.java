@@ -1,6 +1,7 @@
 package com.grafosupporter.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,13 +22,16 @@ public class AuthController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
+    @Value("${app.frontend.base-url}")
+    private String frontendBaseUrl;
+
     @GetMapping("/oauth2/success")
     public ResponseEntity<Void> oauth2Success(
             @AuthenticationPrincipal OAuth2User oauth2User) {
 
         if (oauth2User == null) {
             return ResponseEntity.status(302)
-                    .header("Location", "http://localhost:4200/?error=auth_failed")
+                    .header("Location", frontendBaseUrl + "/?error=auth_failed")
                     .build();
         }
 
@@ -38,7 +42,7 @@ public class AuthController {
 
         if (email == null || googleId == null) {
             return ResponseEntity.status(302)
-                    .header("Location", "http://localhost:4200/?error=auth_failed")
+                    .header("Location", frontendBaseUrl + "/?error=auth_failed")
                     .build();
         }
 
@@ -46,7 +50,8 @@ public class AuthController {
         String token = jwtUtil.generateToken(user.getEmail(), user.getId());
 
         String redirectUrl = String.format(
-                "http://localhost:4200/?token=%s&email=%s&name=%s&pictureUrl=%s&userId=%d",
+                "%s/?token=%s&email=%s&name=%s&pictureUrl=%s&userId=%d",
+                frontendBaseUrl,
                 token,
                 java.net.URLEncoder.encode(user.getEmail(), java.nio.charset.StandardCharsets.UTF_8),
                 user.getName() != null
