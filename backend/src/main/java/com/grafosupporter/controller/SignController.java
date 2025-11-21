@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
-@RequestMapping("/signs")
+@RequestMapping("/api/signs")
 public class SignController {
     private final SignService signService;
 

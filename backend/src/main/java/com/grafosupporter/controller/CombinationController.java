@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/combinations")
+@RequestMapping("/api/combinations")
 public class CombinationController {
     private final CombinationService combinationService;
     private final CombinationMapper combinationMapper;

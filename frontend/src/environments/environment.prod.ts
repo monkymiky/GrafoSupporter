@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: "https://grafosupporter.net.in",
-  apiPrefix: "/api",
+  apiUrl: "https://grafosupporter.net.in/api",
+  apiPrefix: "",
 };

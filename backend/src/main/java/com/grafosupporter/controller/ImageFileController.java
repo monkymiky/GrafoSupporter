@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @RestController
-@RequestMapping("/files")
+@RequestMapping("/api/files")
 public class ImageFileController {
     private final ImageFileService fileStorageService;
     private final ServletContext servletContext;
