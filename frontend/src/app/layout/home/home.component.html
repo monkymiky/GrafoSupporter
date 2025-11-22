@@ -19,8 +19,6 @@
   </div>
   <div
     class="ellipse top"
-    (mouseenter)="stop()"
-    (mouseleave)="play()"
     [style.--ellipse-width]="ellipseWidthVw() + 'vw'"
     [style.--ellipse-top-offset]="ellipseTopOffsetVh() + 'vh'"
     [style.--ellipse-left]="ellipseLeftVw() + 'vw'"
@@ -32,13 +30,11 @@
   />
   <div
     class="ellipse bottom"
-    (mouseenter)="stop()"
-    (mouseleave)="play()"
     [style.--ellipse-width]="ellipseWidthVw() + 'vw'"
     [style.--ellipse-bottom-offset]="ellipseBottomOffsetVh() + 'vh'"
     [style.--ellipse-left]="ellipseLeftVw() + 'vw'"
   ></div>
-  <div class="bottom-hider" (mouseenter)="stop()"></div>
+  <div class="bottom-hider"></div>
 </div>
 
 <section class="login-section">

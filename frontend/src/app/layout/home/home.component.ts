@@ -100,7 +100,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.panelAngle = 360 / this.imageIndex.length;
     this.adjustCarouselDependingOnWindowWidth();
-
+    this.play();
     this.route.queryParams.subscribe((params) => {
       if (params["token"]) {
         const authUser = {
