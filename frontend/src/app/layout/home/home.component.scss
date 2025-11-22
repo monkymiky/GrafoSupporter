@@ -1,5 +1,12 @@
 @use "../../styles/variables" as *;
 
+$ellipse-width: 125vw;
+$ellipse-height: 100vh;
+$ellipse-top-offset: -80vh;
+$ellipse-bottom-offset: 50vh;
+$ellipse-left: -12.5vw;
+$scene-3d-perspective: 50vw;
+
 .scene-3d {
   position: absolute;
   top: 0;
@@ -46,9 +53,9 @@
 
 .ellipse {
   position: absolute;
-  left: -12.5vw;
-  width: 125vw;
-  height: 100vh;
+  left: var(--ellipse-left);
+  width: var(--ellipse-width);
+  height: var(--ellipse-height);
   background-color: $bg-home;
   border-radius: 50%;
   z-index: 2;
@@ -56,11 +63,10 @@
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.75);
 }
 .top {
-  top: -80vh;
+  top: var(--ellipse-top-offset);
 }
 .bottom {
-  top: 50vh;
-  height: 100vh;
+  top: var(--ellipse-bottom-offset);
   border-radius: 50%;
   border-bottom-left-radius: 0%;
   border-bottom-right-radius: 0%;
@@ -141,9 +147,9 @@ img.title {
 
 .login-section {
   position: absolute;
-  width: 35vw;
+  width: 50vw;
   height: auto;
-  left: calc(50% - 17.5vw);
+  left: calc(50% - 25vw);
   top: 60vh;
   z-index: 2000;
 }
