@@ -1,7 +1,6 @@
 @use "../../styles/variables" as *;
 
 $ellipse-width: 125vw;
-$ellipse-height: 100vh;
 $ellipse-top-offset: -80vh;
 $ellipse-bottom-offset: 50vh;
 $ellipse-left: -12.5vw;
@@ -55,7 +54,7 @@ $scene-3d-perspective: 50vw;
   position: absolute;
   left: var(--ellipse-left);
   width: var(--ellipse-width);
-  height: var(--ellipse-height);
+  height: 100vh;
   background-color: $bg-home;
   border-radius: 50%;
   z-index: 2;
@@ -82,10 +81,6 @@ img.title {
   z-index: 4;
 }
 
-.vertical-line {
-  font-size: 1.5rem;
-}
-
 .bottom-hider {
   width: 100vw;
   height: 100vh;
@@ -95,54 +90,9 @@ img.title {
   z-index: 3;
 }
 
-.go-down {
-  position: fixed;
-  top: 0;
-  text-align: center;
-  flex: auto;
-  flex-direction: column;
-  left: calc(50vw - 6rem);
-  z-index: 4;
-  width: 12rem;
-  height: 8rem;
-  background-color: $transparent;
-  border-width: 0;
-
-  animation-name: go-down;
-  animation-direction: alternate;
-  animation-timing-function: ease;
-  animation-duration: 1s;
-  animation-delay: 0.5s;
-  animation-iteration-count: infinite;
-
-  transition: top 1.5s linear 0s;
-}
-
-.bi-arrow-down {
-  font-size: 2rem;
-}
-
-@keyframes go-down {
-  0% {
-    top: calc(100vh - 9.5rem);
-  }
-  100% {
-    top: calc(100vh - 8.7rem);
-  }
-}
 .above-the-fold {
   position: relative;
   top: 0;
-  transition: top 1.5s linear 0s;
-}
-.above-the-fold-up {
-  top: -100vh;
-}
-.disabled-animation {
-  animation: none !important;
-}
-.go-down-transition {
-  top: -100vh;
 }
 
 .login-section {

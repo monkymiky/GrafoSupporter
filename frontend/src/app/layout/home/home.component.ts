@@ -49,7 +49,6 @@ export class HomeComponent implements OnInit {
         this.imageIndex = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         this.panelAngle = 360 / this.imageIndex.length;
         this.ellipseWidthVw.set(150);
-        this.ellipseHeightVh.set(100);
         this.ellipseTopOffsetVh.set(-80);
         this.ellipseBottomOffsetVh.set(50);
         break;
@@ -57,7 +56,6 @@ export class HomeComponent implements OnInit {
         this.imageIndex = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
         this.panelAngle = 360 / this.imageIndex.length;
         this.ellipseWidthVw.set(200);
-        this.ellipseHeightVh.set(100);
         this.ellipseTopOffsetVh.set(-77);
         this.ellipseBottomOffsetVh.set(47);
         break;
@@ -65,7 +63,6 @@ export class HomeComponent implements OnInit {
         this.imageIndex = [0, 1, 2, 3, 4, 5, 6, 7];
         this.panelAngle = 360 / this.imageIndex.length;
         this.ellipseWidthVw.set(225);
-        this.ellipseHeightVh.set(100);
         this.ellipseTopOffsetVh.set(-75);
         this.ellipseBottomOffsetVh.set(45);
         break;
@@ -73,7 +70,6 @@ export class HomeComponent implements OnInit {
         this.imageIndex = [0, 1, 2, 3, 4, 5, 6];
         this.panelAngle = 360 / this.imageIndex.length;
         this.ellipseWidthVw.set(250);
-        this.ellipseHeightVh.set(100);
         this.ellipseTopOffsetVh.set(-72);
         this.ellipseBottomOffsetVh.set(42);
         break;
@@ -81,7 +77,6 @@ export class HomeComponent implements OnInit {
         this.imageIndex = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         this.panelAngle = 360 / this.imageIndex.length;
         this.ellipseWidthVw.set(150);
-        this.ellipseHeightVh.set(100);
         this.ellipseTopOffsetVh.set(-80);
         this.ellipseBottomOffsetVh.set(50);
         break;
