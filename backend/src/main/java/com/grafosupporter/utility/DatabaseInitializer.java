@@ -23,6 +23,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import org.springframework.core.io.ClassPathResource;
 
+import com.grafosupporter.config.ConfigurationPropertiesManager;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+
 @Data
 class JsonSign {
         private Long id;
@@ -54,12 +59,14 @@ public class DatabaseInitializer {
         private final BookRepository bookRepository;
         private final SignRepository signRepository;
         private final CombinationRepository combinationRepository;
+        private final ConfigurationPropertiesManager configProperties;
 
         public DatabaseInitializer(BookRepository bookRepository, SignRepository signRepository,
-                        CombinationRepository combinationRepository) {
+                        CombinationRepository combinationRepository, ConfigurationPropertiesManager configProperties) {
                 this.bookRepository = bookRepository;
                 this.signRepository = signRepository;
                 this.combinationRepository = combinationRepository;
+                this.configProperties = configProperties;
         }
 
         private Book processBook(Long id, String combinationTitle) {
@@ -76,7 +83,7 @@ public class DatabaseInitializer {
 
         public void populateDatabaseFromJson() {
                 if (combinationRepository.count() > 0) {
-                        System.out.println("CombinationDatabase gia inizializzato.");
+                        System.out.println("CombinationDatabase gia pieno.");
                         return;
                 }
 
@@ -134,6 +141,7 @@ public class DatabaseInitializer {
 
         @EventListener(ApplicationReadyEvent.class)
         public void initBookDatabase() {
+                initDefaultImages();
                 final String GIROLAMO_MORETTI = "Girolamo Moretti";
                 final String EDIZIONI_MESSAGGERO_PADOVA = "Edizioni Messaggero Padova";
                 if (bookRepository.count() == 0) {
@@ -180,6 +188,7 @@ public class DatabaseInitializer {
                                         EDIZIONI_MESSAGGERO_PADOVA, "9788825010091"));
 
                         bookRepository.saveAll(books);
+
                         System.out.println("BookDatabase inizializzato con libri di default.");
                 } else {
                         System.out.println("BookDatabase gia inizializzato.");
@@ -310,13 +319,48 @@ public class DatabaseInitializer {
                         signRepository.saveAll(signs);
                         System.out.println("SignDatabase inizializzato con segni default.");
                 } else {
-                        System.out.println("SignDatabase gia inizializzato.");
+                        System.out.println("SignDatabase gia pieno.");
                 }
                 if (combinationRepository.count() == 0) {
                         populateDatabaseFromJson();
                         System.out.println("CombinationDatabase inizializzato con combinazioni default.");
                 } else {
-                        System.out.println("CombinationDatabase gia inizializzato.");
+                        System.out.println("CombinationDatabase gia pieno.");
+                }
+        }
+
+        public void initDefaultImages() {
+                System.out.println("Inizializzazione delle immagini di default...");
+                try {
+                        Path uploadDir = Path.of(configProperties.getCombinationImagesDirectory());
+                        if (!Files.exists(uploadDir)) {
+                                Files.createDirectories(uploadDir);
+                        }
+
+                        List<String> defaultImages = List.of("scrittura.jpg", "scrittura2.jpg");
+
+                        for (String imageName : defaultImages) {
+                                Path targetPath = uploadDir.resolve(imageName);
+
+                                if (!Files.exists(targetPath)) {
+                                        ClassPathResource resource = new ClassPathResource(
+                                                        "static_images/" + imageName);
+                                        if (resource.exists()) {
+                                                try (InputStream inputStream = resource.getInputStream()) {
+                                                        Files.copy(inputStream, targetPath,
+                                                                        StandardCopyOption.REPLACE_EXISTING);
+                                                        System.out.println("Copiata immagine di default: " + imageName);
+                                                }
+                                        } else {
+                                                System.err.println("Impossibile trovare l'immagine nelle risorse: "
+                                                                + imageName);
+                                        }
+                                }
+                        }
+                } catch (IOException e) {
+                        System.err.println("Errore durante l'inizializzazione delle immagini di default: "
+                                        + e.getMessage());
+                        e.printStackTrace();
                 }
         }
 
