@@ -39,7 +39,10 @@ export class HomeComponent implements OnInit {
 
   private adjustCarouselDependingOnWindowWidth() {
     let i = 0;
-    while (window.innerWidth < this.windowWidthBreakpoint[i]) {
+    while (
+      i < this.windowWidthBreakpoint.length &&
+      window.innerWidth < this.windowWidthBreakpoint[i]
+    ) {
       this.currentWindowWidthBreakpoint = this.windowWidthBreakpoint[i];
       i++;
     }
@@ -108,7 +111,7 @@ export class HomeComponent implements OnInit {
           email: params["email"] || "",
           name: params["name"] || "",
           pictureUrl: params["pictureUrl"] || "",
-          userId: Number.parseInt(params["userId"] || "0", 10),
+          userId: Number(params["userId"]),
         };
         console.debug("Auth user from query params:", authUser);
         setTimeout(() => {
