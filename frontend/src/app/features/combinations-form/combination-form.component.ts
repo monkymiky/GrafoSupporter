@@ -371,7 +371,12 @@ export class CombinationsFormComponent implements OnInit {
       longDescription: formValue.longDescription,
       imagePath: null,
       originalTextCondition: null,
-      author: this.authService.currentUserValue?.userId ?? null,
+      author: this.authService.currentUserValue?.userId 
+        ? { 
+            id: this.authService.currentUserValue.userId, 
+            name: this.authService.currentUserValue.name || 'Utente' 
+          } 
+        : null,
       sourceBook: null,
       signs: [
         {

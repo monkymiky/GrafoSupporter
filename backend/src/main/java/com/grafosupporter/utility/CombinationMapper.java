@@ -2,6 +2,7 @@ package com.grafosupporter.utility;
 
 import org.springframework.stereotype.Component;
 
+import com.grafosupporter.dto.AuthorDto;
 import com.grafosupporter.dto.CombinationDto;
 import com.grafosupporter.dto.ValuatedSignDto;
 import com.grafosupporter.model.Combination;
@@ -31,7 +32,13 @@ public class CombinationMapper {
         dto.setId(combination.getId());
         dto.setTitle(combination.getTitle());
         if (combination.getAuthor() != null) {
-            dto.setAuthor(combination.getAuthor().getId());
+            AuthorDto authorDto = new AuthorDto(
+                combination.getAuthor().getId(),
+                combination.getAuthor().getName()
+            );
+            dto.setAuthor(authorDto);
+        } else {
+            dto.setAuthor(null);
         }
         dto.setShortDescription(combination.getShortDescription());
         dto.setLongDescription(combination.getLongDescription());
@@ -64,8 +71,10 @@ public class CombinationMapper {
         combinationEntity.setLongDescription(dto.getLongDescription());
         combinationEntity.setOriginalTextCondition(dto.getOriginalTextCondition());
 
-        if (dto.getAuthor() != null) {
-            combinationEntity.setAuthor(userService.findById(dto.getAuthor()));
+        if (dto.getAuthor() != null && dto.getAuthor().getId() != null) {
+            combinationEntity.setAuthor(userService.findById(dto.getAuthor().getId()));
+        } else {
+            combinationEntity.setAuthor(null);
         }
 
         combinationEntity.setImagePath(dto.getImagePath());

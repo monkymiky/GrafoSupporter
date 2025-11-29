@@ -106,7 +106,7 @@
       />
       }
 
-      <p><strong>Autore:</strong> {{ combination.author }}</p>
+      <p><strong>Autore:</strong> {{ combination.author?.name || 'N/A' }}</p>
 
       @if(this.combination.sourceBook?.title){
       <p>

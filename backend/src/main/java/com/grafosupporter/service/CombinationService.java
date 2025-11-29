@@ -15,11 +15,13 @@ import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import com.grafosupporter.dto.AuthorDto;
 import com.grafosupporter.dto.BookDto;
 import com.grafosupporter.dto.CombinationDto;
 import com.grafosupporter.dto.ValuatedSignDto;
 import com.grafosupporter.model.Combination;
 import com.grafosupporter.model.Sign;
+import com.grafosupporter.model.User;
 import com.grafosupporter.model.ValuatedSign;
 import com.grafosupporter.repository.CombinationRepository;
 import com.grafosupporter.repository.SignRepository;
@@ -138,12 +140,23 @@ public class CombinationService {
     }
 
     private ArrayList<CombinationDto> getCombinationsExamples() {
-        Long user1Id = userRepository.findByEmail("girolamo.moretti@grafosupporter.local")
-                .map(user -> user.getId())
-                .orElse(1L);
-        Long user2Id = userRepository.findByEmail("utente.default@grafosupporter.local")
-                .map(user -> user.getId())
-                .orElse(2L);
+        User user1 = userRepository.findByEmail("girolamo.moretti@grafosupporter.local")
+                .orElseGet(() -> {
+                    User defaultUser = new User();
+                    defaultUser.setId(1L);
+                    defaultUser.setName("Girolamo Moretti");
+                    return defaultUser;
+                });
+        User user2 = userRepository.findByEmail("utente.default@grafosupporter.local")
+                .orElseGet(() -> {
+                    User defaultUser = new User();
+                    defaultUser.setId(2L);
+                    defaultUser.setName("Utente");
+                    return defaultUser;
+                });
+
+        AuthorDto author1 = new AuthorDto(user1.getId(), user1.getName());
+        AuthorDto author2 = new AuthorDto(user2.getId(), user2.getName());
 
         ValuatedSignDto sign1 = new ValuatedSignDto(1L, 10, 5, "S", false, "Largo di Lettere", "");
         ValuatedSignDto sign2 = new ValuatedSignDto(2L, 5, 5, "M", false, "Curva", "Cessione");
@@ -165,7 +178,7 @@ public class CombinationService {
                 "Cliccami per visualizzare le altre informazioni",
                 "Le informazioni che puoi visualizzare in una combianzione sono:   - I segni della combianzione con il loro intervallo in cui la combinazione ha significato: possono avere un '+' affianco, ciò significa che sono opzionali e che quindi la combianzione ha senso anche senza che questi segni siano presenti o siano nel range specificato.  Il testo di ogni sengo può essere di 5 colori che indicano il temperamento:     (nero: dipende dal contesto)      (azzurro: Cessione)      (giallo: Resistenza)       (verde: Attesa)       (rosso: assalto)   Con i bottoni bidone (rosso) e  penna (giallo) è possibile andare a eliminare o modificare una combinazione se è stata inserita dall'utente. Apri il secondo esempio per vederli!  PS: l'intervallo di grado per un segno 0-0/10 indica che il segno deve essere necessariamente assente perche la combinazione abbia significato. ",
                 "qua puoi controllare la condizione testuale uguale a come l'ha scritta moretti nei suoi libri",
-                user1Id,
+                author1,
                 "scrittura.jpg",
                 signs1,
                 book);
@@ -179,7 +192,7 @@ public class CombinationService {
                 "Cliccami per visualizzare le altre informazioni",
                 "Ora incomincia pure la ricerca delle combinazioni selezionando nella barra laterale il grado di tutti i segni che hai trovato durante l'analisi!  ATTENTO! se alcuni non li inserisci il sistema li considera come assenti e non ti mostrerà le combinazioni che li riguardano (a meno che non siano segni opzionali) siccome le combinazioni sono veramente tante e altrimenti sarebbe da visualizzarne sempre tantissime!",
                 "",
-                user2Id,
+                author2,
                 "scrittura2.jpg",
                 signs2,
                 null);
