@@ -150,9 +150,9 @@ public class CombinationService {
                 "9788825010008");
         CombinationDto ex1 = new CombinationDto(
                 0L,
-                "Titolo: Questo è un esempio di combinazione",
-                "Descrizione Breve: Cliccami per visualizzare le altre informazioni",
-                "Descrizione Lunga: Le informazioni che puoi visualizzare in una combianzione sono:   - I segni della combianzione con il loro intervallo in cui la combinazione ha significato: possono avere un '+' affianco, ciò significa che sono opzionali e che quindi la combianzione ha senso anche senza che questi segni siano presenti o siano nel range specificato.  Il testo di ogni sengo può essere di 5 colori che indicano il temperamento:     (nero: dipende dal contesto)      (azzurro: Cessione)      (giallo: Resistenza)       (verde: Attesa)       (rosso: assalto)   Con i bottoni bidone (rosso) e  penna (giallo) è possibile andare a eliminare o modificare una combinazione se è stata inserita dall'utente. Apri il secondo esempio per vederli!  PS: l'intervallo di grado per un segno 0-0/10 indica che il segno deve essere necessariamente assente perche la combinazione abbia significato. ",
+                "Questa è una combinazione d'esempio",
+                "Cliccami per visualizzare le altre informazioni",
+                "Le informazioni che puoi visualizzare in una combianzione sono:   - I segni della combianzione con il loro intervallo in cui la combinazione ha significato: possono avere un '+' affianco, ciò significa che sono opzionali e che quindi la combianzione ha senso anche senza che questi segni siano presenti o siano nel range specificato.  Il testo di ogni sengo può essere di 5 colori che indicano il temperamento:     (nero: dipende dal contesto)      (azzurro: Cessione)      (giallo: Resistenza)       (verde: Attesa)       (rosso: assalto)   Con i bottoni bidone (rosso) e  penna (giallo) è possibile andare a eliminare o modificare una combinazione se è stata inserita dall'utente. Apri il secondo esempio per vederli!  PS: l'intervallo di grado per un segno 0-0/10 indica che il segno deve essere necessariamente assente perche la combinazione abbia significato. ",
                 "qua puoi controllare la condizione testuale uguale a come l'ha scritta moretti nei suoi libri",
                 "Girolamo Moretti",
                 "scrittura.jpg",
@@ -164,7 +164,7 @@ public class CombinationService {
         signs2.add(sign2);
         CombinationDto ex2 = new CombinationDto(
                 2L,
-                "Questo è un esempio di 'combinazione inserita dall'utente'",
+                "Questo è un esempio di 'combinazione inserita da un utente'",
                 "Cliccami per visualizzare le altre informazioni",
                 "Ora incomincia pure la ricerca delle combinazioni selezionando nella barra laterale il grado di tutti i segni che hai trovato durante l'analisi!  ATTENTO! se alcuni non li inserisci il sistema li considera come assenti e non ti mostrerà le combinazioni che li riguardano (a meno che non siano segni opzionali) siccome le combinazioni sono veramente tante e altrimenti sarebbe da visualizzarne sempre tantissime!",
                 "",

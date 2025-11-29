@@ -1,0 +1,62 @@
+services:
+  database:
+    image: postgres:16-alpine
+    container_name: grafosupporter_db_dev
+    environment:
+      POSTGRES_DB: grafosupporterDB
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    restart: always
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: grafosupporter_backend_dev
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    depends_on:
+      - database
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      JWT_SECRET: ${JWT_SECRET}
+      APP_BASE_URL: ${APP_BASE_URL}
+      FRONTEND_BASE_URL: ${FRONTEND_BASE_URL}
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/pom.xml:/app/pom.xml
+      - ./backend/target/classes:/app/target/classes
+      - uploads_dev:/app/uploads
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: grafosupporter_frontend_dev
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/angular.json:/app/angular.json
+      - ./frontend/tsconfig.json:/app/tsconfig.json
+      - ./frontend/tsconfig.app.json:/app/tsconfig.app.json
+      - ./frontend/proxy_dev.conf.json:/app/proxy_dev.conf.json
+      - /app/node_modules
+
+volumes:
+  postgres_data_dev:
+  uploads_dev:

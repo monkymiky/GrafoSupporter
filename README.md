@@ -6,7 +6,7 @@ GrafoSupporter è un'applicazione web full-stack progettata per assistere i graf
 
 L'applicazione è composta da un backend basato su **Spring Boot** e un frontend **Angular**, ed è completamente containerizzata con **Docker**.
 
-**Link all'applicazione live:** coming soon
+**Link all'applicazione live:** https://grafosupporter.net.in/
 
 ## Stack Tecnologico
 
@@ -28,7 +28,7 @@ L'applicazione è composta da un backend basato su **Spring Boot** e un frontend
 
 - Docker & Docker Compose
 - GitHub Actions (CI/CD)
-- Hosting su VPS (Hetzner) con NGINX come reverse proxy (coming soon)
+- Hosting su VPS (Hetzner) con NGINX come reverse proxy
 
 ## Features Principali
 
@@ -59,62 +59,33 @@ Questo progetto richiede delle credenziali per l'autenticazione Google e per la 
     JWT_SECRET=tuo_secret
 
     APP_BASE_URL=http://localhost:8080
+    FRONTEND_BASE_URL=http://localhost:4200
 
     DB_USER=user
     DB_PASS=pass
-    SPRING_DATASOURCE_URL=tuo_url_DB
+    SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/databaseLocale
     ```
 
-### 2. Avvio con Docker Compose (Metodo Consigliato)
+### 2. Avvio con Docker Compose
 
-Il modo più semplice per avviare l'intera applicazione (backend, frontend, database) è tramite Docker Compose.
+Tramite Docker Compose si avvia l'intera applicazione (backend, frontend, database) con un unico comando.
 
 ```bash
 # Dalla root del progetto
 docker-compose up --build
 ```
 
+### 2 Avvio per lo sviluppo con live reload
+
+```bash
+# Dalla root del progetto
+docker-compose -f docker-compose.dev.yml up --build
+```
+
 L'applicazione sarà accessibile ai seguenti indirizzi:
 
 - **Frontend**: `http://localhost:4200`
 - **Backend**: `http://localhost:8080`
-
-### 2 Avvio Manuale (alternativa per lo sviluppo all'avvio tramite docker)
-
-Se preferisci avviare i servizi manualmente:
-
-### Prerequisiti :
-
-- Java 17+
-- Maven 3.8+
-- Node.js 20+
-- Un'istanza di PostgreSQL in esecuzione
-- npm 11+
-  **Backend (Spring Boot) su windows:**
-
-```bash
-# Dalla root del progetto
-cd backend
-./start-dev.bat # carica le variabili d'ambiente da .env
-```
-
-**Backend (Spring Boot) su Linux:**
-
-```bash
-# Dalla root del progetto
-cd backend
-chmod +x start-dev.sh
-./start-dev.sh # carica le variabili d'ambiente da .env
-```
-
-**Frontend (Angular):**
-
-```bash
-# Dalla root del progetto
-cd frontend
-npm install
-npm start
-```
 
 ---
 

@@ -39,6 +39,9 @@
 
 <section class="login-section">
   <div class="text-center">
+    @if (authService.isAuthenticated) {
+    <p>{{ authService.currentUserValue?.name }} sei loggato con successo!</p>
+    }@else {
     <p>Accedi o registrati gratis per cercare le combinazioni:</p>
     <div class="d-flex gap-2 justify-content-center">
       <button
@@ -52,5 +55,6 @@
         Signup
       </button>
     </div>
+    }
   </div>
 </section>

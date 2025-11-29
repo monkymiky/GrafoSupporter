@@ -1,0 +1,6 @@
+FROM maven:3.9-eclipse-temurin-17
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline
+# codice sorgente montato via Volume nel docker-compose per live reload
+CMD ["mvn", "spring-boot:run", "-Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005'"]

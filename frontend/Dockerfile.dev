@@ -1,0 +1,8 @@
+FROM node:20
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm install
+# 'src' montato via volume per live reload
+EXPOSE 4200
+# parametro --poll 2000 (controlla i file ogni 2 sec) per risolvere il problema di Windows con il live reload 
+CMD ["npx", "ng", "serve", "--host", "0.0.0.0", "--poll", "2000", "--disable-host-check"]
