@@ -1,5 +1,12 @@
-import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+  Component,
+  computed,
+  inject,
+  Input,
+  OnInit,
+  signal,
+} from "@angular/core";
+import { CommonModule } from "@angular/common";
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -10,20 +17,21 @@ import {
   ValidatorFn,
   AbstractControl,
   ValidationErrors,
-} from '@angular/forms';
-import { SharedStateService } from '../../shared/services/shared-state.service';
-import { Combination } from '../combination-search/model/combination.interface';
+} from "@angular/forms";
+import { SharedStateService } from "../../shared/services/shared-state.service";
+import { Combination } from "../combination-search/model/combination.interface";
 import {
   classification,
   Sign,
-} from '../combination-search/model/sign.interface';
-import { CombinationService } from '../combination-search/services/combinations.service';
-import { SignFormFieldComponent } from './sign-form-field/sign-form-field.component';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { FileUploadService } from './services/file-upload.service';
-import { finalize } from 'rxjs';
-import { MessageService } from '../../shared/components/message-toast/services/message.service';
-import { MessageType } from '../../shared/components/message-toast/models/message.interface';
+} from "../combination-search/model/sign.interface";
+import { CombinationService } from "../combination-search/services/combinations.service";
+import { SignFormFieldComponent } from "./sign-form-field/sign-form-field.component";
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { FileUploadService } from "./services/file-upload.service";
+import { finalize } from "rxjs";
+import { MessageService } from "../../shared/components/message-toast/services/message.service";
+import { MessageType } from "../../shared/components/message-toast/models/message.interface";
+import { AuthService } from "../../core/services/auth.service";
 
 export interface SingleSignFormModel {
   signId: FormControl<number | null>;
@@ -84,12 +92,12 @@ export function uniqueSignsValidator(
 ): ValidationErrors | null {
   const group = control as FormGroup<CombinationFormModel>;
 
-  const firstSignId = group.controls.firstSign.get('signId')?.value;
-  const secondSignId = group.controls.secondSign.get('signId')?.value;
+  const firstSignId = group.controls.firstSign.get("signId")?.value;
+  const secondSignId = group.controls.secondSign.get("signId")?.value;
 
-  const otherSigns = group.get('otherSigns') as FormArray;
+  const otherSigns = group.get("otherSigns") as FormArray;
   const otherSignsIds = otherSigns.controls.map(
-    (signControl) => signControl.get('signId')?.value
+    (signControl) => signControl.get("signId")?.value
   );
   const allIds = [firstSignId, secondSignId, ...otherSignsIds];
 
@@ -141,10 +149,10 @@ export function fileTypeValidator(allowedTypes: string[]): ValidatorFn {
 }
 
 @Component({
-  selector: 'app-combinations-form',
+  selector: "app-combinations-form",
   imports: [CommonModule, ReactiveFormsModule, SignFormFieldComponent],
-  templateUrl: './combination-form.component.html',
-  styleUrl: './combination-form.component.scss',
+  templateUrl: "./combination-form.component.html",
+  styleUrl: "./combination-form.component.scss",
 })
 export class CombinationsFormComponent implements OnInit {
   activeModal = inject(NgbActiveModal);
@@ -153,6 +161,7 @@ export class CombinationsFormComponent implements OnInit {
   sharedState = inject(SharedStateService);
   private readonly combinationsService = inject(CombinationService);
   private readonly fileUploadService = inject(FileUploadService);
+  private readonly authService = inject(AuthService);
   activeImageFileName: string | null = null;
   remoteImageFileName: string | null = null;
   imagePreviewUrl: string | null = null;
@@ -164,10 +173,10 @@ export class CombinationsFormComponent implements OnInit {
   @Input() combination: Combination | null = null;
 
   readonly pageTitle = computed(() =>
-    this.isEditMode() ? 'Modifica Combinazione' : 'Aggiungi Combinazione'
+    this.isEditMode() ? "Modifica Combinazione" : "Aggiungi Combinazione"
   );
   readonly submitButtonText = computed(() =>
-    this.isEditMode() ? 'Modifica' : 'Salva'
+    this.isEditMode() ? "Modifica" : "Salva"
   );
 
   ngOnInit(): void {
@@ -184,11 +193,11 @@ export class CombinationsFormComponent implements OnInit {
     this.combinationForm = this.formBuilder.group<CombinationFormModel>(
       {
         id: this.formBuilder.control<number | null>(null),
-        title: this.formBuilder.control<string>('', {
+        title: this.formBuilder.control<string>("", {
           nonNullable: true,
           validators: [Validators.required, Validators.minLength(10)],
         }),
-        shortDescription: this.formBuilder.control<string>('', {
+        shortDescription: this.formBuilder.control<string>("", {
           nonNullable: true,
           validators: [
             Validators.required,
@@ -196,19 +205,19 @@ export class CombinationsFormComponent implements OnInit {
             Validators.maxLength(300),
           ],
         }),
-        longDescription: this.formBuilder.control<string>('', {
+        longDescription: this.formBuilder.control<string>("", {
           nonNullable: true,
           validators: [Validators.maxLength(2048)],
         }),
         imagePath: this.formBuilder.control<string | File | null>(null, [
           fileSizeValidator(5 * 1024 * 1024),
           fileTypeValidator([
-            'image/png',
-            'image/jpg',
-            'image/jpeg',
-            'image/gif',
-            'image/webp',
-            'image/svg',
+            "image/png",
+            "image/jpg",
+            "image/jpeg",
+            "image/gif",
+            "image/webp",
+            "image/svg",
           ]),
         ]),
         firstSign: this.createSignForm(true),
@@ -297,7 +306,7 @@ export class CombinationsFormComponent implements OnInit {
       secondSign: this.mapSignDataToForm(c.signs[1]),
     });
 
-    if (typeof c.imagePath === 'string') {
+    if (typeof c.imagePath === "string") {
       this.remoteImageFileName = c.imagePath;
     }
 
@@ -329,13 +338,13 @@ export class CombinationsFormComponent implements OnInit {
         this.imagePreviewUrl = reader.result as string;
       };
       reader.readAsDataURL(file);
-      this.combinationForm.get('imagePath')?.patchValue(file);
-      this.combinationForm.get('imagePath')?.updateValueAndValidity();
+      this.combinationForm.get("imagePath")?.patchValue(file);
+      this.combinationForm.get("imagePath")?.updateValueAndValidity();
     } else {
       this.activeImageFileName = null;
       this.imagePreviewUrl = null;
-      this.combinationForm.get('imagePath')?.patchValue(null);
-      this.combinationForm.get('imagePath')?.updateValueAndValidity();
+      this.combinationForm.get("imagePath")?.patchValue(null);
+      this.combinationForm.get("imagePath")?.updateValueAndValidity();
     }
   }
 
@@ -343,7 +352,7 @@ export class CombinationsFormComponent implements OnInit {
     this.combinationForm.markAllAsTouched();
 
     if (this.combinationForm.invalid) {
-      console.warn('Form is invalid. Submission aborted.');
+      console.warn("Form is invalid. Submission aborted.");
       return;
     }
 
@@ -362,14 +371,14 @@ export class CombinationsFormComponent implements OnInit {
       longDescription: formValue.longDescription,
       imagePath: null,
       originalTextCondition: null,
-      author: 'Utente',
+      author: this.authService.currentUserValue?.userId ?? null,
       sourceBook: null,
       signs: [
         {
           signId: +formValue.firstSign.signId!,
           name:
             getSignDataById(formValue.firstSign.signId)?.name ??
-            'Nome non trovato',
+            "Nome non trovato",
           min: formValue.firstSign.min,
           max: formValue.firstSign.max,
           isOptional: formValue.firstSign.isOptional,
@@ -381,7 +390,7 @@ export class CombinationsFormComponent implements OnInit {
           signId: +formValue.secondSign.signId!,
           name:
             getSignDataById(formValue.secondSign.signId)?.name ??
-            'Nome non trovato',
+            "Nome non trovato",
           min: formValue.secondSign.min,
           max: formValue.secondSign.max,
           isOptional: formValue.secondSign.isOptional,
@@ -393,7 +402,7 @@ export class CombinationsFormComponent implements OnInit {
           const signData = getSignDataById(sign.signId);
           return {
             signId: +sign.signId!,
-            name: signData?.name ?? 'Nome non trovato',
+            name: signData?.name ?? "Nome non trovato",
             min: sign.min,
             max: sign.max,
             isOptional: sign.isOptional,
@@ -411,7 +420,7 @@ export class CombinationsFormComponent implements OnInit {
             finalCombinationData
           )
         : this.combinationsService.createCombination(
-            finalCombinationData as Omit<Combination, 'id'>
+            finalCombinationData as Omit<Combination, "id">
           );
 
       saveOperation
@@ -423,7 +432,7 @@ export class CombinationsFormComponent implements OnInit {
         .subscribe({
           next: () => {
             if (this.isEditMode()) {
-              this.activeModal.close('submit');
+              this.activeModal.close("submit");
             } else {
               this.messageService.showMessage(
                 "Combinazione inserita con successo, se vuoi puoi inserirne un'altra.",
@@ -433,12 +442,12 @@ export class CombinationsFormComponent implements OnInit {
               this.activeImageFileName = null;
               this.remoteImageFileName = null;
               if (this.input?.files) {
-                this.input.value = '';
+                this.input.value = "";
               }
             }
           },
           error: (err) => {
-            const action = this.isEditMode() ? 'aggiornamento' : 'creazione';
+            const action = this.isEditMode() ? "aggiornamento" : "creazione";
             this.messageService.showMessage(
               `Errore durante l'${action} della combinazione: ${
                 err.error?.message ?? err.message
@@ -449,11 +458,11 @@ export class CombinationsFormComponent implements OnInit {
         });
     };
 
-    const imageValue = this.combinationForm.get('imagePath')?.value;
+    const imageValue = this.combinationForm.get("imagePath")?.value;
 
     if (imageValue instanceof File) {
       const formImageData = new FormData();
-      formImageData.append('imageFile', imageValue);
+      formImageData.append("imageFile", imageValue);
 
       this.fileUploadService.uploadCombinationImage(formImageData).subscribe({
         next: (response) => {
@@ -473,7 +482,7 @@ export class CombinationsFormComponent implements OnInit {
     } else {
       if (
         this.isEditMode() &&
-        typeof this.combination?.imagePath === 'string'
+        typeof this.combination?.imagePath === "string"
       ) {
         combinationData.imagePath = this.combination.imagePath;
       } else {

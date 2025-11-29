@@ -14,10 +14,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.grafosupporter.model.Book;
 import com.grafosupporter.model.Combination;
 import com.grafosupporter.model.Sign;
+import com.grafosupporter.model.User;
 import com.grafosupporter.model.ValuatedSign;
 import com.grafosupporter.repository.BookRepository;
 import com.grafosupporter.repository.CombinationRepository;
 import com.grafosupporter.repository.SignRepository;
+import com.grafosupporter.repository.UserRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,14 +61,28 @@ public class DatabaseInitializer {
         private final BookRepository bookRepository;
         private final SignRepository signRepository;
         private final CombinationRepository combinationRepository;
+        private final UserRepository userRepository;
         private final ConfigurationPropertiesManager configProperties;
 
+        private Long defaultUser1Id;
+        private Long defaultUser2Id;
+
         public DatabaseInitializer(BookRepository bookRepository, SignRepository signRepository,
-                        CombinationRepository combinationRepository, ConfigurationPropertiesManager configProperties) {
+                        CombinationRepository combinationRepository, UserRepository userRepository,
+                        ConfigurationPropertiesManager configProperties) {
                 this.bookRepository = bookRepository;
                 this.signRepository = signRepository;
                 this.combinationRepository = combinationRepository;
+                this.userRepository = userRepository;
                 this.configProperties = configProperties;
+        }
+
+        private User createOrGetDefaultUser(String email, String name, String pictureUrl, String googleId) {
+                return userRepository.findByGoogleId(googleId)
+                                .orElseGet(() -> {
+                                        User newUser = new User(email, name, pictureUrl, googleId);
+                                        return userRepository.save(newUser);
+                                });
         }
 
         private Book processBook(Long id, String combinationTitle) {
@@ -79,6 +95,39 @@ public class DatabaseInitializer {
                                         + combinationTitle);
                 }
                 return null;
+        }
+
+        private void initDefaultUsers() {
+                User user1 = userRepository.findByEmail("girolamo.moretti@grafosupporter.local")
+                                .orElseGet(() -> createOrGetDefaultUser(
+                                                "girolamo.moretti@grafosupporter.local",
+                                                "Girolamo Moretti",
+                                                null,
+                                                "default_google_id_moretti"));
+                User user2 = userRepository.findByEmail("utente.default@grafosupporter.local")
+                                .orElseGet(() -> createOrGetDefaultUser(
+                                                "utente.default@grafosupporter.local",
+                                                "Utente Default",
+                                                null,
+                                                "default_google_id_user"));
+
+                defaultUser1Id = user1.getId();
+                defaultUser2Id = user2.getId();
+        }
+
+        private User determineDefaultAuthor(String name) {
+                if (name == null || name.trim().isEmpty()) {
+                        return userRepository.findById(defaultUser2Id)
+                                        .orElseThrow(() -> new RuntimeException("Utente default 2 non trovato"));
+                }
+
+                if ("Girolamo Moretti".equalsIgnoreCase(name.trim())) {
+                        return userRepository.findById(defaultUser1Id)
+                                        .orElseThrow(() -> new RuntimeException("Utente default 1 non trovato"));
+                }
+
+                return userRepository.findById(defaultUser2Id)
+                                .orElseThrow(() -> new RuntimeException("Utente default 2 non trovato"));
         }
 
         public void populateDatabaseFromJson() {
@@ -99,7 +148,9 @@ public class DatabaseInitializer {
                                 combination.setShortDescription(jc.getDescription_short());
                                 combination.setLongDescription(jc.getDescription_long());
                                 combination.setOriginalTextCondition(jc.getOriginal_text_condition());
-                                combination.setAuthor(jc.getAuthor());
+
+                                User author = determineDefaultAuthor(jc.getAuthor());
+                                combination.setAuthor(author);
                                 combination.setImagePath(jc.getImagePath());
 
                                 List<ValuatedSign> valuatedSigns = new ArrayList<>();
@@ -142,6 +193,7 @@ public class DatabaseInitializer {
         @EventListener(ApplicationReadyEvent.class)
         public void initBookDatabase() {
                 initDefaultImages();
+                initDefaultUsers();
                 final String GIROLAMO_MORETTI = "Girolamo Moretti";
                 final String EDIZIONI_MESSAGGERO_PADOVA = "Edizioni Messaggero Padova";
                 if (bookRepository.count() == 0) {

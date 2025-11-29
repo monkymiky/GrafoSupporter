@@ -6,6 +6,7 @@ import com.grafosupporter.dto.CombinationDto;
 import com.grafosupporter.dto.ValuatedSignDto;
 import com.grafosupporter.model.Combination;
 import com.grafosupporter.model.ValuatedSign;
+import com.grafosupporter.service.UserService;
 
 import java.util.List;
 
@@ -13,10 +14,12 @@ import java.util.List;
 public class CombinationMapper {
     private final BookMapper bookMapper;
     private final ValuatedSignMapper valuatedSignMapper;
+    private final UserService userService;
 
-    public CombinationMapper(BookMapper bookMapper, ValuatedSignMapper valuatedSignMapper) {
+    public CombinationMapper(BookMapper bookMapper, ValuatedSignMapper valuatedSignMapper, UserService userService) {
         this.bookMapper = bookMapper;
         this.valuatedSignMapper = valuatedSignMapper;
+        this.userService = userService;
     }
 
     public CombinationDto toCombinationResponseDto(Combination combination) {
@@ -27,7 +30,9 @@ public class CombinationMapper {
         CombinationDto dto = new CombinationDto();
         dto.setId(combination.getId());
         dto.setTitle(combination.getTitle());
-        dto.setAuthor(combination.getAuthor());
+        if (combination.getAuthor() != null) {
+            dto.setAuthor(combination.getAuthor().getId());
+        }
         dto.setShortDescription(combination.getShortDescription());
         dto.setLongDescription(combination.getLongDescription());
         dto.setOriginalTextCondition(combination.getOriginalTextCondition());
@@ -58,7 +63,11 @@ public class CombinationMapper {
         combinationEntity.setShortDescription(dto.getShortDescription());
         combinationEntity.setLongDescription(dto.getLongDescription());
         combinationEntity.setOriginalTextCondition(dto.getOriginalTextCondition());
-        combinationEntity.setAuthor(dto.getAuthor());
+
+        if (dto.getAuthor() != null) {
+            combinationEntity.setAuthor(userService.findById(dto.getAuthor()));
+        }
+
         combinationEntity.setImagePath(dto.getImagePath());
 
         if (dto.getSourceBook() != null) {

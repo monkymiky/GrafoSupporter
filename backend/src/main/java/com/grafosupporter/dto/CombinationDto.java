@@ -26,7 +26,7 @@ public class CombinationDto {
     @JsonDeserialize(using = StringTrimDeserializer.class)
     private String longDescription;
     private String originalTextCondition;
-    private String author;
+    private Long author;
     private String imagePath;
     private List<ValuatedSignDto> signs;
     private BookDto sourceBook;

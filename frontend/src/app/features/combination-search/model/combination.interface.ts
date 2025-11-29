@@ -1,5 +1,5 @@
-import { Book } from './book.interface';
-import { Sign } from './sign.interface';
+import { Book } from "./book.interface";
+import { Sign } from "./sign.interface";
 
 export interface Combination {
   id?: number;
@@ -7,7 +7,7 @@ export interface Combination {
   shortDescription: string;
   longDescription: string | null;
   originalTextCondition: string | null;
-  author: string;
+  author: number | null;
   sourceBook: Book | null;
   imagePath: string | null | File;
   signs: Sign[];

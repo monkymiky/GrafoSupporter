@@ -40,10 +40,13 @@ public class Combination {
     private String longDescription;
     @Column(length = 2048)
     private String originalTextCondition;
-    @Column(length = 125)
-    private String author;
+
     @Column(length = 512)
     private String imagePath;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User author;
 
     @OneToMany(mappedBy = "combination", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderColumn(name = "sign_order")

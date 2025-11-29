@@ -70,14 +70,14 @@
 
   @if (isExpanded) {
   <div class="combination-body row g-0 bg-light-title">
-    @if(combination.author == "Girolamo Moretti"){
+    @if(combination.sourceBook){
     <div class="signs-column-body col-auto">
       <p class="fw-bold">Condizione testuale originale:</p>
       <p>{{ combination.originalTextCondition }}</p>
     </div>
     }
     <div class="col description-column-body">
-      @if(combination.author !== 'Girolamo Moretti'){
+      @if(!combination.sourceBook){
       <div class="float-md-end d-flex gap-1 flex-column mb-3 ms-3">
         <button
           type="button"
