@@ -67,11 +67,22 @@ jobs:
       - name: 3. Copy files to server via scp
         run: scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/docker-compose.yml
 
-      - name: 4. Run deployment commands on server
+      - name: 4. Create .env file locally
+        run: |
+          echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
+        shell: bash
+
+      - name: 5. Copy .env file to server via scp
+        run: scp -o StrictHostKeyChecking=no .env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/.env
+
+      - name: 6. Run deployment commands on server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
-            echo '${{ secrets.ENV_FILE_CONTENT }}' > ~/.env
             echo '${{ secrets.GITHUB_TOKEN }}' | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker compose -f ~/docker-compose.yml pull
             docker compose -f ~/docker-compose.yml up -d
           "
+
+      - name: 7. Cleanup local .env file
+        if: always()
+        run: rm -f .env
