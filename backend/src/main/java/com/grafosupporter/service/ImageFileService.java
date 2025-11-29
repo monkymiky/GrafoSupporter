@@ -57,7 +57,7 @@ public class ImageFileService {
             throw new FileValidationException("Solo file immagine sono consentiti.");
         }
         if (file.getSize() > maxFileSize) {
-            throw new FileValidationException("Il file è troppo grande. Dimensione massima 5MB.");
+            throw new FileValidationException("Il file è troppo grande. Dimensione massima 10MB.");
         }
         String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
         String uniqueFileName = UUID.randomUUID().toString() + "." + extension;

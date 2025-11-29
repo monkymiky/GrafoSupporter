@@ -210,7 +210,7 @@ export class CombinationsFormComponent implements OnInit {
           validators: [Validators.maxLength(2048)],
         }),
         imagePath: this.formBuilder.control<string | File | null>(null, [
-          fileSizeValidator(5 * 1024 * 1024),
+          fileSizeValidator(10 * 1024 * 1024),
           fileTypeValidator([
             "image/png",
             "image/jpg",
