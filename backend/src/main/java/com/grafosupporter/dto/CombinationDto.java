@@ -30,4 +30,5 @@ public class CombinationDto {
     private String imagePath;
     private List<ValuatedSignDto> signs;
     private BookDto sourceBook;
+    private VoteStatsDto voteStats;
 }

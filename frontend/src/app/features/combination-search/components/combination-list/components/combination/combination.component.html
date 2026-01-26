@@ -52,7 +52,7 @@
 
     <div class="description-column col" (click)="toggleExpand()">
       <div class="d-flex justify-content-between align-items-start">
-        <div>
+        <div class="flex-grow-1">
           <p class="fw-bold mb-1">{{ combination.title }}</p>
 
           <p class="text-muted mb-0" [class.hidden]="!isExpanded">
@@ -74,7 +74,44 @@
             <span>{{ combination.author?.name || 'N/A' }}</span>
           </div>
         </div>
-        
+
+        <div class="vote-section d-flex flex-column align-items-center ms-3" (click)="$event.stopPropagation()">
+          <button
+            type="button"
+            class="btn btn-link p-0 vote-button vote-button-up"
+            [class.active]="combination.voteStats?.userVote === 'UP'"
+            [disabled]="!canVote()"
+            (click)="handleVote('UP')"
+            [title]="!canVote() ? 'Non puoi votare le tue combinazioni' : 'Vota positivamente'"
+          >
+            <i class="bi bi-arrow-up-circle fs-4"></i>
+          </button>
+          <ng-template #voteRatioTooltip>
+            Il rapporto mostra il numero di voti positivi (frecce su) rispetto ai voti negativi (frecce giù). Le combinazioni sono ordinate in base a questo rapporto: più frecce su e meno frecce giù determinano una posizione migliore nella ricerca.
+          </ng-template>
+          <div
+            class="vote-count text-center"
+            [ngbTooltip]="isTooltipDisabled ? null : voteRatioTooltip"
+            placement="top"
+            container="body"
+            tooltipClass="tooltip-black"
+          >
+            <div class="small">
+              <span class="text-success">{{ combination.voteStats?.upvotes ?? 0 }}</span> /
+              <span class="text-danger">{{ combination.voteStats?.downvotes ?? 0 }}</span>
+            </div>
+          </div>
+          <button
+            type="button"
+            class="btn btn-link p-0 vote-button vote-button-down"
+            [class.active]="combination.voteStats?.userVote === 'DOWN'"
+            [disabled]="!canVote()"
+            (click)="handleVote('DOWN')"
+            [title]="!canVote() ? 'Non puoi votare le tue combinazioni' : 'Vota negativamente'"
+          >
+            <i class="bi bi-arrow-down-circle fs-4"></i>
+          </button>
+        </div>
 
         <i
           class="bi bi-chevron-down ms-3 chevron-icon"

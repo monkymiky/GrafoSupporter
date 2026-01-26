@@ -5,8 +5,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.grafosupporter.dto.CombinationDto;
 import com.grafosupporter.dto.CombinationSearchRequestDto;
+import com.grafosupporter.dto.VoteRequestDto;
+import com.grafosupporter.dto.VoteStatsDto;
 import com.grafosupporter.model.Combination;
+import com.grafosupporter.model.VoteType;
 import com.grafosupporter.service.CombinationService;
+import com.grafosupporter.service.UserService;
+import com.grafosupporter.service.VoteService;
 import com.grafosupporter.utility.CombinationMapper;
 
 import java.io.IOException;
@@ -16,6 +21,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -31,10 +37,15 @@ import jakarta.validation.Valid;
 public class CombinationController {
     private final CombinationService combinationService;
     private final CombinationMapper combinationMapper;
+    private final VoteService voteService;
+    private final UserService userService;
 
-    public CombinationController(CombinationService combinationService, CombinationMapper combinationMapper) {
+    public CombinationController(CombinationService combinationService, CombinationMapper combinationMapper,
+            VoteService voteService, UserService userService) {
         this.combinationService = combinationService;
         this.combinationMapper = combinationMapper;
+        this.voteService = voteService;
+        this.userService = userService;
     }
 
     @PostMapping("/search")
@@ -72,6 +83,33 @@ public class CombinationController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCombination(@PathVariable Long combinationId) {
         combinationService.deleteCombination(combinationId);
+    }
+
+    @PostMapping("/{combinationId}/vote")
+    public ResponseEntity<VoteStatsDto> voteCombination(
+            @PathVariable Long combinationId,
+            @RequestBody VoteRequestDto voteRequest,
+            Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(401).build();
+        }
+
+        String email = authentication.getName();
+        var user = userService.findByEmail(email);
+        Long userId = user.getId();
+
+        VoteType voteType = null;
+        if (voteRequest.getVoteType() != null && !voteRequest.getVoteType().trim().isEmpty()) {
+            String voteTypeStr = voteRequest.getVoteType().trim().toUpperCase();
+            if ("UP".equals(voteTypeStr)) {
+                voteType = VoteType.UP;
+            } else if ("DOWN".equals(voteTypeStr)) {
+                voteType = VoteType.DOWN;
+            }
+        }
+
+        VoteStatsDto stats = voteService.vote(combinationId, userId, voteType);
+        return ResponseEntity.ok(stats);
     }
 
 }

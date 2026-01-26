@@ -19,6 +19,7 @@ import com.grafosupporter.dto.AuthorDto;
 import com.grafosupporter.dto.BookDto;
 import com.grafosupporter.dto.CombinationDto;
 import com.grafosupporter.dto.ValuatedSignDto;
+import com.grafosupporter.dto.VoteStatsDto;
 import com.grafosupporter.model.Combination;
 import com.grafosupporter.model.Sign;
 import com.grafosupporter.model.ValuatedSign;
@@ -33,16 +34,19 @@ public class CombinationService {
     private final CombinationRepository combinationRepository;
     private final CombinationMapper combinationResponseMapper;
     private final ImageFileService imageFileService;
+    private final VoteService voteService;
 
     public CombinationService(
             SignRepository signRepository,
             CombinationRepository combinationRepository,
             CombinationMapper combinationResponseMapper,
-            ImageFileService imageFileService) {
+            ImageFileService imageFileService,
+            VoteService voteService) {
         this.signRepository = signRepository;
         this.combinationRepository = combinationRepository;
         this.combinationResponseMapper = combinationResponseMapper;
         this.imageFileService = imageFileService;
+        this.voteService = voteService;
     }
 
     @Transactional(readOnly = true)
@@ -59,8 +63,19 @@ public class CombinationService {
         
         List<Combination> foundCombinations = combinationRepository.findAll(spec);
 
-        return foundCombinations.stream()
-                .map(combinationResponseMapper::toCombinationResponseDto)
+        List<Combination> sortedCombinations = foundCombinations.stream()
+                .sorted((c1, c2) -> {
+                    VoteStatsDto stats1 = voteService.getVoteStats(c1.getId(), null);
+                    VoteStatsDto stats2 = voteService.getVoteStats(c2.getId(), null);
+                    return Long.compare(stats2.getScore(), stats1.getScore()); // decrescente
+                })
+                .toList();
+
+        return sortedCombinations.stream()
+                .map(combination -> {
+                    VoteStatsDto voteStats = voteService.getVoteStats(combination.getId(), null);
+                    return combinationResponseMapper.toCombinationResponseDto(combination, voteStats);
+                })
                 .toList();
     }
 

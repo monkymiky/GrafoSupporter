@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import com.grafosupporter.dto.AuthorDto;
 import com.grafosupporter.dto.CombinationDto;
 import com.grafosupporter.dto.ValuatedSignDto;
+import com.grafosupporter.dto.VoteStatsDto;
 import com.grafosupporter.model.Combination;
 import com.grafosupporter.model.ValuatedSign;
 import com.grafosupporter.service.UserService;
@@ -24,6 +25,10 @@ public class CombinationMapper {
     }
 
     public CombinationDto toCombinationResponseDto(Combination combination) {
+        return toCombinationResponseDto(combination, null);
+    }
+
+    public CombinationDto toCombinationResponseDto(Combination combination, VoteStatsDto voteStats) {
         if (combination == null) {
             return null;
         }
@@ -60,6 +65,8 @@ public class CombinationMapper {
                     .toList();
             dto.setSigns(signsDto);
         }
+
+        dto.setVoteStats(voteStats);
 
         return dto;
     }

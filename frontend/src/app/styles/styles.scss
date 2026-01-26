@@ -8,6 +8,17 @@ $enable-rounded: false;
   max-width: 17rem;
   text-align: left;
 }
+
+.tooltip-black > .tooltip-inner {
+  background-color: #000000;
+  color: #ffffff;
+  max-width: 20rem;
+  text-align: left;
+}
+
+.tooltip-black > .tooltip-arrow::before {
+  border-top-color: #000000;
+}
 @media screen and (min-width: 1400px) {
   .col-xl-4 {
     width: 440px !important;

@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { Combination } from "../model/combination.interface";
+import { Combination, VoteStats } from "../model/combination.interface";
 import { Grado } from "../model/filter.interface";
 import { environment } from "../../../../environments/environment";
 
@@ -52,5 +52,18 @@ export class CombinationService {
 
   deleteCombination(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  voteCombination(
+    combinationId: number,
+    voteType: 'UP' | 'DOWN' | null
+  ): Observable<VoteStats> {
+    const requestBody = {
+      voteType: voteType
+    };
+    return this.http.post<VoteStats>(
+      `${this.apiUrl}/${combinationId}/vote`,
+      requestBody
+    );
   }
 }

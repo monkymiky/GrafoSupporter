@@ -15,6 +15,9 @@ import { DeleteComponentModalComponent } from './components/delete-combination-m
 import { CombinationService } from '../../../../services/combinations.service';
 import { SharedStateService } from '../../../../../../shared/services/shared-state.service';
 import { CombinationsFormComponent } from '../../../../../combinations-form/combination-form.component';
+import { AuthService } from '../../../../../../core/services/auth.service';
+import { MessageService } from '../../../../../../shared/components/message-toast/services/message.service';
+import { MessageType } from '../../../../../../shared/components/message-toast/models/message.interface';
 
 @Component({
   selector: 'app-single-combination',
@@ -29,6 +32,8 @@ export class SingleCombination {
   private readonly modalService = inject(NgbModal);
   private readonly combinationService = inject(CombinationService);
   private readonly sharedState = inject(SharedStateService);
+  private readonly authService = inject(AuthService);
+  private readonly messageService = inject(MessageService);
   public isExpanded = false;
   public isTooltipDisabled = false;
   private readonly mobileBreakpoint = 768;
@@ -95,5 +100,49 @@ export class SingleCombination {
   onAuthorImageError(event: Event): void {
     const img = event.target as HTMLImageElement;
     img.style.display = 'none';
+  }
+
+  public canVote(): boolean {
+    if (!this.authService.isAuthenticated) {
+      return false;
+    }
+    const currentUser = this.authService.currentUserValue;
+    if (!currentUser || !this.combination.author) {
+      return false;
+    }
+    return currentUser.userId !== this.combination.author.id;
+  }
+
+  public handleVote(voteType: 'UP' | 'DOWN'): void {
+    if (!this.canVote() || !this.combination.id) {
+      return;
+    }
+
+    const currentVote = this.combination.voteStats?.userVote;
+    let newVoteType: 'UP' | 'DOWN' | null = voteType;
+
+    if (currentVote === voteType) {
+      newVoteType = null;
+    }
+
+    this.combinationService.voteCombination(this.combination.id, newVoteType).subscribe({
+      next: (voteStats) => {
+        if (!this.combination.voteStats) {
+          this.combination.voteStats = voteStats;
+        } else {
+          this.combination.voteStats.upvotes = voteStats.upvotes;
+          this.combination.voteStats.downvotes = voteStats.downvotes;
+          this.combination.voteStats.score = voteStats.score;
+          this.combination.voteStats.userVote = voteStats.userVote;
+        }
+        this.sharedState.combinationsSearchTrigger.set(Date.now());
+      },
+      error: (err) => {
+        this.messageService.showMessage(
+          `Errore durante il voto: ${err.error?.message || err.message}`,
+          MessageType.error
+        );
+      },
+    });
   }
 }
