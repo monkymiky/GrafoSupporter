@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.grafosupporter.dto.CombinationDto;
+import com.grafosupporter.dto.CombinationSearchRequestDto;
 import com.grafosupporter.model.Combination;
 import com.grafosupporter.service.CombinationService;
 import com.grafosupporter.utility.CombinationMapper;
@@ -37,8 +38,11 @@ public class CombinationController {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<List<CombinationDto>> getCombinations(@RequestBody Map<Long, Integer> searchedSign) {
-        List<CombinationDto> combinations = combinationService.getCombinations(searchedSign);
+    public ResponseEntity<List<CombinationDto>> getCombinations(@RequestBody CombinationSearchRequestDto request) {
+        Map<Long, Integer> searchedSign = request.getSearchedSign();
+        List<String> authorCustomUsernames = request.getAuthorCustomUsernames();
+        
+        List<CombinationDto> combinations = combinationService.getCombinations(searchedSign, authorCustomUsernames);
         return ResponseEntity.ok(combinations);
     }
 

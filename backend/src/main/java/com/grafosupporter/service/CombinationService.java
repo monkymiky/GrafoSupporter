@@ -21,11 +21,9 @@ import com.grafosupporter.dto.CombinationDto;
 import com.grafosupporter.dto.ValuatedSignDto;
 import com.grafosupporter.model.Combination;
 import com.grafosupporter.model.Sign;
-import com.grafosupporter.model.User;
 import com.grafosupporter.model.ValuatedSign;
 import com.grafosupporter.repository.CombinationRepository;
 import com.grafosupporter.repository.SignRepository;
-import com.grafosupporter.repository.UserRepository;
 import com.grafosupporter.repository.specifications.CombinationSpecifications;
 import com.grafosupporter.utility.CombinationMapper;
 
@@ -35,39 +33,30 @@ public class CombinationService {
     private final CombinationRepository combinationRepository;
     private final CombinationMapper combinationResponseMapper;
     private final ImageFileService imageFileService;
-    private final UserRepository userRepository;
 
     public CombinationService(
             SignRepository signRepository,
             CombinationRepository combinationRepository,
             CombinationMapper combinationResponseMapper,
-            ImageFileService imageFileService,
-            UserRepository userRepository) {
+            ImageFileService imageFileService) {
         this.signRepository = signRepository;
         this.combinationRepository = combinationRepository;
         this.combinationResponseMapper = combinationResponseMapper;
         this.imageFileService = imageFileService;
-        this.userRepository = userRepository;
     }
 
     @Transactional(readOnly = true)
-    public List<CombinationDto> getCombinations(Map<Long, Integer> searchedSign) {
-        if (searchedSign == null) {
-            throw new InvalidParameterException("non è possibile cercare combinazioni con una mappa nulla");
+    public List<CombinationDto> getCombinations(Map<Long, Integer> searchedSign, List<String> authorCustomUsernames) {
+        boolean hasSignFilters = searchedSign != null && !searchedSign.isEmpty() 
+                && searchedSign.values().stream().anyMatch(v -> v != 0);
+        boolean hasAuthorFilters = authorCustomUsernames != null && !authorCustomUsernames.isEmpty();
+        
+        if (!hasSignFilters && !hasAuthorFilters) {
+            return new ArrayList<>();
         }
-        boolean allZero = true;
-        for (Integer v : searchedSign.values()) {
-            if (v != 0) {
-                allZero = false;
-                break;
-            }
-        }
-        if (allZero || searchedSign.isEmpty()) {
-            return this.getCombinationsExamples();
-        }
-
-        Specification<Combination> spec = CombinationSpecifications
-                .allSignsInCombinationMustMatchCriteria(searchedSign);
+        
+        Specification<Combination> spec = CombinationSpecifications.withFilters(searchedSign, authorCustomUsernames);
+        
         List<Combination> foundCombinations = combinationRepository.findAll(spec);
 
         return foundCombinations.stream()
@@ -137,69 +126,6 @@ public class CombinationService {
             throw new InvalidParameterException(
                     "non è possibile eliminare la combianzione con id=" + id + " perche l'autore è moretti");
         combinationRepository.deleteById(id);
-    }
-
-    private ArrayList<CombinationDto> getCombinationsExamples() {
-        User user1 = userRepository.findByEmail("girolamo.moretti@grafosupporter.local")
-                .orElseGet(() -> {
-                    User defaultUser = new User();
-                    defaultUser.setId(1L);
-                    defaultUser.setName("Girolamo Moretti");
-                    return defaultUser;
-                });
-        User user2 = userRepository.findByEmail("utente.default@grafosupporter.local")
-                .orElseGet(() -> {
-                    User defaultUser = new User();
-                    defaultUser.setId(2L);
-                    defaultUser.setName("Utente");
-                    return defaultUser;
-                });
-
-        AuthorDto author1 = new AuthorDto(user1.getId(), user1.getName(), user1.getPictureUrl());
-        AuthorDto author2 = new AuthorDto(user2.getId(), user2.getName(), user2.getPictureUrl());
-
-        ValuatedSignDto sign1 = new ValuatedSignDto(1L, 10, 5, "S", false, "Largo di Lettere", "");
-        ValuatedSignDto sign2 = new ValuatedSignDto(2L, 5, 5, "M", false, "Curva", "Cessione");
-        ValuatedSignDto sign3 = new ValuatedSignDto(11L, 5, 1, "A", true, "Angoli B", "Resistenza");
-        ValuatedSignDto sign4 = new ValuatedSignDto(20L, 6, 4, "A", true, "Ascendente", "Assalto");
-        ValuatedSignDto sign5 = new ValuatedSignDto(40L, 8, 6, "A", true, "Grossolana", "Attesa");
-        ArrayList<ValuatedSignDto> signs1 = new ArrayList<>();
-        signs1.add(sign1);
-        signs1.add(sign2);
-        signs1.add(sign3);
-        signs1.add(sign4);
-        signs1.add(sign5);
-        BookDto book = new BookDto(1L, "Manuale di grafologia", "Girolamo Moretti", 1914,
-                "Edizioni Messaggero Padova",
-                "9788825010008");
-        CombinationDto ex1 = new CombinationDto(
-                0L,
-                "Questa è una combinazione d'esempio",
-                "Cliccami per visualizzare le altre informazioni",
-                "Le informazioni che puoi visualizzare in una combianzione sono:   - I segni della combianzione con il loro intervallo in cui la combinazione ha significato: possono avere un '+' affianco, ciò significa che sono opzionali e che quindi la combianzione ha senso anche senza che questi segni siano presenti o siano nel range specificato.  Il testo di ogni sengo può essere di 5 colori che indicano il temperamento:     (nero: dipende dal contesto)      (azzurro: Cessione)      (giallo: Resistenza)       (verde: Attesa)       (rosso: assalto)   Con i bottoni bidone (rosso) e  penna (giallo) è possibile andare a eliminare o modificare una combinazione se è stata inserita dall'utente. Apri il secondo esempio per vederli!  PS: l'intervallo di grado per un segno 0-0/10 indica che il segno deve essere necessariamente assente perche la combinazione abbia significato. ",
-                "qua puoi controllare la condizione testuale uguale a come l'ha scritta moretti nei suoi libri",
-                author1,
-                "scrittura.jpg",
-                signs1,
-                book);
-
-        ArrayList<ValuatedSignDto> signs2 = new ArrayList<>();
-        signs2.add(sign1);
-        signs2.add(sign2);
-        CombinationDto ex2 = new CombinationDto(
-                2L,
-                "Questo è un esempio di 'combinazione inserita da un utente'",
-                "Cliccami per visualizzare le altre informazioni",
-                "Ora incomincia pure la ricerca delle combinazioni selezionando nella barra laterale il grado di tutti i segni che hai trovato durante l'analisi!  ATTENTO! se alcuni non li inserisci il sistema li considera come assenti e non ti mostrerà le combinazioni che li riguardano (a meno che non siano segni opzionali) siccome le combinazioni sono veramente tante e altrimenti sarebbe da visualizzarne sempre tantissime!",
-                "",
-                author2,
-                "scrittura2.jpg",
-                signs2,
-                null);
-        ArrayList<CombinationDto> result = new ArrayList<>();
-        result.add(ex1);
-        result.add(ex2);
-        return result;
     }
 
 }

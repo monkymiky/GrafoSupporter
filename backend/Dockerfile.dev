@@ -2,5 +2,9 @@ FROM maven:3.9-eclipse-temurin-17
 WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline
+# Copia lo script entrypoint per il live reload
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+# Converte CRLF in LF e rende eseguibile (necessario per Windows)
+RUN sed -i 's/\r$//' /app/docker-entrypoint.sh && chmod +x /app/docker-entrypoint.sh
 # codice sorgente montato via Volume nel docker-compose per live reload
-CMD ["mvn", "spring-boot:run", "-Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005'"]
+CMD ["/app/docker-entrypoint.sh"]

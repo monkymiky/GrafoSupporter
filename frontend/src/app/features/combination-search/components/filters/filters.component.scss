@@ -33,3 +33,24 @@
     height: calc(100vh - 8.5rem);
   }
 }
+
+.hover-bg-light:hover {
+  background-color: #f8f9fa !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.author-search-container {
+  position: relative;
+  z-index: 1;
+}
+
+.author-dropdown {
+  z-index: 1050 !important;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+}

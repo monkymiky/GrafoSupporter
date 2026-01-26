@@ -53,4 +53,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);// 400
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGenericException(Exception ex) {
+        ex.printStackTrace();
+        return new ResponseEntity<>("Si è verificato un errore sul server.", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }

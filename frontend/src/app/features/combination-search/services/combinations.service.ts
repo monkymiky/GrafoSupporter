@@ -12,15 +12,29 @@ export class CombinationService {
   readonly apiUrl = `${environment.apiUrl}/combinations`;
   readonly http = inject(HttpClient);
 
-  searchCombinations(filters: Map<number, number>): Observable<Combination[]> {
+  searchCombinations(
+    filters: Map<number, number>,
+    authorCustomUsernames?: string[]
+  ): Observable<Combination[]> {
     const filtersObject: { [key: number]: Grado } = {};
     filters.forEach((value, key) => {
       filtersObject[key] = value;
     });
 
+    const requestBody: {
+      searchedSign: { [key: number]: Grado };
+      authorCustomUsernames?: string[];
+    } = {
+      searchedSign: filtersObject,
+    };
+
+    if (authorCustomUsernames && authorCustomUsernames.length > 0) {
+      requestBody.authorCustomUsernames = authorCustomUsernames;
+    }
+
     return this.http.post<Combination[]>(
       this.apiUrl + "/search",
-      filtersObject
+      requestBody
     );
   }
 

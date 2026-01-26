@@ -1,6 +1,7 @@
 import { computed, Injectable, signal } from '@angular/core';
 import { Grado } from '../../features/combination-search/model/filter.interface';
 import { SignApiResponseItem } from '../../features/combination-search/components/combination-list/services/signs.service';
+import { Author } from '../../features/combination-search/model/author.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,8 @@ export class SharedStateService {
   signs = signal<SignApiResponseItem[]>([]);
 
   signsRequestTrigger = signal(0);
+
+  selectedAuthors = signal<Author[]>([]);
 
   signsMap = computed(() => {
     return new Map(this.signs().map((sign) => [sign.id, sign]));

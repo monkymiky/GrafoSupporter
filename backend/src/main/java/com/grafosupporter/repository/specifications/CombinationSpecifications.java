@@ -16,6 +16,7 @@ import java.util.Map;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.grafosupporter.model.Combination;
+import com.grafosupporter.model.User;
 import com.grafosupporter.model.ValuatedSign;
 
 public class CombinationSpecifications {
@@ -86,6 +87,78 @@ public class CombinationSpecifications {
 
             return cb.not(cb.exists(subquery));
         };
+    }
+
+    public static Specification<Combination> byAuthorCustomUsernames(List<String> customUsernames) {
+        return (Root<Combination> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
+            if (customUsernames == null || customUsernames.isEmpty()) {
+                return cb.conjunction();
+            }
+
+            Join<Combination, User> authorJoin = root.join("author");
+            List<Predicate> authorPredicates = new ArrayList<>();
+
+            for (String searchTerm : customUsernames) {
+                if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+                    String trimmedTerm = searchTerm.trim().toLowerCase();
+                    
+                    Predicate customUsernameNotNull = cb.isNotNull(authorJoin.get("customUsername"));
+                    Predicate customUsernameNotEmpty = cb.notEqual(authorJoin.get("customUsername"), "");
+                    Predicate customUsernameEqual = cb.equal(
+                            cb.lower(authorJoin.get("customUsername")),
+                            trimmedTerm
+                    );
+                    Predicate customUsernameMatch = cb.and(
+                            customUsernameNotNull,
+                            customUsernameNotEmpty,
+                            customUsernameEqual
+                    );
+                    
+                    Predicate nameMatch = cb.equal(
+                            cb.lower(authorJoin.get("name")),
+                            trimmedTerm
+                    );
+                    
+                    Predicate customUsernameOrNameMatch = cb.or(
+                            customUsernameMatch,
+                            cb.and(
+                                    cb.or(
+                                            cb.isNull(authorJoin.get("customUsername")),
+                                            cb.equal(authorJoin.get("customUsername"), "")
+                                    ),
+                                    nameMatch
+                            )
+                    );
+                    
+                    authorPredicates.add(customUsernameOrNameMatch);
+                }
+            }
+
+            if (authorPredicates.isEmpty()) {
+                return cb.conjunction();
+            }
+
+            return cb.or(authorPredicates.toArray(new Predicate[0]));
+        };
+    }
+
+    public static Specification<Combination> withFilters(
+            Map<Long, Integer> signMapInput,
+            List<String> authorCustomUsernames) {
+        Specification<Combination> spec = Specification.where(null);
+
+        if (signMapInput != null && !signMapInput.isEmpty()) {
+            boolean allZero = signMapInput.values().stream().allMatch(v -> v == 0);
+            if (!allZero) {
+                spec = spec.and(allSignsInCombinationMustMatchCriteria(signMapInput));
+            }
+        }
+
+        if (authorCustomUsernames != null && !authorCustomUsernames.isEmpty()) {
+            spec = spec.and(byAuthorCustomUsernames(authorCustomUsernames));
+        }
+
+        return spec;
     }
 
 }

@@ -1,6 +1,102 @@
 @if (errorMessage()) {
 <div>{{ errorMessage() }}</div>
 } @if (signsForm) {
+<div class="bg-white small-no-x-margin mb-2">
+  <div class="fw-bold mb-2 ms-3 pt-2">Filtra per autori</div>
+  <div class="ms-3 me-3 mb-2 position-relative author-search-container">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Cerca autore..."
+      [formControl]="authorSearchControl"
+      (input)="onAuthorInputChange($any($event.target).value)"
+      (focus)="onAuthorInputFocus()"
+    />
+    @if (showAuthorDropdown()) {
+    <div
+      class="author-dropdown position-absolute bg-white border rounded shadow-sm mt-1 w-100"
+      style="max-height: 300px; overflow-y: auto"
+    >
+      @if (isSearchingAuthors()) {
+      <div class="p-2 text-center">
+        <div class="spinner-border spinner-border-sm" role="status">
+          <span class="visually-hidden">Caricamento...</span>
+        </div>
+      </div>
+      } @else if (authorSuggestions().length === 0) {
+      <div class="p-2 text-muted text-center">Nessun autore trovato</div>
+      } @else {
+      @for (author of authorSuggestions(); track author.id) {
+      <div
+        class="d-flex align-items-center p-2 hover-bg-light cursor-pointer"
+        (click)="selectAuthor(author)"
+        style="cursor: pointer"
+      >
+        @if (author.pictureUrl) {
+        <img
+          [src]="author.pictureUrl"
+          [alt]="getAuthorDisplayName(author)"
+          class="rounded-circle me-2"
+          style="width: 32px; height: 32px; object-fit: cover"
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"
+          (error)="onAuthorImageError($event)"
+        />
+        } @else {
+        <div
+          class="rounded-circle me-2 bg-secondary d-flex align-items-center justify-content-center text-white"
+          style="width: 32px; height: 32px; font-size: 14px"
+        >
+          {{ getAuthorDisplayName(author).charAt(0).toUpperCase() }}
+        </div>
+        }
+        <span>{{ getAuthorDisplayName(author) }}</span>
+      </div>
+      }
+      }
+    </div>
+    }
+  </div>
+  @if (selectedAuthors().length > 0) {
+  <div class="ms-3 me-3 mb-2">
+    <div class="d-flex flex-wrap gap-2">
+      @for (author of selectedAuthors(); track author.id) {
+      <div
+        class="badge bg-primary d-flex align-items-center gap-1"
+        style="font-size: 0.875rem; padding: 0.375rem 0.5rem"
+      >
+        @if (author.pictureUrl) {
+        <img
+          [src]="author.pictureUrl"
+          [alt]="getAuthorDisplayName(author)"
+          class="rounded-circle"
+          style="width: 20px; height: 20px; object-fit: cover"
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"
+          (error)="onAuthorImageError($event)"
+        />
+        } @else {
+        <div
+          class="rounded-circle bg-white text-primary d-flex align-items-center justify-content-center"
+          style="width: 20px; height: 20px; font-size: 10px; font-weight: bold"
+        >
+          {{ getAuthorDisplayName(author).charAt(0).toUpperCase() }}
+        </div>
+        }
+        <span>{{ getAuthorDisplayName(author) }}</span>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          style="font-size: 0.6rem"
+          (click)="removeAuthor(author)"
+          aria-label="Rimuovi autore"
+        ></button>
+      </div>
+      }
+    </div>
+  </div>
+  }
+</div>
 <ng-template #gradi>
   <div>
     I valori selezionabili per ogni grado sono cosi definiti:
@@ -12,7 +108,7 @@
   </div>
 </ng-template>
 <div
-  class="d-flex sticky-top -top bg-title"
+  class="d-flex -top bg-title"
   [ngbTooltip]="gradi"
   placement="bottom"
   container="body"

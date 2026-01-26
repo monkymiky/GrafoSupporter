@@ -13,6 +13,7 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { MessageService } from '../../../../shared/components/message-toast/services/message.service';
 import { MessageType } from '../../../../shared/components/message-toast/models/message.interface';
+import { EXAMPLE_COMBINATIONS } from '../../constants/example-combinations';
 
 @Component({
   selector: 'app-combination-list',
@@ -31,8 +32,20 @@ export class CombinationListComponent {
     this.sharedState.combinationsSearchTrigger
   ).pipe(
     switchMap(() => {
+      const searchTrigger = this.sharedState.combinationsSearchTrigger();
+      
+      if (searchTrigger === 0) {
+        return of(EXAMPLE_COMBINATIONS);
+      }
+
+      const selectedAuthors = this.sharedState.selectedAuthors();
+      const authorCustomUsernames = selectedAuthors.map((a) => a.name);
+
       return this.combinationsService
-        .searchCombinations(this.sharedState.filters())
+        .searchCombinations(
+          this.sharedState.filters(),
+          authorCustomUsernames.length > 0 ? authorCustomUsernames : undefined
+        )
         .pipe(
           tap((combinations) => {
             if (combinations.length == 0) {
@@ -53,7 +66,7 @@ export class CombinationListComponent {
     })
   );
   readonly combinationsDisplayed = toSignal(this.combinationsObservable, {
-    initialValue: [] as Combination[],
+    initialValue: EXAMPLE_COMBINATIONS,
   });
 
   constructor(config: NgbTooltipConfig) {
