@@ -1,0 +1,9 @@
+---
+alwaysApply: true
+---
+
+# === Regole Generali per la Qualità del Codice ===
+
+# 1. Usa il codice esistente come guida per lo stile.
+
+- Analizza i file esistenti nel progetto per comprendere e adottare lo stile di codifica, le convenzioni di denominazione e i pattern architetturali utilizzati.

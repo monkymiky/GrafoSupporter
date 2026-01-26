@@ -1,0 +1,63 @@
+<div class="settings-page">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-10 col-xl-8">
+        <!-- Header -->
+        <div class="text-center mb-5">
+          <h1 class="display-4 mb-3">
+            <i class="bi bi-gear me-2"></i>Impostazioni
+          </h1>
+          <p class="lead text-muted">
+            Personalizza il tuo profilo modificando il nome utente
+          </p>
+        </div>
+
+        <!-- Form -->
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <form (ngSubmit)="onSubmit()" #settingsForm="ngForm">
+              <!-- Custom Username -->
+              <div class="mb-4">
+                <label for="customUsername" class="form-label fw-semibold">
+                  Nome utente personalizzato
+                </label>
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  id="customUsername"
+                  name="customUsername"
+                  [(ngModel)]="customUsername"
+                  placeholder="Lascia vuoto per usare il nome Google"
+                  maxlength="255"
+                />
+                <small class="form-text text-muted">
+                  Se lasciato vuoto, verrà utilizzato il nome del tuo account Google
+                </small>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="d-grid gap-2">
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-lg"
+                  [disabled]="isSubmitting"
+                >
+                  @if (isSubmitting) {
+                  <span
+                    class="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  Salvataggio in corso...
+                  } @else {
+                  <i class="bi bi-save me-2"></i>Salva modifiche
+                  }
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

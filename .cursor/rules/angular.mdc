@@ -1,0 +1,14 @@
+---
+alwaysApply: true
+---
+
+- Usa Angular 19 e Angular CLI aggiornato.
+- Segui lo style guide ufficiale Angular:
+  https://angular.dev/style-guide
+- Usa standalone components, non NgModule.
+- Usa RxJS per gestione delle async logic (no promesse se non necessario).
+- Struttura cartelle secondo domain-driven structure:
+  /src/app/<domain>/<feature>/
+- Nomi file kebab-case; nomi classi PascalCase; variabili camelCase.
+- Tutto il codice deve essere typed strict.
+- Utilizza il browser per verificare gli errori del frontend all'indirizzo http://localhost:4200 e guarda anche la console 

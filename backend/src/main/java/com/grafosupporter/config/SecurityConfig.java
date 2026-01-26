@@ -45,7 +45,11 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .requestMatchers("/api/combinations/**").authenticated()
+                        // Endpoint ricerca combinazioni reso pubblico per permettere accesso anche a utenti non loggati
+                        // Per riattivare la protezione: rimuovere questa riga e decommentare la riga successiva
+                        .requestMatchers(HttpMethod.POST, "/api/combinations/search").permitAll()
+                        // .requestMatchers("/api/combinations/**").authenticated() // Protezione completa endpoint combinazioni (disattivata)
+                        .requestMatchers("/api/combinations/**").authenticated() // Mantiene protezione per POST/PUT/DELETE (aggiunta/modifica/eliminazione)
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler((request, response, authentication) -> {

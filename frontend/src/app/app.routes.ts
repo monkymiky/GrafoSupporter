@@ -24,7 +24,7 @@ export const routes: Routes = [
         resolve: {
           signs: signsResolver,
         },
-        canActivate: [authGuard],
+        // canActivate: [authGuard], // Disattivato per permettere accesso pubblico. Per riattivare: decommentare questa riga
       },
       {
         path: 'contatti',
