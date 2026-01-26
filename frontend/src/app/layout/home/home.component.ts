@@ -111,6 +111,7 @@ export class HomeComponent implements OnInit {
           email: params["email"] || "",
           name: params["name"] || "",
           pictureUrl: params["pictureUrl"] || "",
+          customUsername: params["customUsername"] || undefined,
           userId: Number(params["userId"]),
         };
         console.debug("Auth user from query params:", authUser);

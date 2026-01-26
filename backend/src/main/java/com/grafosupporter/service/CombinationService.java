@@ -155,8 +155,8 @@ public class CombinationService {
                     return defaultUser;
                 });
 
-        AuthorDto author1 = new AuthorDto(user1.getId(), user1.getName());
-        AuthorDto author2 = new AuthorDto(user2.getId(), user2.getName());
+        AuthorDto author1 = new AuthorDto(user1.getId(), user1.getName(), user1.getPictureUrl());
+        AuthorDto author2 = new AuthorDto(user2.getId(), user2.getName(), user2.getPictureUrl());
 
         ValuatedSignDto sign1 = new ValuatedSignDto(1L, 10, 5, "S", false, "Largo di Lettere", "");
         ValuatedSignDto sign2 = new ValuatedSignDto(2L, 5, 5, "M", false, "Curva", "Cessione");

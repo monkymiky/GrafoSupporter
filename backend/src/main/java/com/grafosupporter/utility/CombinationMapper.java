@@ -32,9 +32,14 @@ public class CombinationMapper {
         dto.setId(combination.getId());
         dto.setTitle(combination.getTitle());
         if (combination.getAuthor() != null) {
+            String authorName = combination.getAuthor().getCustomUsername() != null 
+                    && !combination.getAuthor().getCustomUsername().trim().isEmpty()
+                    ? combination.getAuthor().getCustomUsername()
+                    : combination.getAuthor().getName();
             AuthorDto authorDto = new AuthorDto(
                 combination.getAuthor().getId(),
-                combination.getAuthor().getName()
+                authorName,
+                combination.getAuthor().getPictureUrl()
             );
             dto.setAuthor(authorDto);
         } else {

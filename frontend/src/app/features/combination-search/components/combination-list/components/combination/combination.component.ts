@@ -91,4 +91,9 @@ export class SingleCombination {
       }
     );
   }
+
+  onAuthorImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
+  }
 }

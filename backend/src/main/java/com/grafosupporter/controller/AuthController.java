@@ -9,9 +9,11 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import com.grafosupporter.dto.AuthResponseDto;
+import com.grafosupporter.dto.UpdateCustomUsernameDto;
 import com.grafosupporter.service.UserService;
 import com.grafosupporter.utility.JwtUtil;
 
+import jakarta.validation.Valid;
 import java.util.Map;
 
 @RestController
@@ -50,7 +52,7 @@ public class AuthController {
         String token = jwtUtil.generateToken(user.getEmail(), user.getId());
 
         String redirectUrl = String.format(
-                "%s/?token=%s&email=%s&name=%s&pictureUrl=%s&userId=%d",
+                "%s/?token=%s&email=%s&name=%s&pictureUrl=%s&userId=%d&customUsername=%s",
                 frontendBaseUrl,
                 token,
                 java.net.URLEncoder.encode(user.getEmail(), java.nio.charset.StandardCharsets.UTF_8),
@@ -60,7 +62,10 @@ public class AuthController {
                 user.getPictureUrl() != null
                         ? java.net.URLEncoder.encode(user.getPictureUrl(), java.nio.charset.StandardCharsets.UTF_8)
                         : "",
-                user.getId());
+                user.getId(),
+                user.getCustomUsername() != null
+                        ? java.net.URLEncoder.encode(user.getCustomUsername(), java.nio.charset.StandardCharsets.UTF_8)
+                        : "");
 
         return ResponseEntity.status(302)
                 .header("Location", redirectUrl)
@@ -86,6 +91,7 @@ public class AuthController {
                 user.getEmail(),
                 user.getName(),
                 user.getPictureUrl(),
+                user.getCustomUsername(),
                 user.getId());
 
         return ResponseEntity.ok(response);
@@ -113,5 +119,28 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(401).body(Map.of("valid", false));
         }
+    }
+
+    @PutMapping("/profile/username")
+    public ResponseEntity<Map<String, Object>> updateCustomUsername(
+            @Valid @RequestBody UpdateCustomUsernameDto dto,
+            Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(401).build();
+        }
+
+        String email = authentication.getName();
+        var user = userService.findByEmail(email);
+        
+        String customUsername = dto.getCustomUsername();
+        if (customUsername != null && customUsername.trim().isEmpty()) {
+            customUsername = null;
+        }
+        
+        var updatedUser = userService.updateCustomUsername(user.getId(), customUsername);
+
+        return ResponseEntity.ok(Map.of(
+                "message", "Custom username aggiornato con successo",
+                "customUsername", updatedUser.getCustomUsername() != null ? updatedUser.getCustomUsername() : null));
     }
 }

@@ -29,7 +29,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     importProvidersFrom(FormsModule),
     provideAnimationsAsync(),
-    provideHttpClient(),
     provideHttpClient(withInterceptorsFromDi()),
     {
       provide: HTTP_INTERCEPTORS,

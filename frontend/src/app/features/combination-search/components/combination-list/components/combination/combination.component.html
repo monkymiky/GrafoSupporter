@@ -58,7 +58,23 @@
           <p class="text-muted mb-0" [class.hidden]="!isExpanded">
             {{ combination.shortDescription }}
           </p>
+          <div class="d-flex align-items-center gap-2">
+            <strong>Autore:</strong>
+            @if (combination.author?.pictureUrl) {
+            <img
+              [src]="combination.author?.pictureUrl"
+              alt="Immagine profilo autore"
+              class="rounded-circle"
+              style="width: 32px; height: 32px; object-fit: cover"
+              crossorigin="anonymous"
+              referrerpolicy="no-referrer"
+              (error)="onAuthorImageError($event)"
+            />
+            }
+            <span>{{ combination.author?.name || 'N/A' }}</span>
+          </div>
         </div>
+        
 
         <i
           class="bi bi-chevron-down ms-3 chevron-icon"
@@ -105,8 +121,6 @@
         class="img-fluid mb-3"
       />
       }
-
-      <p><strong>Autore:</strong> {{ combination.author?.name || 'N/A' }}</p>
 
       @if(this.combination.sourceBook?.title){
       <p>

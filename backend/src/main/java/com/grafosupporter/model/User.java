@@ -27,6 +27,7 @@ public class User {
     private String name;
     private String pictureUrl;
     private String googleId;
+    private String customUsername;
     private LocalDateTime createdAt;
     private LocalDateTime lastLoginAt;
 

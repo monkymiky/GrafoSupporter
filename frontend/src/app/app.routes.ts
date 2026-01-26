@@ -34,6 +34,15 @@ export const routes: Routes = [
           ),
         title: 'Contatti - GrafoSupporter',
       },
+      {
+        path: 'impostazioni',
+        loadComponent: () =>
+          import('./features/settings/settings.component').then(
+            (m) => m.SettingsComponent
+          ),
+        title: 'Impostazioni - GrafoSupporter',
+        canActivate: [authGuard],
+      },
     ],
   },
 ];

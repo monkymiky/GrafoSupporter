@@ -12,5 +12,6 @@ public class AuthResponseDto {
     private String email;
     private String name;
     private String pictureUrl;
+    private String customUsername;
     private Long userId;
 }

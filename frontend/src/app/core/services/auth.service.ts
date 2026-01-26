@@ -9,6 +9,7 @@ export interface AuthUser {
   email: string;
   name: string;
   pictureUrl: string;
+  customUsername?: string;
   userId: number;
 }
 
@@ -28,14 +29,16 @@ export class AuthService {
   constructor() {
     const storedUser = this.getStoredUser();
     if (storedUser) {
-      this.validateToken(storedUser.token).subscribe({
-        next: (isValid) => {
-          if (!isValid) {
-            this.logout();
-          }
-        },
-        error: () => this.logout(),
-      });
+      setTimeout(() => {
+        this.validateToken(storedUser.token).subscribe({
+          next: (isValid) => {
+            if (!isValid) {
+              this.logout();
+            }
+          },
+          error: () => this.logout(),
+        });
+      }, 0);
     }
   }
 

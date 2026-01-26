@@ -18,12 +18,14 @@ export class JwtInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     const token = this.authService.getToken();
 
-    // Skip token for auth endpoints
-    if (request.url.includes('/api/auth/')) {
-      return next.handle(request);
-    }
+    // Skip token only for public auth endpoints (OAuth2, validate)
+    // But include token for protected endpoints like /me, /profile/username
+    const publicAuthEndpoints = ['/oauth2/', '/validate'];
+    const isPublicAuthEndpoint = publicAuthEndpoints.some(endpoint => 
+      request.url.includes(endpoint)
+    );
 
-    if (token) {
+    if (!isPublicAuthEndpoint && token) {
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`,
@@ -34,6 +36,4 @@ export class JwtInterceptor implements HttpInterceptor {
     return next.handle(request);
   }
 }
-
-
 

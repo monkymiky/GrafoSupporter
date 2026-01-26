@@ -62,7 +62,8 @@
             />
             }
             <span>{{
-              authService.currentUserValue?.name ||
+              authService.currentUserValue?.customUsername ||
+                authService.currentUserValue?.name ||
                 authService.currentUserValue?.email
             }}</span>
           </button>
@@ -70,6 +71,15 @@
             class="dropdown-menu dropdown-menu-end"
             aria-labelledby="userDropdown"
           >
+            <li>
+              <a
+                class="dropdown-item"
+                (click)="navigateToSettings(); $event.preventDefault()"
+                style="cursor: pointer"
+              >
+                <i class="bi bi-gear me-2"></i>Impostazioni
+              </a>
+            </li>
             <li>
               <a
                 class="dropdown-item"

@@ -41,4 +41,11 @@ public class UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found: " + id));
     }
+
+    @Transactional
+    public User updateCustomUsername(Long userId, String customUsername) {
+        User user = findById(userId);
+        user.setCustomUsername(customUsername);
+        return userRepository.save(user);
+    }
 }
