@@ -194,57 +194,6 @@ public class DatabaseInitializer {
         public void initBookDatabase() {
                 initDefaultImages();
                 initDefaultUsers();
-                final String GIROLAMO_MORETTI = "Girolamo Moretti";
-                final String EDIZIONI_MESSAGGERO_PADOVA = "Edizioni Messaggero Padova";
-                if (bookRepository.count() == 0) {
-                        ArrayList<Book> books = new ArrayList<>();
-                        books.add(new Book(null, "Manuale di grafologia", GIROLAMO_MORETTI, 1914,
-                                        EDIZIONI_MESSAGGERO_PADOVA,
-                                        "9788825010008"));
-                        books.add(new Book(null, "Vizio. Psicologia e grafologia dei sette vizi capitali",
-                                        GIROLAMO_MORETTI, 1937,
-                                        EDIZIONI_MESSAGGERO_PADOVA, "9788825010015"));
-                        books.add(new Book(null, "Trattato scientifico di perizie grafiche su base grafologica",
-                                        GIROLAMO_MORETTI,
-                                        1942, EDIZIONI_MESSAGGERO_PADOVA, "9788825010251"));
-                        books.add(new Book(null, "Grafologia somatica. Il corpo umano dalla scrittura",
-                                        GIROLAMO_MORETTI, 1945,
-                                        EDIZIONI_MESSAGGERO_PADOVA, "9788825010022"));
-                        books.add(new Book(null, "Grafologia pedagogica", GIROLAMO_MORETTI, 1947,
-                                        EDIZIONI_MESSAGGERO_PADOVA,
-                                        "9788825010268"));
-                        books.add(new Book(null, "Grafologia delle attitudini umane", GIROLAMO_MORETTI, 1948,
-                                        EDIZIONI_MESSAGGERO_PADOVA, "9788825010039"));
-                        books.add(new Book(null, "I santi dalla scrittura", GIROLAMO_MORETTI, 1952,
-                                        "Edizioni San Paolo",
-                                        "9788821535727"));
-                        books.add(new Book(null, "Trattato di grafologia. Intelligenza, sentimento", GIROLAMO_MORETTI,
-                                        1955,
-                                        EDIZIONI_MESSAGGERO_PADOVA, "9788825010800"));
-                        books.add(new Book(null, "Scompensi, anomalie della psiche e grafologia", GIROLAMO_MORETTI,
-                                        1962,
-                                        EDIZIONI_MESSAGGERO_PADOVA, "9788825010046"));
-                        books.add(new Book(null, "La passione predominante. Grafologia differenziale",
-                                        GIROLAMO_MORETTI, 1962,
-                                        EDIZIONI_MESSAGGERO_PADOVA, "9788825010053"));
-                        books.add(new Book(null, "Analisi grafologiche", GIROLAMO_MORETTI, 1966,
-                                        EDIZIONI_MESSAGGERO_PADOVA,
-                                        "9788825010060"));
-                        books.add(new Book(null, "I grandi dalla scrittura", GIROLAMO_MORETTI, 1966,
-                                        EDIZIONI_MESSAGGERO_PADOVA,
-                                        "9788825010077"));
-                        books.add(new Book(null, "Grafologia e pedagogia nella scuola dell'obbligo", GIROLAMO_MORETTI,
-                                        1970,
-                                        EDIZIONI_MESSAGGERO_PADOVA, "9788825010084"));
-                        books.add(new Book(null, "Chi lo avrebbe mai pensato. Autobiografia", GIROLAMO_MORETTI, 1977,
-                                        EDIZIONI_MESSAGGERO_PADOVA, "9788825010091"));
-
-                        bookRepository.saveAll(books);
-
-                        System.out.println("BookDatabase inizializzato con libri di default.");
-                } else {
-                        System.out.println("BookDatabase gia inizializzato.");
-                }
 
                 if (signRepository.count() == 0) {
                         final String CESSIONE = "Cessione";
@@ -375,7 +324,7 @@ public class DatabaseInitializer {
                 }
                 if (combinationRepository.count() == 0) {
                         populateDatabaseFromJson();
-                        System.out.println("CombinationDatabase inizializzato con combinazioni default.");
+                        System.out.println("CombinationDatabase inizializzato (nessuna combinazione di default).");
                 } else {
                         System.out.println("CombinationDatabase gia pieno.");
                 }
