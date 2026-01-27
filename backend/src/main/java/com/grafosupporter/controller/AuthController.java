@@ -14,6 +14,7 @@ import com.grafosupporter.service.UserService;
 import com.grafosupporter.utility.JwtUtil;
 
 import jakarta.validation.Valid;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -139,8 +140,9 @@ public class AuthController {
         
         var updatedUser = userService.updateCustomUsername(user.getId(), customUsername);
 
-        return ResponseEntity.ok(Map.of(
-                "message", "Custom username aggiornato con successo",
-                "customUsername", updatedUser.getCustomUsername() != null ? updatedUser.getCustomUsername() : null));
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "Custom username aggiornato con successo");
+        body.put("customUsername", updatedUser.getCustomUsername());
+        return ResponseEntity.ok(body);
     }
 }

@@ -55,4 +55,7 @@ public class Combination {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", nullable = true)
     private Book sourceBook;
+
+    @OneToMany(mappedBy = "combination", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
 }

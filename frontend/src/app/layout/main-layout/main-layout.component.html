@@ -41,6 +41,9 @@
       </ul>
       <ul class="navbar-nav">
         @if (authService.isAuthenticated) {
+        <li class="nav-item d-flex align-items-center">
+          <app-notification-bell></app-notification-bell>
+        </li>
         <li class="nav-item dropdown">
           <button
             class="nav-link dropdown-toggle d-flex align-items-center"

@@ -1,0 +1,38 @@
+.notifications-list {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.notification-item:hover {
+  background-color: #f8f9fa;
+}
+
+.notification-item.unread {
+  background-color: #e7f3ff;
+}
+
+.notification-item.unread:hover {
+  background-color: #d0e7ff;
+}
+
+.notification-avatar {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.badge.bg-primary {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  flex-shrink: 0;
+  margin-top: 0.5rem;
+}

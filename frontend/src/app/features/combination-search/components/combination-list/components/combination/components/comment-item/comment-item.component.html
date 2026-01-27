@@ -1,0 +1,80 @@
+<div class="comment-item" [attr.data-comment-id]="comment.id">
+  @if (comment.parentCommentId && comment.parentCommentContent) {
+  <div class="parent-comment-preview">
+    <small class="text-muted">
+      <i class="bi bi-reply"></i>
+      {{ comment.parentCommentContent }}
+    </small>
+  </div>
+  }
+
+  <div class="comment-content">
+    <div class="d-flex align-items-start gap-2">
+      @if (comment.author.pictureUrl) {
+      <img
+        [src]="comment.author.pictureUrl"
+        [alt]="comment.author.name"
+        class="comment-author-avatar rounded-circle"
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+        (error)="onImageError($event)"
+      />
+      }
+      <div class="flex-grow-1">
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <strong class="comment-author-name">{{ comment.author.name || 'Anonimo' }}</strong>
+          <small class="text-muted">{{ formatDate(comment.createdAt) }}</small>
+        </div>
+        <p class="comment-text mb-2">{{ comment.content }}</p>
+        @if (isAuthenticated) {
+        <button
+          type="button"
+          class="btn btn-link btn-sm p-0 text-decoration-none"
+          (click)="toggleReplyForm()"
+        >
+          <i class="bi bi-reply me-1"></i>Rispondi
+        </button>
+        }
+      </div>
+    </div>
+
+    @if (showReplyForm) {
+    <div class="reply-form mt-3 ms-4">
+      <textarea
+        class="form-control form-control-sm"
+        rows="2"
+        placeholder="Scrivi una risposta..."
+        [(ngModel)]="replyContent"
+        [disabled]="isSubmitting"
+        maxlength="2000"
+      ></textarea>
+      <div class="d-flex justify-content-end gap-2 mt-2">
+        <button
+          type="button"
+          class="btn btn-secondary btn-sm"
+          (click)="toggleReplyForm()"
+          [disabled]="isSubmitting"
+        >
+          Annulla
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary btn-sm"
+          (click)="submitReply()"
+          [disabled]="!replyContent.trim() || isSubmitting"
+        >
+          @if (isSubmitting) {
+          <span
+            class="spinner-border spinner-border-sm me-2"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          }
+          Rispondi
+        </button>
+      </div>
+    </div>
+    }
+
+  </div>
+</div>

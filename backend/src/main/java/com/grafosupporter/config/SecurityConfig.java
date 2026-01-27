@@ -43,6 +43,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/files/**").permitAll()
                         .requestMatchers("/api/contact", "/api/contact/**").permitAll()
                         .requestMatchers("/api/authors/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/combinations/*/comments").permitAll()
+                        .requestMatchers("/api/notifications/**").authenticated()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()

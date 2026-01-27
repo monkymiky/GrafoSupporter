@@ -18,13 +18,14 @@ import { CombinationsFormComponent } from '../../../../../combinations-form/comb
 import { AuthService } from '../../../../../../core/services/auth.service';
 import { MessageService } from '../../../../../../shared/components/message-toast/services/message.service';
 import { MessageType } from '../../../../../../shared/components/message-toast/models/message.interface';
+import { CommentSectionComponent } from './components/comment-section/comment-section.component';
 
 @Component({
   selector: 'app-single-combination',
   standalone: true,
   templateUrl: './combination.component.html',
   styleUrls: ['./combination.component.scss'],
-  imports: [NgbAccordionModule, NgbTooltip],
+  imports: [NgbAccordionModule, NgbTooltip, CommentSectionComponent],
 })
 export class SingleCombination {
   @Input() combination!: Combination;
