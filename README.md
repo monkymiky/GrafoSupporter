@@ -66,6 +66,18 @@ Questo progetto richiede delle credenziali per l'autenticazione Google e per la 
     SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/databaseLocale
     ```
 
+    **Notifiche feedback (opzionali):** per ricevere su Telegram un messaggio ad ogni feedback inviato dal form contatti:
+
+    ```
+    TELEGRAM_BOT_TOKEN=token_del_bot
+    TELEGRAM_CHAT_ID=id_chat
+    ```
+
+    Come ottenerli:
+    1. In Telegram cerca @BotFather → invia `/newbot` → scegli nome e username → copia il **token**.
+    2. Avvia il bot (es. "Start") e invia un messaggio qualsiasi al bot.
+    3. Apri nel browser `https://api.telegram.org/bot<TOKEN>/getUpdates` e nella risposta JSON prendi `result[0].message.chat.id` come **chat_id**.
+
 ### 2. Avvio con Docker Compose
 
 Tramite Docker Compose si avvia l'intera applicazione (backend, frontend, database) con un unico comando.

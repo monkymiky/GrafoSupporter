@@ -12,6 +12,7 @@ import com.grafosupporter.repository.ContactFeedbackRepository;
 @RequiredArgsConstructor
 public class ContactFeedbackService {
     private final ContactFeedbackRepository contactFeedbackRepository;
+    private final FeedbackNotificationService feedbackNotificationService;
 
     @Transactional
     public ContactFeedback saveFeedback(ContactFeedbackDto feedbackDto) {
@@ -24,7 +25,9 @@ public class ContactFeedbackService {
                 feedbackDto.getUserAgent(),
                 feedbackDto.getPageUrl()
         );
-        return contactFeedbackRepository.save(feedback);
+        ContactFeedback saved = contactFeedbackRepository.save(feedback);
+        feedbackNotificationService.notifyNewFeedback(saved);
+        return saved;
     }
 }
 
