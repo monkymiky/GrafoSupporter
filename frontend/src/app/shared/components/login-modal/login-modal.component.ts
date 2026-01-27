@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, Inject, inject } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { LoginModalService } from './services/login-modal.service';
 
 @Component({
   selector: 'app-login-modal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './login-modal.component.html',
   styleUrls: ['./login-modal.component.scss'],
 })

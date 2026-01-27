@@ -1,0 +1,31 @@
+.legal-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+
+  h1 {
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+  }
+
+  p,
+  ul {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+
+  ul {
+    padding-left: 1.5rem;
+  }
+
+  .last-update {
+    font-size: 0.9rem;
+    color: var(--bs-secondary);
+    margin-bottom: 2rem;
+  }
+}

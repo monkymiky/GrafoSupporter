@@ -43,6 +43,22 @@ export const routes: Routes = [
         title: 'Impostazioni - GrafoSupporter',
         canActivate: [authGuard],
       },
+      {
+        path: 'termini-di-servizio',
+        loadComponent: () =>
+          import('./features/legal/terms-of-service/terms-of-service.component').then(
+            (m) => m.TermsOfServiceComponent
+          ),
+        title: 'Termini di servizio - GrafoSupporter',
+      },
+      {
+        path: 'informativa-privacy',
+        loadComponent: () =>
+          import('./features/legal/privacy-policy/privacy-policy.component').then(
+            (m) => m.PrivacyPolicyComponent
+          ),
+        title: 'Informativa sulla privacy - GrafoSupporter',
+      },
     ],
   },
 ];

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { ContactService, ContactFeedback } from './services/contacts.service';
 import { MessageService } from '../../shared/components/message-toast/services/message.service';
 import { MessageType } from '../../shared/components/message-toast/models/message.interface';
@@ -8,7 +9,7 @@ import { MessageType } from '../../shared/components/message-toast/models/messag
 @Component({
   selector: 'app-contacts',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './contacts.component.html',
   styleUrl: './contacts.component.scss',
 })
