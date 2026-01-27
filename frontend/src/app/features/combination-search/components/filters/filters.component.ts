@@ -4,6 +4,7 @@ import {
   effect,
   HostListener,
   inject,
+  input,
   Signal,
   signal,
 } from '@angular/core';
@@ -17,7 +18,11 @@ import {
 } from '@angular/forms';
 import { Grado } from '../../model/filter.interface';
 import { SharedStateService } from '../../../../shared/services/shared-state.service';
-import { NgbTooltip, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbActiveOffcanvas,
+  NgbTooltip,
+  NgbTooltipConfig,
+} from '@ng-bootstrap/ng-bootstrap';
 import { AuthorsService } from '../../services/authors.service';
 import { Author } from '../../model/author.interface';
 import {
@@ -48,6 +53,11 @@ export class FiltersComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly sharedState = inject(SharedStateService);
   private readonly authorsService = inject(AuthorsService);
+  private readonly activeOffcanvas = inject(NgbActiveOffcanvas, {
+    optional: true,
+  });
+  /** Ref passato dal template dell'offcanvas (mobile) quando NgbActiveOffcanvas non è disponibile nell'injector. */
+  readonly offcanvasRef = input<{ close(): void } | null>(null);
   signTypes = this.sharedState.signTypes;
 
   signsForm!: FormGroup;
@@ -58,6 +68,9 @@ export class FiltersComponent {
   readonly isSearchingAuthors = signal<boolean>(false);
   readonly showAuthorDropdown = signal<boolean>(false);
   readonly selectedAuthors = computed(() => this.sharedState.selectedAuthors());
+  readonly reversedAuthorSuggestions = computed(() =>
+    this.authorSuggestions().slice().reverse()
+  );
 
   private authorSearchSubject = new Subject<string>();
 
@@ -229,5 +242,9 @@ export class FiltersComponent {
 
     this.sharedState.filters.set(newFilterMap);
     this.sharedState.combinationsSearchTrigger.set(Date.now());
+    const refToClose = this.activeOffcanvas ?? this.offcanvasRef();
+    if (refToClose) {
+      queueMicrotask(() => refToClose.close());
+    }
   }
 }

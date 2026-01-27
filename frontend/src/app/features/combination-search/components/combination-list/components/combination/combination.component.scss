@@ -44,6 +44,18 @@
   transform: rotate(180deg);
 }
 
+@media screen and (max-width: 991px) {
+  .signs-column .sign-name {
+    margin-left: 0 !important;
+  }
+
+  .vote-section {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25rem;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .hidden {
     display: none;
@@ -136,4 +148,13 @@
 
 .vote-count .small {
   font-size: 0.75rem;
+}
+
+.author-placeholder {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  background-color: #e9ecef;
+  color: #6c757d;
+  font-size: 1.1rem;
 }

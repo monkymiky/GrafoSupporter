@@ -1,102 +1,6 @@
 @if (errorMessage()) {
 <div>{{ errorMessage() }}</div>
 } @if (signsForm) {
-<div class="bg-white small-no-x-margin mb-2">
-  <div class="fw-bold mb-2 ms-3 pt-2">Filtra per autori</div>
-  <div class="ms-3 me-3 mb-2 position-relative author-search-container">
-    <input
-      type="text"
-      class="form-control"
-      placeholder="Cerca autore..."
-      [formControl]="authorSearchControl"
-      (input)="onAuthorInputChange($any($event.target).value)"
-      (focus)="onAuthorInputFocus()"
-    />
-    @if (showAuthorDropdown()) {
-    <div
-      class="author-dropdown position-absolute bg-white border rounded shadow-sm mt-1 w-100"
-      style="max-height: 300px; overflow-y: auto"
-    >
-      @if (isSearchingAuthors()) {
-      <div class="p-2 text-center">
-        <div class="spinner-border spinner-border-sm" role="status">
-          <span class="visually-hidden">Caricamento...</span>
-        </div>
-      </div>
-      } @else if (authorSuggestions().length === 0) {
-      <div class="p-2 text-muted text-center">Nessun autore trovato</div>
-      } @else {
-      @for (author of authorSuggestions(); track author.id) {
-      <div
-        class="d-flex align-items-center p-2 hover-bg-light cursor-pointer"
-        (click)="selectAuthor(author)"
-        style="cursor: pointer"
-      >
-        @if (author.pictureUrl) {
-        <img
-          [src]="author.pictureUrl"
-          [alt]="getAuthorDisplayName(author)"
-          class="rounded-circle me-2"
-          style="width: 32px; height: 32px; object-fit: cover"
-          crossorigin="anonymous"
-          referrerpolicy="no-referrer"
-          (error)="onAuthorImageError($event)"
-        />
-        } @else {
-        <div
-          class="rounded-circle me-2 bg-secondary d-flex align-items-center justify-content-center text-white"
-          style="width: 32px; height: 32px; font-size: 14px"
-        >
-          {{ getAuthorDisplayName(author).charAt(0).toUpperCase() }}
-        </div>
-        }
-        <span>{{ getAuthorDisplayName(author) }}</span>
-      </div>
-      }
-      }
-    </div>
-    }
-  </div>
-  @if (selectedAuthors().length > 0) {
-  <div class="ms-3 me-3 mb-2">
-    <div class="d-flex flex-wrap gap-2">
-      @for (author of selectedAuthors(); track author.id) {
-      <div
-        class="badge bg-primary d-flex align-items-center gap-1"
-        style="font-size: 0.875rem; padding: 0.375rem 0.5rem"
-      >
-        @if (author.pictureUrl) {
-        <img
-          [src]="author.pictureUrl"
-          [alt]="getAuthorDisplayName(author)"
-          class="rounded-circle"
-          style="width: 20px; height: 20px; object-fit: cover"
-          crossorigin="anonymous"
-          referrerpolicy="no-referrer"
-          (error)="onAuthorImageError($event)"
-        />
-        } @else {
-        <div
-          class="rounded-circle bg-white text-primary d-flex align-items-center justify-content-center"
-          style="width: 20px; height: 20px; font-size: 10px; font-weight: bold"
-        >
-          {{ getAuthorDisplayName(author).charAt(0).toUpperCase() }}
-        </div>
-        }
-        <span>{{ getAuthorDisplayName(author) }}</span>
-        <button
-          type="button"
-          class="btn-close btn-close-white"
-          style="font-size: 0.6rem"
-          (click)="removeAuthor(author)"
-          aria-label="Rimuovi autore"
-        ></button>
-      </div>
-      }
-    </div>
-  </div>
-  }
-</div>
 <ng-template #gradi>
   <div>
     I valori selezionabili per ogni grado sono cosi definiti:
@@ -123,44 +27,144 @@
   <div class="d-inline grado">MA</div>
   <div class="d-inline grado alto">A</div>
 </div>
-<div class="overflow-auto scrollable bg-white small-no-x-margin">
-  <form [formGroup]="signsForm" (ngSubmit)="onSubmit()">
-    <div
-      formArrayName="rowSelections"
-      class="pt-2 mb-3 ms-3 extra-bottom-padding small-no-x-margin me-2"
-    >
-      @for(signType of signTypes(); track signType) {
+<div class="filters-layout bg-white small-no-x-margin">
+  <form [formGroup]="signsForm" (ngSubmit)="onSubmit()" class="filters-form">
+    <div class="filters-scrollable overflow-auto">
       <div
-        class="mb-2 pb-1 border-emphasis no-rounded small-no-x-padding small-no-x-margin"
+        formArrayName="rowSelections"
+        class="pt-2 mb-3 ms-3 small-no-x-margin me-2"
       >
-        <div class="text-center fw-bold -top my-1">
-          {{ signType }}
+        @for(signType of signTypes(); track signType) {
+        <div
+          class="mb-2 pb-1 border-emphasis no-rounded small-no-x-padding small-no-x-margin"
+        >
+          <div class="text-center fw-bold -top my-1">
+            {{ signType }}
+          </div>
+          @for (signData of filteredSignsByType(signType); let j = $index; track
+          j;) {
+          <div class="d-flex ps-1 mx-1" [class.bg-light-title]="$even">
+            <div class="flex-shrink-1">{{ signData.signName }}</div>
+            <div class="ms-auto flex-nowrap flex-shrink-0 align-self-center">
+              @for (option of signData.radioOptions; track option.value) {
+              @if(option.value != 0) {
+              <label class="text-center">
+                <input
+                  class="form-check-input form-check-inline border-secondary"
+                  type="radio"
+                  [formControlName]="signData.index.toString()"
+                  [value]="option.value"
+                  (click)="onRadioClick(signData.index, option.value)"
+                />
+              </label>
+              } }
+            </div>
+          </div>
+          }
         </div>
-        @for (signData of filteredSignsByType(signType); let j = $index; track
-        j;) {
-        <div class="d-flex ps-1 mx-1" [class.bg-light-title]="$even">
-          <div class="flex-shrink-1">{{ signData.signName }}</div>
-          <div class="ms-auto flex-nowrap flex-shrink-0 align-self-center">
-            @for (option of signData.radioOptions; track option.value) {
-            @if(option.value != 0) {
-            <label class="text-center">
-              <input
-                class="form-check-input form-check-inline border-secondary"
-                type="radio"
-                [formControlName]="signData.index.toString()"
-                [value]="option.value"
-                (click)="onRadioClick(signData.index, option.value)"
+        }
+      </div>
+
+      <div class="bg-white small-no-x-margin mb-2 filters-author-block">
+        <div class="fw-bold mb-2 ms-3 pt-2">Filtra per autori</div>
+        <div class="ms-3 me-3 mb-2 position-relative author-search-container">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Cerca autore..."
+            [formControl]="authorSearchControl"
+            (input)="onAuthorInputChange($any($event.target).value)"
+            (focus)="onAuthorInputFocus()"
+          />
+          @if (showAuthorDropdown()) {
+          <div
+            class="author-dropdown position-absolute bg-white border rounded shadow-sm mb-1 w-100"
+            style="max-height: 300px; overflow-y: auto"
+          >
+            @if (isSearchingAuthors()) {
+            <div class="p-2 text-center">
+              <div class="spinner-border spinner-border-sm" role="status">
+                <span class="visually-hidden">Caricamento...</span>
+              </div>
+            </div>
+            } @else if (authorSuggestions().length === 0) {
+            <div class="p-2 text-muted text-center">Nessun autore trovato</div>
+            } @else {
+            @for (author of reversedAuthorSuggestions(); track author.id) {
+            <div
+              class="d-flex align-items-center p-2 hover-bg-light cursor-pointer"
+              (click)="selectAuthor(author)"
+              style="cursor: pointer"
+            >
+              @if (author.pictureUrl) {
+              <img
+                [src]="author.pictureUrl"
+                [alt]="getAuthorDisplayName(author)"
+                class="rounded-circle me-2"
+                style="width: 32px; height: 32px; object-fit: cover"
+                crossorigin="anonymous"
+                referrerpolicy="no-referrer"
+                (error)="onAuthorImageError($event)"
               />
-            </label>
-            } }
+              } @else {
+              <div
+                class="rounded-circle me-2 bg-secondary d-flex align-items-center justify-content-center text-white"
+                style="width: 32px; height: 32px; font-size: 14px"
+              >
+                {{ getAuthorDisplayName(author).charAt(0).toUpperCase() }}
+              </div>
+              }
+              <span>{{ getAuthorDisplayName(author) }}</span>
+            </div>
+            }
+            }
+          </div>
+          }
+        </div>
+        @if (selectedAuthors().length > 0) {
+        <div class="ms-3 me-3 mb-2">
+          <div class="d-flex flex-wrap gap-2">
+            @for (author of selectedAuthors(); track author.id) {
+            <div
+              class="badge bg-primary d-flex align-items-center gap-1"
+              style="font-size: 0.875rem; padding: 0.375rem 0.5rem"
+            >
+              @if (author.pictureUrl) {
+              <img
+                [src]="author.pictureUrl"
+                [alt]="getAuthorDisplayName(author)"
+                class="rounded-circle"
+                style="width: 20px; height: 20px; object-fit: cover"
+                crossorigin="anonymous"
+                referrerpolicy="no-referrer"
+                (error)="onAuthorImageError($event)"
+              />
+              } @else {
+              <div
+                class="rounded-circle bg-white text-primary d-flex align-items-center justify-content-center"
+                style="width: 20px; height: 20px; font-size: 10px; font-weight: bold"
+              >
+                {{ getAuthorDisplayName(author).charAt(0).toUpperCase() }}
+              </div>
+              }
+              <span>{{ getAuthorDisplayName(author) }}</span>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                style="font-size: 0.6rem"
+                (click)="removeAuthor(author)"
+                aria-label="Rimuovi autore"
+              ></button>
+            </div>
+            }
           </div>
         </div>
         }
       </div>
-      }
-
+    </div>
+    <div class="filters-actions d-flex justify-content-end">
       <button
-        class="btn btn-primary mt-1 float-end fw-bold"
+        class="btn btn-primary fw-bold"
         type="submit"
         [disabled]="!signsForm.valid"
       >
