@@ -58,7 +58,7 @@ interface CombinationFormModel {
 }
 
 export function intervalValidator(
-  control: AbstractControl
+  control: AbstractControl,
 ): ValidationErrors | null {
   const group = control as FormGroup<SingleSignFormModel>;
 
@@ -73,7 +73,7 @@ export function intervalValidator(
 }
 
 export function requiredSignNotAbsentValidator(
-  control: AbstractControl
+  control: AbstractControl,
 ): ValidationErrors | null {
   const group = control as FormGroup<SingleSignFormModel>;
 
@@ -88,7 +88,7 @@ export function requiredSignNotAbsentValidator(
 }
 
 export function uniqueSignsValidator(
-  control: AbstractControl
+  control: AbstractControl,
 ): ValidationErrors | null {
   const group = control as FormGroup<CombinationFormModel>;
 
@@ -97,7 +97,7 @@ export function uniqueSignsValidator(
 
   const otherSigns = group.get("otherSigns") as FormArray;
   const otherSignsIds = otherSigns.controls.map(
-    (signControl) => signControl.get("signId")?.value
+    (signControl) => signControl.get("signId")?.value,
   );
   const allIds = [firstSignId, secondSignId, ...otherSignsIds];
 
@@ -173,10 +173,10 @@ export class CombinationsFormComponent implements OnInit {
   @Input() combination: Combination | null = null;
 
   readonly pageTitle = computed(() =>
-    this.isEditMode() ? "Modifica Combinazione" : "Aggiungi Combinazione"
+    this.isEditMode() ? "Modifica Combinazione" : "Aggiungi Combinazione",
   );
   readonly submitButtonText = computed(() =>
-    this.isEditMode() ? "Modifica" : "Salva"
+    this.isEditMode() ? "Modifica" : "Salva",
   );
 
   ngOnInit(): void {
@@ -226,14 +226,14 @@ export class CombinationsFormComponent implements OnInit {
       },
       {
         validators: [uniqueSignsValidator],
-      }
+      },
     );
     this.combinationForm.controls.firstSign.controls.isOptional.disable();
     this.combinationForm.controls.secondSign.controls.isOptional.disable();
   }
 
   private createSignForm(
-    isRequiredAndNotAbsent: boolean
+    isRequiredAndNotAbsent: boolean,
   ): FormGroup<SingleSignFormModel> {
     const groupValidators: ValidatorFn[] = [intervalValidator];
 
@@ -275,12 +275,12 @@ export class CombinationsFormComponent implements OnInit {
           {
             nonNullable: true,
             validators: [Validators.required],
-          }
+          },
         ),
       },
       {
         validators: groupValidators,
-      }
+      },
     );
   }
 
@@ -371,11 +371,11 @@ export class CombinationsFormComponent implements OnInit {
       longDescription: formValue.longDescription,
       imagePath: null,
       originalTextCondition: null,
-      author: this.authService.currentUserValue?.userId 
-        ? { 
-            id: this.authService.currentUserValue.userId, 
-            name: this.authService.currentUserValue.name || 'Utente' 
-          } 
+      author: this.authService.currentUserValue?.userId
+        ? {
+            id: this.authService.currentUserValue.userId,
+            name: this.authService.currentUserValue.name || "Utente",
+          }
         : null,
       sourceBook: null,
       signs: [
@@ -422,17 +422,17 @@ export class CombinationsFormComponent implements OnInit {
       const saveOperation = this.isEditMode()
         ? this.combinationsService.updateCombination(
             finalCombinationData.id!,
-            finalCombinationData
+            finalCombinationData,
           )
         : this.combinationsService.createCombination(
-            finalCombinationData as Omit<Combination, "id">
+            finalCombinationData as Omit<Combination, "id">,
           );
 
       saveOperation
         .pipe(
           finalize(() =>
-            this.sharedState.combinationsSearchTrigger.set(Date.now())
-          )
+            this.sharedState.combinationsSearchTrigger.set(Date.now()),
+          ),
         )
         .subscribe({
           next: () => {
@@ -441,7 +441,7 @@ export class CombinationsFormComponent implements OnInit {
             } else {
               this.messageService.showMessage(
                 "Combinazione inserita con successo, se vuoi puoi inserirne un'altra.",
-                MessageType.success
+                MessageType.success,
               );
               this.combinationForm.reset();
               this.activeImageFileName = null;
@@ -457,7 +457,7 @@ export class CombinationsFormComponent implements OnInit {
               `Errore durante l'${action} della combinazione: ${
                 err.error?.message ?? err.message
               }`,
-              MessageType.error
+              MessageType.error,
             );
           },
         });
@@ -480,7 +480,7 @@ export class CombinationsFormComponent implements OnInit {
             `Errore durante l'upload dell'immagine: ${
               err.error?.message ?? err.message
             }`,
-            MessageType.error
+            MessageType.error,
           );
         },
       });
@@ -494,7 +494,9 @@ export class CombinationsFormComponent implements OnInit {
         combinationData.imagePath = null;
       }
       saveCombination(combinationData);
+      this.activeModal.dismiss("Submit click");
     }
+
   }
 
   get titleCtrl() {
