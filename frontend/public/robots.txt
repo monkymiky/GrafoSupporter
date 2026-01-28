@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Allow: /ricerca-combinazioni
+Allow: /contatti
+Allow: /termini-di-servizio
+Allow: /informativa-privacy
+
+Disallow: /impostazioni
+Disallow: /api/
+
+Sitemap: https://grafosupporter.net.in/sitemap.xml
