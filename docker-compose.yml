@@ -1,48 +1,46 @@
 services:
-  
-  db:
-    image: postgres:16
-    container_name: pg
+  database:
+    image: postgres:16-alpine
+    container_name: postgresDB
     environment:
       POSTGRES_DB: grafosupporterDB
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
     ports:
       - "5432:5432"
-    volumes:
+    volumes: # Salva i dati del db su disco (persistono anche se il container viene stoppato)
       - postgres_data:/var/lib/postgresql/data
+    restart: always
 
-  
   backend:
-    build: 
-      context: .
-      dockerfile: backend/Dockerfile.dev
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: grafosupporter_backend
     ports:
       - "8080:8080"
-      - "5005:5005"  # Porta per il debug remoto
-    volumes:
-      - ./backend:/app
-      - ~/.m2:/root/.m2
     depends_on:
-      - db         
+      - database
     environment:
-      DB_USER: user
-      DB_PASS: pass
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/grafosupporterDB
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      JWT_SECRET: ${JWT_SECRET}
+    volumes:
+      - uploads:/app/uploads
+    restart: always
 
   frontend:
     build: ./frontend
     container_name: grafosupporter_frontend
     ports:
-     - "4200:4200"
+      - "4200:80"
     depends_on:
-     - backend
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-      - /app/.angular/cache 
-    
+      - backend
+    restart: always
 
 volumes:
   postgres_data:
+  uploads:

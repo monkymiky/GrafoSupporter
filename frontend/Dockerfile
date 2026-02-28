@@ -1,14 +1,17 @@
-FROM node:24.11.0-alpine
-
+FROM node:24.11.0-alpine AS build
 WORKDIR /app
-COPY package*.json ./
+COPY package.json package-lock.json ./
 RUN npm install
+COPY angular.json .
+COPY tsconfig.json .
+COPY tsconfig.app.json .
+COPY src ./src
+COPY public ./public
+RUN npm run build -- --configuration production
 
 
-CMD ["npm", "start"]
-#COPY . .
-#RUN ng build --prod
-#FROM nginx:stable-alpine
-#COPY --from=build /app/dist/frontend /usr/share/nginx/html
-#COPY nginx.conf /etc/nginx/conf.d/default.conf
-#EXPOSE 80
+
+FROM nginx:1.29.3-alpine
+COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80

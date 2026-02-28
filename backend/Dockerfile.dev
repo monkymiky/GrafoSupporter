@@ -1,9 +1,0 @@
-FROM maven:3.9.11-eclipse-temurin-21 AS build
-
-WORKDIR /app
-
-COPY backend/pom.xml .
-RUN mvn -B dependency:go-offline
-
-# Il -Dspring-boot.run.jvmArguments=-agentlib... abilita il debug remoto sulla porta 5005 (opzionale ma utile)
-CMD ["./mvnw", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"]

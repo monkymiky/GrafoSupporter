@@ -1,0 +1,41 @@
+@use "../../styles/variables" as *;
+.header-signs {
+  width: 86%;
+}
+@media screen and (min-width: 1200px) {
+  .intervallo-header-sign {
+    margin-left: 4.8rem;
+  }
+  .classificazione-header-sign {
+    margin-left: 1rem;
+  }
+}
+@media screen and (max-width: 767.98px) {
+  .header-labels {
+    display: none;
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 991.98px) {
+  .intervallo-header-sign {
+    margin-left: 0px;
+    margin-right: 0.5rem;
+  }
+  .sign-header-sign {
+    flex-grow: 1;
+  }
+  .classificazione-header-sign {
+    margin-right: 6.5rem;
+  }
+  .modal-body {
+    max-width: 768px;
+    margin: auto;
+  }
+}
+.img {
+  text-align: center;
+}
+
+.form-error {
+  color: $error;
+  font-size: 0.875rem;
+}

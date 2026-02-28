@@ -1,0 +1,48 @@
+<div class="above-the-fold" [class.above-the-fold-up]="goDownNow">
+  <div class="scene-3d">
+    <div
+      class="cylinder"
+      [class.paused]="!isHovering"
+      [class.running]="isHovering"
+    >
+      @for (index of imageIndex; track $index) {
+      <div
+        class="cylinder-panel"
+        [style.transform]="
+          'rotateY(' + $index * panelAngle + 'deg) translateZ(50vw)'
+        "
+      >
+        <img [src]="image" />
+      </div>
+      }
+    </div>
+  </div>
+  <div class="ellipse top" (mouseenter)="stop()" (mouseleave)="play()"></div>
+  <img
+    class="title"
+    src="assets/combination-image/logo5.png"
+    alt="Grafosupporter"
+  />
+  <div class="ellipse bottom" (mouseenter)="stop()" (mouseleave)="play()"></div>
+  <div class="bottom-hider" (mouseenter)="stop()"></div>
+</div>
+
+<section class="login-section">
+  <div class="text-center">
+    <p class="lead mb-3">
+      Registrati gratuitamente per cercare le combinazioni, oppure accedi
+    </p>
+    <div class="d-flex gap-2 justify-content-center">
+      <button
+        class="btn btn-outline-primary"
+        type="button"
+        (click)="openLogin()"
+      >
+        Login
+      </button>
+      <button class="btn btn-primary" type="button" (click)="openSignup()">
+        Signup
+      </button>
+    </div>
+  </div>
+</section>

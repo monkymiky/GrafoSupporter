@@ -1,0 +1,125 @@
+<div [formGroup]="signFormGroup">
+  <div class="row g-3 align-items-center">
+    <label
+      for="classification-{{ signIndex }}"
+      class="form-label text-muted labels"
+      >Seleziona un segno:</label
+    >
+    <div class="col-md">
+      <select
+        id="sign-id-{{ signIndex }}"
+        class="form-select"
+        formControlName="signId"
+        [class.is-invalid]="
+          this.signFormGroup.controls.signId.invalid &&
+          (this.signFormGroup.controls.signId.touched ||
+            this.signFormGroup.controls.signId.dirty)
+        "
+      >
+        @for(signType of sharedState.signTypes(); track signType) {
+        <optgroup [label]="signType"></optgroup>
+        @for (sign of filteredSignsByType(signType); let j = $index; track j;) {
+        <option [value]="sign.id">{{ sign.name }}</option>
+        } }
+      </select>
+    </div>
+
+    <div class="col-md-2">
+      <label
+        for="classification-{{ signIndex }}"
+        class="form-label text-muted labels"
+        >Intervallo:</label
+      >
+      <div class="input-group flex-nowrap">
+        <select
+          id="range-min-{{ signIndex }}"
+          class="form-control select-number text-end ps-1 pe-3"
+          formControlName="min"
+          [class.is-invalid]="
+            signFormGroup.controls['min'].invalid && signFormGroup.touched
+          "
+          aria-label="Valore minimo dell'intervallo"
+        >
+          @for(i of range; track i){
+          <option [value]="i">{{ i }}</option>
+          }
+        </select>
+
+        <span class="input-group-text px-1">-</span>
+        <select
+          id="range-max-{{ signIndex }}"
+          class="form-control select-number pe-1"
+          formControlName="max"
+          [class.is-invalid]="
+            signFormGroup.controls['max'].invalid && signFormGroup.touched
+          "
+          aria-label="Valore massimo dell'intervallo"
+        >
+          @for(i of range; track i){
+          <option [value]="i">{{ i }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <label
+        for="classification-{{ signIndex }}"
+        class="form-label text-muted labels"
+        >Classificazione:</label
+      >
+      <select
+        id="classification-{{ signIndex }}"
+        class="form-select select-number"
+        formControlName="classification"
+      >
+        <option [value]="'S'">Sostanziale</option>
+        <option [value]="'M'">Modificante</option>
+        <option [value]="'A'">Accidentale</option>
+      </select>
+    </div>
+
+    <div class="col-md-auto">
+      <div class="form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          value=""
+          formControlName="isOptional"
+          id="isOptional-{{ signIndex }}"
+        />
+        <label class="form-check-label" for="isOptional-{{ signIndex }}"
+          >Opzionale</label
+        >
+      </div>
+    </div>
+  </div>
+</div>
+<div class="col">
+  @if (signFormGroup.controls.signId.invalid &&
+  (signFormGroup.controls.signId.touched ||
+  signFormGroup.controls.signId.dirty)) {
+  <div class="invalid-feedback d-block">
+    @if (signFormGroup.controls.signId.errors?.['required']) {
+    <span>Selezionare un segno è obbligatorio.</span>
+    }
+  </div>
+  } @else if ( (signFormGroup.controls['min'].invalid ||
+  signFormGroup.controls['max'].invalid) && (signFormGroup.dirty ||
+  signFormGroup.touched) ) {
+  <div class="invalid-feedback d-block mt-1">
+    L'intervallo per entrambi i valori deve essere compreso tra 0 e 10.
+  </div>
+  } @else if (signFormGroup.hasError('invalidInterval') && (signFormGroup.dirty
+  || signFormGroup.touched)) {
+  <div class="invalid-feedback d-block mt-1">
+    Il valore massimo non può essere inferiore al valore minimo.
+  </div>
+  } @else if (signFormGroup.hasError('RequiredSignCanTBeAbsent') &&
+  (signFormGroup.dirty || signFormGroup.touched)) {
+  <div class="invalid-feedback d-block mt-1">
+    I primi due segni sono obbligatori e non possono essere assenti (intervallo
+    0-0).
+  </div>
+  }
+</div>

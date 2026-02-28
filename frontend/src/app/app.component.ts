@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { MessageToastComponent } from './shared/error-handling/message-toast/message-toast.component';
+import { MessageToastComponent } from './shared/components/message-toast/message-toast.component';
 
 @Component({
   selector: 'app-root',
