@@ -28,7 +28,7 @@ L'applicazione è composta da un backend basato su **Spring Boot** e un frontend
 
 - Docker & Docker Compose
 - GitHub Actions (CI/CD)
-- Hosting su VPS (Hetzner) con NGINX come reverse proxy (coming soon)
+- Hosting su VPS (Hetzner) con NGINX come reverse proxy 
 
 ## Features Principali
 
